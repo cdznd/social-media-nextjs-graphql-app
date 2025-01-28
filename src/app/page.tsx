@@ -1,11 +1,23 @@
+"use client"
 import Image from "next/image";
 import styles from "./page.module.css";
 import Button from "@mui/material/Button"
 import Blog from "@/components/blog";
 
+import { useSession } from "next-auth/react";
+
 export default function Home() {
+
+  const { data: session } = useSession();
+
+  console.log('data', session)
+
   return (
-    <Blog />
+    <>
+      <h1>Testing the life!</h1>
+      <p>{session?.user?.email}</p>
+    </>
+    // <Blog />
     // <div className={styles.page}>
     //   <main className={styles.main}>
     //     <Button variant="contained">Hello</Button>

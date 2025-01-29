@@ -10,7 +10,7 @@ import {
     Checkbox
 } from "@mui/material";
 
-const CredentialsForm = () => {
+const CredentialsSigninForm = () => {
 
     const [emailError, setEmailError] = useState('error')
     const [emailErrorMessage, setEmailErrorMessage] = useState('')
@@ -102,4 +102,4 @@ const CredentialsForm = () => {
     )
 }
 
-export default CredentialsForm;
+export default CredentialsSigninForm;

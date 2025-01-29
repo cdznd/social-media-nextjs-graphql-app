@@ -14,7 +14,7 @@ import Card from '@/components/common/card';
 import AuthContainer from '@/components/common/AuthContainer';
 
 import ColorModeSelect from '@/components/shared-theme/ColorModeSelect';
-import CredentialsForm from '@/components/common/CredentialsForm';
+import CredentialsSigninForm from '@/components/common/CredentialsSigninForm';
 
 export default function SignInPage() {
     return (
@@ -31,7 +31,7 @@ export default function SignInPage() {
                         Sign in
                     </Typography>
 
-                    <CredentialsForm />
+                    <CredentialsSigninForm />
 
                     <Divider>or</Divider>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

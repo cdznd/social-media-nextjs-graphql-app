@@ -11,8 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
-import Sitemark from './SitemarkIcon';
+import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
+import Sitemark from '../blog/components/SitemarkIcon';
+
+// Mine
+import { useRouter } from 'next/navigation';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -30,12 +33,22 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   padding: '8px 12px',
 }));
 
-export default function AppAppBar() {
+export default function Navbar() {
   const [open, setOpen] = React.useState(false);
+
+  const router = useRouter();
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+
+  const openSignInPage = () => {
+    router.push('/signin')
+  }
+
+  const openSignUpPage = () => {
+    router.push('/signup')
+  }
 
   return (
     <AppBar
@@ -80,10 +93,20 @@ export default function AppAppBar() {
               alignItems: 'center',
             }}
           >
-            <Button color="primary" variant="text" size="small">
+            <Button 
+              color="primary"
+              variant="text"
+              size="small"
+              onClick={() => openSignInPage()}
+            >
               Sign in
             </Button>
-            <Button color="primary" variant="contained" size="small">
+            <Button
+              color="primary"
+              variant="contained"
+              size="small"
+              onClick={() => openSignUpPage()}
+            >
               Sign up
             </Button>
             <ColorModeIconDropdown />

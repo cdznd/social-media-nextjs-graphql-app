@@ -2,10 +2,8 @@
 import { useSession } from "next-auth/react";
 
 // New
-import AppTheme from "@/components/shared-theme/AppTheme";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar";
 // MUI Material
-import { CssBaseline } from "@mui/material";
 import Container from '@mui/material/Container';
 import MainContent from "@/components/blog/components/MainContent";
 import Latest from "@/components/blog/components/Latest";
@@ -13,13 +11,10 @@ import Footer from "@/components/blog/components/Footer";
 
 export default function Home() {
 
-  const { data: session } = useSession();
-
-  const props = {}
+  // const { data: session } = useSession();
 
   return (
-    <AppTheme {...props}>
-      <CssBaseline enableColorScheme />
+    <>
       <Navbar />
       <Container
         maxWidth="lg"
@@ -30,6 +25,6 @@ export default function Home() {
         <Latest />
       </Container>
       <Footer />
-    </AppTheme>
+    </>
   );
 }

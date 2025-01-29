@@ -7,17 +7,30 @@ import {
     Link,
     Typography
 } from '@mui/material'
-import Card from '@/components/common/card';
-import AuthContainer from '@/components/common/AuthContainer';
-import CredentialsSignupForm from '@/components/common/CredentialsSignupForm';
-import { GoogleIcon, SitemarkIcon } from '@/components/common/CustomIcons';
+import CardAuth from '@/components/Authentication/AuthCard';
+import AuthContainer from '@/components/Authentication/AuthContainer';
+import CredentialsSignupForm from '@/components/Authentication/CredentialsSignupForm';
+import { GoogleIcon, SitemarkIcon } from '@/components/Common/CustomIcons';
 import ColorModeSelect from '@/components/shared-theme/ColorModeSelect';
 
+import { signIn } from 'next-auth/react';
+
 export default function SignUpPage() {
+
+    const handleSignUp = async () => {
+        const result = await signIn('google', {
+            callbackUrl: '/',
+            redirect: true,
+        });
+        if (result?.error) {
+            console.error(result.error);
+        }
+    };
+
     return (
         <AuthContainer direction="column" justifyContent="space-between">
             <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
-            <Card variant="outlined">
+            <CardAuth variant="outlined">
                 <SitemarkIcon />
                 <Typography
                     component="h1"
@@ -34,7 +47,7 @@ export default function SignUpPage() {
                     <Button
                         fullWidth
                         variant="outlined"
-                        onClick={() => alert('Sign up with Google')}
+                        onClick={() => handleSignUp()}
                         startIcon={<GoogleIcon />}
                     >
                         Sign up with Google
@@ -50,7 +63,7 @@ export default function SignUpPage() {
                         </Link>
                     </Typography>
                 </Box>
-            </Card>
+            </CardAuth>
         </AuthContainer>
     );
 }

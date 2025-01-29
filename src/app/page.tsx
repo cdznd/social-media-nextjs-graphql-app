@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 
 // New
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/Navbar";
 // MUI Material
 import Container from '@mui/material/Container';
 import MainContent from "@/components/blog/components/MainContent";

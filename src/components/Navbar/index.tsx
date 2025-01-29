@@ -1,20 +1,24 @@
-import * as React from 'react';
+import { useState  } from 'react'
+import { useSession, signOut } from 'next-auth/react';
+
 import { alpha, styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import Drawer from '@mui/material/Drawer';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Button,
+  IconButton,
+  Container,
+  Divider,
+  MenuItem,
+  Drawer,
+} from '@mui/material'
+
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+
 import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 import Sitemark from '../blog/components/SitemarkIcon';
-
-// Mine
 import { useRouter } from 'next/navigation';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -34,20 +38,32 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 export default function Navbar() {
-  const [open, setOpen] = React.useState(false);
+
+  const [open, setOpen] = useState(false);
 
   const router = useRouter();
+
+  const { data: session, status } = useSession();
+
+  const userLogged = session?.user
+
+  console.log('userLogged', userLogged)
+  console.log(userLogged?.email)
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
 
   const openSignInPage = () => {
-    router.push('/signin')
+    router.push('/sign-in')
   }
 
   const openSignUpPage = () => {
-    router.push('/signup')
+    router.push('/sign-up')
+  }
+
+  const logout = () => {
+    signOut({ redirect: false })
   }
 
   return (
@@ -93,22 +109,40 @@ export default function Navbar() {
               alignItems: 'center',
             }}
           >
-            <Button 
-              color="primary"
-              variant="text"
-              size="small"
-              onClick={() => openSignInPage()}
-            >
-              Sign in
-            </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              onClick={() => openSignUpPage()}
-            >
-              Sign up
-            </Button>
+            {
+              !userLogged ? (
+                <>
+                  <Button
+                    color="primary"
+                    variant="text"
+                    size="small"
+                    onClick={() => openSignInPage()}
+                  >
+                    Sign in
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    onClick={() => openSignUpPage()}
+                  >
+                    Sign up
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <h1>{userLogged?.email}</h1>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    onClick={() => logout()}
+                  >
+                    Logout
+                  </Button>
+                </>
+              )
+            }
             <ColorModeIconDropdown />
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>

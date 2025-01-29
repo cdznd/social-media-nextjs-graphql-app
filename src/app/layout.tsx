@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 // App Session Provider
-import AppSessionProvider from "@/components/AppSessionProvider/AppSessionProvider";
+import AppSessionProvider from "@/components/AppSessionProvider/index";
 
 // App MUI Components
 import AppTheme from "@/components/shared-theme/AppTheme";

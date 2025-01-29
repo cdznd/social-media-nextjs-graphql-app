@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import MuiCard from '@mui/material/Card';
 
-const Card = styled(MuiCard)(({ theme }) => ({
+const AuthCard = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignSelf: 'center',
@@ -20,4 +20,4 @@ const Card = styled(MuiCard)(({ theme }) => ({
     }),
 }));
 
-export default Card;
+export default AuthCard;

@@ -11,16 +11,15 @@ import Button from '@mui/material/Button';
 import { GoogleIcon, SitemarkIcon } from '../../components/signin/Components/CustomIcons'
 
 import Card from '@/components/common/card';
-import SignInContainer from '@/components/common/signinContainer';
+import AuthContainer from '@/components/common/AuthContainer';
 
 import ColorModeSelect from '@/components/shared-theme/ColorModeSelect';
 import CredentialsForm from '@/components/common/CredentialsForm';
 
 export default function SignInPage() {
-    const props = {}
     return (
         <>
-            <SignInContainer direction="column" justifyContent="space-between">
+            <AuthContainer direction="column" justifyContent="space-between">
                 <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
                 <Card variant="outlined">
                     <SitemarkIcon />
@@ -56,7 +55,7 @@ export default function SignInPage() {
                         </Typography>
                     </Box>
                 </Card>
-            </SignInContainer>
+            </AuthContainer>
         </>
     )
 }

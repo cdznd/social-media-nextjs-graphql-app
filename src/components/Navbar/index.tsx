@@ -1,18 +1,21 @@
-import { useState  } from 'react'
+import { useState } from 'react'
 import { useSession, signOut } from 'next-auth/react';
 
-import { alpha, styled } from '@mui/material/styles';
 import {
   Box,
   AppBar,
-  Toolbar,
   Button,
   IconButton,
   Container,
   Divider,
   MenuItem,
   Drawer,
+  Typography,
+  Avatar,
+  Menu
 } from '@mui/material'
+
+import { StyledToolbar } from './styles';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -21,22 +24,6 @@ import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
 import Sitemark from '../blog/components/SitemarkIcon';
 import { useRouter } from 'next/navigation';
 
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  flexShrink: 0,
-  borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
-  backdropFilter: 'blur(24px)',
-  border: '1px solid',
-  borderColor: (theme.vars || theme).palette.divider,
-  backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
-    : alpha(theme.palette.background.default, 0.4),
-  boxShadow: (theme.vars || theme).shadows[1],
-  padding: '8px 12px',
-}));
-
 export default function Navbar() {
 
   const [open, setOpen] = useState(false);
@@ -44,6 +31,17 @@ export default function Navbar() {
   const router = useRouter();
 
   const { data: session, status } = useSession();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
 
   const userLogged = session?.user
 
@@ -62,9 +60,37 @@ export default function Navbar() {
     router.push('/sign-up')
   }
 
-  const logout = () => {
+  const handleLogout = () => {
     signOut({ redirect: false })
   }
+
+  const navbarItems = [
+    {
+      label: 'Feed',
+      open: () => { }
+    },
+    {
+      label: 'Friends',
+      open: () => { }
+    },
+    {
+      label: 'Explore',
+      open: () => { }
+    }
+  ]
+
+  const renderNavbarItems = navbarItems.map(item => {
+    return (
+      <Button
+        variant="text"
+        color="info"
+        size="small"
+        onClick={item.open}
+      >
+        {item.label}
+      </Button>
+    )
+  })
 
   return (
     <AppBar
@@ -79,29 +105,14 @@ export default function Navbar() {
     >
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
+          {/* NavItems */}
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
             <Sitemark />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small">
-                Features
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Testimonials
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Highlights
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Pricing
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                FAQ
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                Blog
-              </Button>
+              {renderNavbarItems}
             </Box>
           </Box>
+          {/* NavAuthButtons */}
           <Box
             sx={{
               display: { xs: 'none', md: 'flex' },
@@ -131,20 +142,46 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  <h1>{userLogged?.email}</h1>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    onClick={() => logout()}
-                  >
-                    Logout
-                  </Button>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    {/* User Email */}
+                    <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'block' } }}>
+                      {userLogged.email}
+                    </Typography>
+
+                    {/* Profile Picture with Dropdown Menu */}
+                    <Avatar
+                      alt={userLogged.name || 'User'}
+                      src={userLogged?.image}
+                      onClick={handleMenuOpen}
+                      sx={{ cursor: 'pointer' }}
+                    />
+
+                    {/* Dropdown Menu */}
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleMenuClose}
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                      sx={{
+                        '&:focus': {
+                          outline: 'none'
+                        }
+                      }}
+                    >
+                      <MenuItem onClick={handleLogout}>
+                        <Button color="primary" variant="contained" size="small" fullWidth>
+                          Logout
+                        </Button>
+                      </MenuItem>
+                    </Menu>
+                  </Box>
                 </>
               )
             }
             <ColorModeIconDropdown />
           </Box>
+          {/* Mobile */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
             <ColorModeIconDropdown size="medium" />
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
@@ -171,12 +208,7 @@ export default function Navbar() {
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
+                {renderNavbarItems}
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
                   <Button color="primary" variant="contained" fullWidth>

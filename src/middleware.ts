@@ -1,18 +1,20 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export function middleware(request: NextRequest) {
-  // Check if the request is for the root URL
-  if (request.nextUrl.pathname === '/') {
-    // Redirect to /app
-    return NextResponse.redirect(new URL('/app', request.url));
+export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/") {
+    return NextResponse.redirect(new URL("/app", request.url));
   }
-
-  // Continue with the request
+  if (request.nextUrl.pathname === "/api/graphql") {
+    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+    if (!token) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+  }
   return NextResponse.next();
 }
 
-// Optional: Match specific paths
 export const config = {
-  matcher: '/', // Only run middleware for the root URL
+  matcher: ["/", "/api/graphql"], // Apply middleware to both "/" and "/api/graphql"
 };

@@ -39,7 +39,7 @@ interface CommentParent {
 
 const resolvers = {
   DateTime: {
-    // Custom scalar resolver for DateTime if needed
+
   },
   User: {
     accounts: (parent: UserParent) => prisma.account.findMany({ where: { userId: parent.id } }),
@@ -77,19 +77,19 @@ const resolvers = {
   },
   Query: {
     // User Queries
-    user: (_: unknown, args: { id: string }) => prisma.user.findUnique({ where: { id: args.id } }),
+    user: (_: any, args: { id: string }) => prisma.user.findUnique({ where: { id: args.id } }),
     users: () => prisma.user.findMany(),
     // Post Queries
-    post: (_: unknown, args: { id: string }) => prisma.post.findUnique({ where: { id: args.id } }),
+    post: (_: any, args: { id: string }) => prisma.post.findUnique({ where: { id: args.id } }),
     posts: () => prisma.post.findMany(),
     // Category Queries
-    category: (_: unknown, args: { id: string }) => prisma.category.findUnique({ where: { id: args.id } }),
+    category: (_: any, args: { id: string }) => prisma.category.findUnique({ where: { id: args.id } }),
     categories: () => prisma.category.findMany(),
     // Like Queries
-    like: (_: unknown, args: { id: string }) => prisma.like.findUnique({ where: { id: args.id } }),
+    like: (_: any, args: { id: string }) => prisma.like.findUnique({ where: { id: args.id } }),
     likes: () => prisma.like.findMany(),
     // Comment Queries
-    comment: (_: unknown, args: { id: string }) => prisma.comment.findUnique({ where: { id: args.id } }),
+    comment: (_: any, args: { id: string }) => prisma.comment.findUnique({ where: { id: args.id } }),
     comments: () => prisma.comment.findMany(),
   },
   Mutation: {

@@ -26,13 +26,13 @@ import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
 
-  const [open, setOpen] = useState(false);
-
   const router = useRouter();
 
   const { data: session, status } = useSession();
 
+  const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,11 +42,7 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
-
   const userLogged = session?.user
-
-  console.log('userLogged', userLogged)
-  console.log(userLogged?.email)
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -67,15 +63,19 @@ export default function Navbar() {
   const navbarItems = [
     {
       label: 'Feed',
-      open: () => { }
+      open: () => { router.push('/') }
     },
     {
       label: 'Friends',
-      open: () => { }
+      open: () => { router.push('/friends') }
     },
     {
       label: 'Explore',
-      open: () => { }
+      open: () => { router.push('/explore') }
+    },
+    {
+      label: 'New Post',
+      open: () => { router.push('/new-post') }
     }
   ]
 

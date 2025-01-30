@@ -75,7 +75,7 @@ export default function Navbar() {
     },
     {
       label: 'New Post',
-      open: () => { router.push('/new-post') }
+      open: () => { router.push('/app/new-post') }
     }
   ]
 

@@ -1,14 +1,10 @@
+
 import type { Metadata } from "next";
 
 // Google Fonts
 import { Geist, Geist_Mono } from "next/font/google";
 
-// App Session Provider
-import AppSessionProvider from "@/components/AppSessionProvider/index";
-
-// App MUI Components
-import AppTheme from "@/components/shared-theme/AppTheme";
-import { CssBaseline } from "@mui/material";
+import ClientProviders from "@/components/AppClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,12 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AppTheme {...props}>
-          <CssBaseline enableColorScheme />
-          <AppSessionProvider>
-            {children}
-          </AppSessionProvider>
-        </AppTheme>
+        <ClientProviders>
+          {children}
+        </ClientProviders>
       </body>
     </html>
   );

@@ -15,7 +15,7 @@ import {
   Menu
 } from '@mui/material'
 
-import { StyledToolbar } from './styles';
+import { StyledToolbar } from './style';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -79,9 +79,10 @@ export default function Navbar() {
     }
   ]
 
-  const renderNavbarItems = navbarItems.map(item => {
+  const renderNavbarItems = navbarItems.map((item, key) => {
     return (
       <Button
+        key={key}
         variant="text"
         color="info"
         size="small"

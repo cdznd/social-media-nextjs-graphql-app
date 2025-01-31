@@ -1,6 +1,6 @@
 "use client"
 
-import MainContent from "@/components/blog/components/MainContent";
+import Feed from "@/components/Feed";
 import Latest from "@/components/blog/components/Latest";
 
 import { useQuery, gql } from '@apollo/client';
@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <>
-      <MainContent />
+      <Feed />
       {/* <Latest /> */}
     </>
   );

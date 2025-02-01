@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import Container from '@mui/material/Container';
 
-import Footer from "@/components/blog/components/Footer";
+import Footer from "@/components/Footer";
 
 export default function AppLayout({
   children,

@@ -10,7 +10,8 @@ import {
 import CardAuth from '@/components/Authentication/AuthCard';
 import AuthContainer from '@/components/Authentication/AuthContainer';
 import CredentialsSignupForm from '@/components/Authentication/CredentialsSignupForm';
-import { GoogleIcon, SitemarkIcon } from '@/components/Common/CustomIcons';
+import { GoogleIcon, SitemarkIcon } from '@/components/common/CustomIcons';
+
 import ColorModeSelect from '@/components/shared-theme/ColorModeSelect';
 
 import { signIn } from 'next-auth/react';

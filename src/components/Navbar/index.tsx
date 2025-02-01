@@ -20,9 +20,9 @@ import { StyledToolbar } from './style';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
-import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
-import Sitemark from '../blog/components/SitemarkIcon';
 import { useRouter } from 'next/navigation';
+import { SitemarkIcon } from '../common/CustomIcons';
+import ColorModeIconDropdown from '../ColorModeIconDropdown';
 
 export default function Navbar() {
 
@@ -108,7 +108,7 @@ export default function Navbar() {
         <StyledToolbar variant="dense" disableGutters>
           {/* NavItems */}
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-            <Sitemark />
+            <SitemarkIcon />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               {renderNavbarItems}
             </Box>

@@ -1,29 +1,43 @@
 "use client"
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     Box,
     FormControl,
     FormLabel,
     TextField,
     Button,
-    Checkbox,
-    FormControlLabel,
 } from "@mui/material";
+import { useMutation } from "@apollo/client";
+import { CREATE_POST_MUTATION } from "@/graphql/mutations";
+import { StyledTextarea } from "@/components/common/CustomTextArea";
+
+type CreatePostDTO = {
+    title: String,
+    content: String,
+    authorId: String
+};
 
 const NewPostPage = () => {
+
+    const router = useRouter()
+
     const [titleError, setTitleError] = useState(false);
     const [contentError, setContentError] = useState(false);
     const [titleErrorMessage, setTitleErrorMessage] = useState('');
     const [contentErrorMessage, setContentErrorMessage] = useState('');
 
-    const validateInputs = () => {
-        const title = document.getElementById('title') as HTMLInputElement;
-        const content = document.getElementById('content') as HTMLInputElement;
+    const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
+
+    const validateInputs = (formData: any) => {
 
         let isValid = true;
 
-        if (!title.value || title.value.length < 5) {
+        const title = formData.get('title')
+        const content = formData.get('content')
+
+        if (!title || title.length < 5) {
             setTitleError(true);
             setTitleErrorMessage('Title must be at least 5 characters long.');
             isValid = false;
@@ -32,7 +46,7 @@ const NewPostPage = () => {
             setTitleErrorMessage('');
         }
 
-        if (!content.value || content.value.length < 10) {
+        if (!content || content.length < 10) {
             setContentError(true);
             setContentErrorMessage('Content must be at least 10 characters long.');
             isValid = false;
@@ -41,26 +55,34 @@ const NewPostPage = () => {
             setContentErrorMessage('');
         }
 
-        return isValid;
+        return isValid
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (!validateInputs()) {
+        const formData = new FormData(event.currentTarget);
+        if (!validateInputs(formData)) {
             return;
         }
-        const data = new FormData(event.currentTarget);
-        console.log({
-            title: data.get('title'),
-            content: data.get('content'),
-            tags: data.get('tags'),
-            published: data.get('published') === 'on',
-        });
+        const createPostData: CreatePostDTO = {
+            title: formData.get('title') as string,
+            content: formData.get('content') as string,
+            authorId: 'cm6h4havf00020hukais5q0g6'
+        }
+        try {
+            const response = await createPost({
+                variables: { ...createPostData },
+            });
+            console.log('Post created successfully:', response.data.createPost);
+            router.push('/app')
+        } catch (err) {
+            console.error('Error creating post:', err);
+        }
     };
 
     return (
         <Box
-            component="form"
+            component={'form'}
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2, padding: 3 }}
         >
@@ -78,9 +100,14 @@ const NewPostPage = () => {
             </FormControl>
             <FormControl>
                 <FormLabel htmlFor="content">Content</FormLabel>
-                <textarea name="content" id="" style={{ height: '500px' }}></textarea>
+                <StyledTextarea
+                    id="content"
+                    name="content"
+                    placeholder="Enter post content"
+                />
+                {contentError && <p style={{ color: 'red' }}>Error: {contentErrorMessage}</p>}
             </FormControl>
-            <FormControl>
+            {/* <FormControl>
                 <FormLabel htmlFor="tags">Tags</FormLabel>
                 <TextField
                     fullWidth
@@ -88,14 +115,16 @@ const NewPostPage = () => {
                     name="tags"
                     placeholder="Enter tags separated by commas"
                 />
-            </FormControl>
-            <FormControlLabel
-                control={<Checkbox name="published" />}
-                label="Publish"
-            />
-            <Button type="submit" variant="contained" color="primary">
-                Create Post
+            </FormControl> */}
+            <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={loading}
+            >
+                {loading ? 'Creating...' : 'Create Post'}
             </Button>
+            {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}
         </Box>
     );
 };

@@ -1,7 +1,7 @@
 "use client"
 import { useState } from 'react';
 import { Typography } from '@mui/material';
-import FeedAuthor from '../FeedAuthor';
+import FeedPostInfo from '../FeedPostInfo';
 import CardMedia from '@mui/material/CardMedia';
 import { StyledCard, StyledCardContent, StyledTypography } from '../FeedPost/style'
 
@@ -46,23 +46,23 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
                     <CardMedia
                         component="img"
                         alt="green iguana"
-                        image={cardData.img}
+                        image={'https://picsum.photos/800/450?random=1'}
                         sx={cardMediaClass}
                     />
                 ) : <></>
             }
+            <FeedPostInfo 
+                author={cardData.author}
+                createdAt={cardData.createdAt}
+            />
             <StyledCardContent>
-                <Typography gutterBottom variant="caption" component="div">
-                    {cardData.tag}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                    {cardData.title}
-                </Typography>
-                <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                    {cardData.description}
+                {/* <Typography gutterBottom variant="caption" component="div">
+                    {cardData?.tag}
+                </Typography> */}
+                <StyledTypography color="text.secondary" gutterBottom>
+                    {cardData.content}
                 </StyledTypography>
             </StyledCardContent>
-            {/* <FeedAuthor authors={cardData.authors} /> */}
         </StyledCard >
     );
 

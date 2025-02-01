@@ -8,6 +8,7 @@ export const StyledCard = styled(Card)(({ theme }) => ({
     flexDirection: 'column',
     padding: 0,
     height: '100%',
+    marginBottom: '2rem',
     backgroundColor: (theme.vars || theme).palette.background.paper,
     '&:hover': {
         backgroundColor: 'transparent',

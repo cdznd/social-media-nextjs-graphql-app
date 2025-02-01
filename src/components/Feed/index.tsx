@@ -10,6 +10,9 @@ const GET_DATA = gql`
   query Posts {
     posts {
       id
+      title
+      content
+      createdAt
       likes {
         user {
           id
@@ -17,13 +20,18 @@ const GET_DATA = gql`
           image
         }
       }
+      author {
+        id
+        image
+        name
+      }
     }
   }
 `;
 
 async function getServerSideProps() {
   const apolloClient = createApolloClient()
-  const { data: feedData } = await apolloClient.query({
+  const { data: feedData, error } = await apolloClient.query({
     query: GET_DATA
   })
   return {
@@ -32,9 +40,7 @@ async function getServerSideProps() {
 }
 
 export default async function Feed() {
-  
   const { feedData } = await getServerSideProps()
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FeedHeader />

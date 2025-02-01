@@ -22,16 +22,6 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
         setFocusedCardIndex(null);
     };
 
-    const cardMediaClass =
-        variation === 'small' ? {
-            height: { sm: 'auto', md: '50%' },
-            aspectRatio: { sm: '16 / 9', md: '' },
-        } : {
-            aspectRatio: '16 / 9',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-        }
-
     return (
         <StyledCard
             variant="outlined"
@@ -41,24 +31,21 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
             className={focusedCardIndex === 0 ? 'Mui-focused' : ''}
             sx={variation === 'small' ? { height: '100%' } : {}}
         >
-            {
-                variation !== 'no-media' ? (
-                    <CardMedia
-                        component="img"
-                        alt="green iguana"
-                        image={'https://picsum.photos/800/450?random=1'}
-                        sx={cardMediaClass}
-                    />
-                ) : <></>
-            }
-            <FeedPostInfo 
+            <CardMedia
+                component="img"
+                alt="green iguana"
+                image={'https://picsum.photos/800/450?random=1'}
+                sx={{
+                    aspectRatio: '16 / 9',
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                }}
+            />
+            <FeedPostInfo
                 author={cardData.author}
                 createdAt={cardData.createdAt}
             />
             <StyledCardContent>
-                {/* <Typography gutterBottom variant="caption" component="div">
-                    {cardData?.tag}
-                </Typography> */}
                 <StyledTypography color="text.secondary" gutterBottom>
                     {cardData.content}
                 </StyledTypography>

@@ -32,7 +32,6 @@ export default function Home() {
   return (
     <>
       <Feed />
-      {/* <Latest /> */}
     </>
   );
 }

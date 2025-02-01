@@ -1,38 +1,22 @@
-"use client"
+import Feed from "@/components/Feed";
 
-import MainContent from "@/components/blog/components/MainContent";
-import Latest from "@/components/blog/components/Latest";
+export default async function Home() {
 
-import { useQuery, gql } from '@apollo/client';
+  // const { feedData } = await getServerSideProps()
 
-const GET_DATA = gql`
-  query Posts {
-    posts {
-      id
-      likes {
-        user {
-          id
-          name
-          image
-        }
-      }
-    }
-  }
-`;
+  // const { loading, error, data } = useQuery(GET_DATA);
 
-export default function Home() {
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error.message}</p>;
 
-  const { loading, error, data } = useQuery(GET_DATA);
+  // console.log('data here')
+  // console.log(data)
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
-  console.log('data here', data)
-
+  // const allPosts = data?.posts;
+  
   return (
     <>
-      <MainContent />
-      {/* <Latest /> */}
+      <Feed />
     </>
   );
 }

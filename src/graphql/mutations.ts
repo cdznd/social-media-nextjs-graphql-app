@@ -16,13 +16,27 @@ export const CREATE_POST_MUTATION = gql`
             content
         }
     }
-`
+`;
 
-export const GET_POSTS = gql`
-    query GetAllPosts {
-        posts {
-            id
-            title
+export const GET_FEED_POSTS = gql`
+  query Posts {
+    posts {
+      id
+      title
+      content
+      createdAt
+      likes {
+        user {
+          id
+          name
+          image
         }
+      }
+      author {
+        id
+        image
+        name
+      }
     }
-`
+  }
+`;

@@ -81,7 +81,10 @@ const resolvers = {
     users: () => prisma.user.findMany(),
     // Post Queries
     post: (_: any, args: { id: string }) => prisma.post.findUnique({ where: { id: args.id } }),
-    posts: () => prisma.post.findMany(),
+    posts: (_: any, args: { orderBy?: {[key: string]: 'asc' | 'desc' }}) => {
+      const orderBy = args.orderBy || { createdAt: 'desc' };
+      return prisma.post.findMany({ orderBy })
+    },
     // Category Queries
     category: (_: any, args: { id: string }) => prisma.category.findUnique({ where: { id: args.id } }),
     categories: () => prisma.category.findMany(),

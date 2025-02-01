@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
     Box,
@@ -8,10 +8,12 @@ import {
     FormLabel,
     TextField,
     Button,
+    Typography
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { CREATE_POST_MUTATION } from "@/graphql/mutations";
 import { StyledTextarea } from "@/components/common/CustomTextArea";
+import ClearIcon from '@mui/icons-material/Clear';
 
 type CreatePostDTO = {
     title: String,
@@ -27,6 +29,30 @@ const NewPostPage = () => {
     const [contentError, setContentError] = useState(false);
     const [titleErrorMessage, setTitleErrorMessage] = useState('');
     const [contentErrorMessage, setContentErrorMessage] = useState('');
+
+    const imageFileInputRef = useRef<HTMLInputElement>(null)
+
+    // Image Upload state
+    const [imageFile, setImageFile] = useState(null);
+    const [imageFilePreview, setImageFilePreview] = useState('');
+
+    // React.FormEvent<HTMLFormElement>
+    const handleFileChange = (event: any) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            setImageFile(selectedFile);
+            setImageFilePreview(URL.createObjectURL(selectedFile));
+        }
+    }
+
+    const handleReset = (event: any) => {
+        event.preventDefault();
+        if(imageFileInputRef.current) {
+            imageFileInputRef.current.value = ""
+            setImageFile(null);
+            setImageFilePreview('');
+        }
+    };
 
     const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
 
@@ -64,20 +90,25 @@ const NewPostPage = () => {
         if (!validateInputs(formData)) {
             return;
         }
-        const createPostData: CreatePostDTO = {
-            title: formData.get('title') as string,
-            content: formData.get('content') as string,
-            authorId: 'cm6h4havf00020hukais5q0g6'
+
+        if(imageFile) {
+
         }
-        try {
-            const response = await createPost({
-                variables: { ...createPostData },
-            });
-            console.log('Post created successfully:', response.data.createPost);
-            router.push('/app')
-        } catch (err) {
-            console.error('Error creating post:', err);
-        }
+
+        // const createPostData: CreatePostDTO = {
+        //     title: formData.get('title') as string,
+        //     content: formData.get('content') as string,
+        //     authorId: 'cm6h4havf00020hukais5q0g6'
+        // }
+        // try {
+        //     const response = await createPost({
+        //         variables: { ...createPostData },
+        //     });
+        //     console.log('Post created successfully:', response.data.createPost);
+        //     router.push('/app')
+        // } catch (err) {
+        //     console.error('Error creating post:', err);
+        // }
     };
 
     return (
@@ -107,15 +138,52 @@ const NewPostPage = () => {
                 />
                 {contentError && <p style={{ color: 'red' }}>Error: {contentErrorMessage}</p>}
             </FormControl>
-            {/* <FormControl>
-                <FormLabel htmlFor="tags">Tags</FormLabel>
-                <TextField
-                    fullWidth
-                    id="tags"
-                    name="tags"
-                    placeholder="Enter tags separated by commas"
+            <FormControl>
+                <FormLabel htmlFor="raised-button-file">Image</FormLabel>
+                <input
+                    ref={imageFileInputRef}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="raised-button-file"
+                    type="file"
+                    name="imageFile"
+                    onChange={handleFileChange}
                 />
-            </FormControl> */}
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '1rem',
+                    border: '1px solid #666',
+                    borderRadius: '1rem'
+                }}>
+                    {
+                        !imageFilePreview ? (
+                            <FormLabel htmlFor="raised-button-file" sx={{ mb: 0 }}>
+                                <Button variant="contained" component="span">
+                                    Choose Image
+                                </Button>
+                            </FormLabel>
+                        ) : <FormLabel>
+                            <Button 
+                                variant="outlined"
+                                component="span"
+                                onClick={(event) => handleReset(event)}
+                            >
+                                <ClearIcon />
+                            </Button>
+                        </FormLabel>
+                    }
+                    {imageFilePreview && (
+                        <Box sx={{
+                            padding: '2rem',
+                            height: '500px'
+                        }}>
+                            <img src={imageFilePreview} alt="Preview" style={{ maxWidth: '100%', height: '100%' }} />
+                        </Box>
+                    )}
+                </Box>
+            </FormControl>
             <Button
                 type="submit"
                 variant="contained"

@@ -60,33 +60,48 @@ const cardData = [
 
 import FeedPost from '../FeedPost';
 
-export default function FeedContent() {
+export default function FeedContent({ data }: { data: any }) {
+
+    const posts = data?.posts
+
+    if(posts.lenght <= 0) {
+        return <h1>No data to display</h1>
+    }
+
+    console.log('data inside feedcontent', posts)
+
+    console.log(posts[0])
 
     return (
         <>
             <Grid container spacing={2} columns={12}>
                 <Grid size={{ xs: 12, md: 8 }}>
-                    <FeedPost cardData={cardData[0]} />
+                    { posts[0] ? <FeedPost cardData={posts[0]} /> : <></> }
                 </Grid>
-                <Grid size={{ xs: 12, md: 4 }}>
+                {/* <Grid size={{ xs: 12, md: 4 }}>
                     <Box
                         sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}
                     >
-                        <FeedPost cardData={cardData[1]} variation={'no-media'} />
-                        <FeedPost cardData={cardData[2]} variation={'no-media'} />
+                        { data[1] ?? <FeedPost cardData={data[1]} variation={'no-media'} /> }
+                        { data[2] ?? <FeedPost cardData={data[2]} variation={'no-media'} /> }
                     </Box>
                 </Grid>
                 <Grid size={{ xs: 12, md: 4 }}>
-                    <FeedPost cardData={cardData[3]} variation={'small'} />
+                    { data[3] ? <FeedPost cardData={data[3]} variation={'small'} /> : <></> }
                 </Grid>
                 <Grid size={{ xs: 12, md: 4 }}>
-                    <FeedPost cardData={cardData[4]} variation={'small'} />
+                    { data[4] ? <FeedPost cardData={data[4]} variation={'small'} /> : <></>}
                 </Grid>
                 <Grid size={{ xs: 12, md: 4 }}>
-                    <FeedPost cardData={cardData[5]} />
-                </Grid>
+                    { data[5] ? <FeedPost cardData={data[5]} /> : <></>}
+                </Grid> */}
             </Grid>
-            <hr />
+        </>
+    )
+}
+
+
+{/* <hr />
             <Grid container spacing={2} columns={12}>
                 <Grid size={{ xs: 12, md: 6 }}>
                     <FeedPost cardData={cardData[0]} />
@@ -108,7 +123,4 @@ export default function FeedContent() {
                 <Grid size={{ xs: 12, md: 4 }}>
                     <FeedPost cardData={cardData[5]} variation={'small'} />
                 </Grid>
-            </Grid>
-        </>
-    )
-}
+            </Grid> */}

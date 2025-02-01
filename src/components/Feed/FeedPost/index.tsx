@@ -1,3 +1,4 @@
+"use client"
 import { useState } from 'react';
 import { Typography } from '@mui/material';
 import FeedAuthor from '../FeedAuthor';
@@ -5,6 +6,9 @@ import CardMedia from '@mui/material/CardMedia';
 import { StyledCard, StyledCardContent, StyledTypography } from '../FeedPost/style'
 
 export default function ({ cardData, variation }: { cardData: any, variation?: string }) {
+
+    console.log('card data here')
+    console.log(cardData)
 
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
         null,
@@ -58,7 +62,7 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
                     {cardData.description}
                 </StyledTypography>
             </StyledCardContent>
-            <FeedAuthor authors={cardData.authors} />
+            {/* <FeedAuthor authors={cardData.authors} /> */}
         </StyledCard >
     );
 

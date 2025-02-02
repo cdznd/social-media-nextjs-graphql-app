@@ -17,10 +17,6 @@ async function getServerSideProps() {
 
 export default async function Feed() {
   const { feedData } = await getServerSideProps()
-
-  console.log('feedData here')
-  console.log(feedData)
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FeedHeader />

@@ -18,7 +18,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 type CreatePostDTO = {
     title: String,
     content: String,
-    authorId: String
+    authorId: String,
+    thumbnail: String
 };
 
 const NewPostPage = () => {
@@ -57,12 +58,9 @@ const NewPostPage = () => {
     const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
 
     const validateInputs = (formData: any) => {
-
         let isValid = true;
-
         const title = formData.get('title')
         const content = formData.get('content')
-
         if (!title || title.length < 5) {
             setTitleError(true);
             setTitleErrorMessage('Title must be at least 5 characters long.');
@@ -71,7 +69,6 @@ const NewPostPage = () => {
             setTitleError(false);
             setTitleErrorMessage('');
         }
-
         if (!content || content.length < 10) {
             setContentError(true);
             setContentErrorMessage('Content must be at least 10 characters long.');
@@ -80,7 +77,6 @@ const NewPostPage = () => {
             setContentError(false);
             setContentErrorMessage('');
         }
-
         return isValid
     };
 
@@ -90,9 +86,8 @@ const NewPostPage = () => {
         if (!validateInputs(formData)) {
             return;
         }
-
+        let imageFileS3Url = '';
         if (imageFile) {
-            console.log("Uploading image file...", imageFile);
             formData.append("imageFile", imageFile);
             try {
                 const response = await fetch("/api/s3-upload", {
@@ -103,26 +98,26 @@ const NewPostPage = () => {
                 if (!response.ok) {
                     throw new Error(result.error || "Upload failed");
                 }
-                console.log("Upload successful:", result);
+                imageFileS3Url = result?.fileUrl
             } catch (error) {
                 console.error("Error uploading file:", error);
             }
         }
-
-        // const createPostData: CreatePostDTO = {
-        //     title: formData.get('title') as string,
-        //     content: formData.get('content') as string,
-        //     authorId: 'cm6h4havf00020hukais5q0g6'
-        // }
-        // try {
-        //     const response = await createPost({
-        //         variables: { ...createPostData },
-        //     });
-        //     console.log('Post created successfully:', response.data.createPost);
-        //     router.push('/app')
-        // } catch (err) {
-        //     console.error('Error creating post:', err);
-        // }
+        const createPostData: CreatePostDTO = {
+            title: formData.get('title') as string,
+            content: formData.get('content') as string,
+            authorId: 'cm6h4havf00020hukais5q0g6',
+            thumbnail: imageFileS3Url ?? ''
+        }
+        try {
+            const response = await createPost({
+                variables: { ...createPostData },
+            });
+            console.log('Post created successfully:', response.data.createPost);
+            router.push('/app')
+        } catch (err) {
+            console.error('Error creating post:', err);
+        }
     };
 
     return (

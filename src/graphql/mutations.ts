@@ -5,11 +5,13 @@ export const CREATE_POST_MUTATION = gql`
         $title: String!,
         $content: String!,
         $authorId: String!
+        $thumbnail: String
     ) {
         createPost(
             title: $title,
             content: $content,
-            authorId: $authorId
+            authorId: $authorId,
+            thumbnail: $thumbnail
         ) {
             id,
             title,
@@ -25,6 +27,7 @@ export const GET_FEED_POSTS = gql`
       title
       content
       createdAt
+      thumbnail
       likes {
         user {
           id

@@ -2,43 +2,32 @@ import Box from '@mui/material/Box';
 import FeedHeader from '@/components/Feed/FeedHeader';
 import FeedContent from '@/components/Feed/FeedContent';
 
-import { gql } from '@apollo/client';
-
 import createApolloClient from "@/lib/apolloClient";
-
-const GET_DATA = gql`
-  query Posts {
-    posts {
-      id
-      likes {
-        user {
-          id
-          name
-          image
-        }
-      }
-    }
-  }
-`;
+import { GET_FEED_POSTS } from '@/graphql/mutations';
+import ErrorAlert from '../ErrorAlert';
 
 async function getServerSideProps() {
   const apolloClient = createApolloClient()
-  const { data: feedData } = await apolloClient.query({
-    query: GET_DATA
-  })
-  return {
-    feedData
+  try {
+    const { data: feedData } = await apolloClient.query({
+      query: GET_FEED_POSTS
+    })
+    return { feedData, feedError: null }
+  } catch (error) {
+    return { feedData: null, feedError: error }
   }
 }
 
 export default async function Feed() {
-  
-  const { feedData } = await getServerSideProps()
-
+  const { feedData, feedError } = await getServerSideProps()
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FeedHeader />
-      <FeedContent data={feedData} />
+      {
+        !feedError ?
+          <FeedContent data={feedData} />
+        : <ErrorAlert message={`${feedError}`} />
+      }
     </Box>
   );
 }

@@ -1,14 +1,11 @@
 "use client"
 import { useState } from 'react';
 import { Typography } from '@mui/material';
-import FeedAuthor from '../FeedAuthor';
+import FeedPostInfo from '../FeedPostInfo';
 import CardMedia from '@mui/material/CardMedia';
 import { StyledCard, StyledCardContent, StyledTypography } from '../FeedPost/style'
 
 export default function ({ cardData, variation }: { cardData: any, variation?: string }) {
-
-    console.log('card data here')
-    console.log(cardData)
 
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
         null,
@@ -22,16 +19,6 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
         setFocusedCardIndex(null);
     };
 
-    const cardMediaClass =
-        variation === 'small' ? {
-            height: { sm: 'auto', md: '50%' },
-            aspectRatio: { sm: '16 / 9', md: '' },
-        } : {
-            aspectRatio: '16 / 9',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-        }
-
     return (
         <StyledCard
             variant="outlined"
@@ -42,27 +29,28 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
             sx={variation === 'small' ? { height: '100%' } : {}}
         >
             {
-                variation !== 'no-media' ? (
+                cardData?.thumbnail && (
                     <CardMedia
                         component="img"
                         alt="green iguana"
-                        image={cardData.img}
-                        sx={cardMediaClass}
+                        image={cardData?.thumbnail ?? ''}
+                        sx={{
+                            aspectRatio: '16 / 9',
+                            borderBottom: '1px solid',
+                            borderColor: 'divider',
+                        }}
                     />
-                ) : <></>
+                )
             }
+            <FeedPostInfo
+                author={cardData.author}
+                createdAt={cardData.createdAt}
+            />
             <StyledCardContent>
-                <Typography gutterBottom variant="caption" component="div">
-                    {cardData.tag}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                    {cardData.title}
-                </Typography>
-                <StyledTypography variant="body2" color="text.secondary" gutterBottom>
-                    {cardData.description}
+                <StyledTypography color="text.secondary" gutterBottom>
+                    {cardData.content}
                 </StyledTypography>
             </StyledCardContent>
-            {/* <FeedAuthor authors={cardData.authors} /> */}
         </StyledCard >
     );
 

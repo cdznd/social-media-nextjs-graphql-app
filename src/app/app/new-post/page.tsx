@@ -91,8 +91,22 @@ const NewPostPage = () => {
             return;
         }
 
-        if(imageFile) {
-
+        if (imageFile) {
+            console.log("Uploading image file...", imageFile);
+            formData.append("imageFile", imageFile);
+            try {
+                const response = await fetch("/api/s3-upload", {
+                    method: "POST",
+                    body: formData,
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || "Upload failed");
+                }
+                console.log("Upload successful:", result);
+            } catch (error) {
+                console.error("Error uploading file:", error);
+            }
         }
 
         // const createPostData: CreatePostDTO = {

@@ -2,8 +2,7 @@ import { Box, Avatar, Card, CardContent, Typography, Container } from "@mui/mate
 import { auth } from "@/lib/auth";
 import createApolloClient from "@/lib/apolloClient";
 import { GET_USER_PROFILE } from "@/graphql/query/user";
-import MyPostsCard from "@/components/MyProfile/PostList";
-import PostList from "@/components/MyProfile/PostList";
+import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileCard from "@/components/MyProfile/UserProfileCard";
 
 async function getCurrentProfileData(userId: any) {
@@ -36,11 +35,11 @@ export default async function MyProfilePage() {
             <UserProfileCard
                 user={user}
             />
-            <PostList
+            <PostListCard
                 title={'My Posts'}
                 posts={userPosts}
             />
-            <PostList
+            <PostListCard
                 title={'Liked Posts'}
                 posts={userLikedPosts}
             />

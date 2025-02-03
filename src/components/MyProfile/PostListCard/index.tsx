@@ -5,12 +5,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import PostCard from "@/components/PostCard";
 
-type PostListProps = {
+type PostListCardProps = {
     title: String,
     posts: any[]
 }
 
-const PostList = ({ title, posts }: PostListProps) => {
+const PostListCard = ({ title, posts }: PostListCardProps) => {
 
     const onDeleteAll = () => {
         const x = window.confirm('Are you sure!')
@@ -93,4 +93,4 @@ const PostList = ({ title, posts }: PostListProps) => {
     );
 };
 
-export default PostList;
+export default PostListCard;

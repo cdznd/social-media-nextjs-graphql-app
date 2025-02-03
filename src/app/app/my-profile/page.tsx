@@ -1,9 +1,10 @@
-import { Box, Avatar, Card, CardContent, Typography, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import { auth } from "@/lib/auth";
 import createApolloClient from "@/lib/apolloClient";
 import { GET_USER_PROFILE } from "@/graphql/query/user";
 import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileCard from "@/components/MyProfile/UserProfileCard";
+import ErrorAlert from "@/components/ErrorAlert";
 
 async function getCurrentProfileData(userId: any) {
     const apolloClient = createApolloClient()
@@ -21,15 +22,12 @@ async function getCurrentProfileData(userId: any) {
 export default async function MyProfilePage() {
     const session = await auth()
     const { data } = await getCurrentProfileData(session?.user?.id)
-
     const user = data?.user
     if (!user) {
-        throw ('No User found')
+        return <ErrorAlert message={'No User found'} />
     }
-
     const userPosts = user?.posts ?? []
     const userLikedPosts = user?.likes ?? []
-
     return (
         <Container>
             <UserProfileCard

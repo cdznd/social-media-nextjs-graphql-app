@@ -1,6 +1,6 @@
 import { Avatar, Card, CardContent, Typography } from "@mui/material";
 
-interface UserProfileCardProps {
+type UserProfileCardProps = {
   user: {
     name: string;
     email: string;
@@ -8,7 +8,7 @@ interface UserProfileCardProps {
   };
 }
 
-const UserProfileCard: React.FC<UserProfileCardProps> = ({ user }) => {
+export default function UserProfileCard({ user }: UserProfileCardProps) {
   return (
     <Card sx={{ p: 3, textAlign: "center", mb: 4, display: "flex", justifyContent: "start" }}>
       <Avatar src={user.image} alt={user.name} sx={{ width: 100, height: 100 }} />
@@ -21,5 +21,3 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ user }) => {
     </Card>
   );
 };
-
-export default UserProfileCard;

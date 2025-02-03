@@ -10,7 +10,7 @@ type PostListCardProps = {
     posts: any[]
 }
 
-const PostListCard = ({ title, posts }: PostListCardProps) => {
+export default function PostListCard({ title, posts }: PostListCardProps) {
 
     const onDeleteAll = () => {
         const x = window.confirm('Are you sure!')
@@ -92,5 +92,3 @@ const PostListCard = ({ title, posts }: PostListCardProps) => {
         </Card>
     );
 };
-
-export default PostListCard;

@@ -1,10 +1,5 @@
 import NextAuth, { SessionStrategy, getServerSession } from "next-auth"
 import type { NextAuthOptions } from "next-auth"
-import type {
-    GetServerSidePropsContext,
-    NextApiRequest,
-    NextApiResponse,
-} from "next"
 import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "./prisma"
@@ -46,12 +41,6 @@ export const authOptions: NextAuthOptions = {
 
 export const handler = NextAuth(authOptions);
 
-// Use it in server contexts
-export function auth(
-    // ...args:
-    //     | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    //     | [NextApiRequest, NextApiResponse]
-    //     | []
-) {
+export function auth() {
     return getServerSession(authOptions)
 }

@@ -1,11 +1,16 @@
 "use client"
 import { useState } from 'react';
 import { Typography } from '@mui/material';
-import FeedPostInfo from '../FeedPostInfo';
+import FeedPostInfo from '../Feed/FeedPostInfo';
 import CardMedia from '@mui/material/CardMedia';
-import { StyledCard, StyledCardContent, StyledTypography } from '../FeedPost/style'
+import { StyledPostCard, StyledPostCardContent, StyledTypography } from './style'
 
-export default function ({ cardData, variation }: { cardData: any, variation?: string }) {
+type PostCardProps = {
+    postData: any,
+    variation?: string
+}
+
+export default function PostCard({ postData, variation }: PostCardProps) {
 
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
         null,
@@ -20,7 +25,7 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
     };
 
     return (
-        <StyledCard
+        <StyledPostCard
             variant="outlined"
             onFocus={() => handleFocus(0)}
             onBlur={handleBlur}
@@ -29,11 +34,11 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
             sx={variation === 'small' ? { height: '100%' } : {}}
         >
             {
-                cardData?.thumbnail && (
+                (postData?.thumbnail || variation === 'no-media') && (
                     <CardMedia
                         component="img"
                         alt="green iguana"
-                        image={cardData?.thumbnail ?? ''}
+                        image={postData?.thumbnail ?? ''}
                         sx={{
                             aspectRatio: '16 / 9',
                             borderBottom: '1px solid',
@@ -43,15 +48,15 @@ export default function ({ cardData, variation }: { cardData: any, variation?: s
                 )
             }
             <FeedPostInfo
-                author={cardData.author}
-                createdAt={cardData.createdAt}
+                author={postData.author}
+                createdAt={postData.createdAt}
             />
-            <StyledCardContent>
+            <StyledPostCardContent>
                 <StyledTypography color="text.secondary" gutterBottom>
-                    {cardData.content}
+                    {postData.content}
                 </StyledTypography>
-            </StyledCardContent>
-        </StyledCard >
+            </StyledPostCardContent>
+        </StyledPostCard>
     );
 
 }

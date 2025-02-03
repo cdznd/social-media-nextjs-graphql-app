@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 
-import FeedPost from '../FeedPost';
+import FeedPost from '../../PostCard';
 import { Container } from '@mui/material';
 
 export default function FeedContent({ data }: { data: any }) {

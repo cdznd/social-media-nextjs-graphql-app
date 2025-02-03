@@ -3,7 +3,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
-export const StyledCard = styled(Card)(({ theme }) => ({
+export const StyledPostCard = styled(Card)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: 0,
@@ -21,7 +21,7 @@ export const StyledCard = styled(Card)(({ theme }) => ({
     },
 }));
 
-export const StyledCardContent = styled(CardContent)({
+export const StyledPostCardContent = styled(CardContent)({
     display: 'flex',
     flexDirection: 'column',
     gap: 4,

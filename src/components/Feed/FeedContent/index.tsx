@@ -12,9 +12,6 @@ export default function FeedContent({ data }: { data: any }) {
         return <h1>No data to display</h1>
     }
 
-    console.log('data inside feedcontent', posts)
-    console.log(posts[0])
-
     return (
         <Box
             sx={{

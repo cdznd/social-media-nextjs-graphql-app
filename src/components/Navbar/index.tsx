@@ -44,6 +44,9 @@ export default function Navbar() {
 
   const userLogged = session?.user
 
+  console.log('userLogged by useSession client')
+  console.log(session)
+
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
@@ -58,6 +61,10 @@ export default function Navbar() {
 
   const handleLogout = () => {
     signOut({ redirect: false })
+  }
+
+  const handleOpenMyProfile = () => {
+    router.push('app/my-profile')
   }
 
   const navbarItems = [
@@ -173,6 +180,11 @@ export default function Navbar() {
                       <MenuItem onClick={handleLogout}>
                         <Button color="primary" variant="contained" size="small" fullWidth>
                           Logout
+                        </Button>
+                      </MenuItem>
+                      <MenuItem onClick={handleOpenMyProfile}>
+                        <Button color="primary" variant="contained" size="small" fullWidth>
+                          My Profile
                         </Button>
                       </MenuItem>
                     </Menu>

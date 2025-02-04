@@ -1,40 +1,17 @@
-"use client"
-
-import { Card, Typography, Box, IconButton, Menu, MenuItem, Alert } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useState } from "react";
+import { Card, Typography, Box, Alert } from "@mui/material";
 import PostCard from "@/components/PostCard";
 
 type PostListCardProps = {
     title: String,
-    posts: any[]
+    posts: any[],
+    withActions: Boolean
 }
 
-export default function PostListCard({ title, posts }: PostListCardProps) {
-
-    const onDeleteAll = () => {
-        const x = window.confirm('Are you sure!')
-        if (x) {
-
-        }
-    }
-
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-
-    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
+export default function PostListCard({ title, posts, withActions }: PostListCardProps) {
     const renderPosts =
         posts.map((post, key) => {
             return <PostCard postData={post} key={key} />
         })
-
     return (
         <Card
             sx={{
@@ -48,7 +25,6 @@ export default function PostListCard({ title, posts }: PostListCardProps) {
                 borderRadius: 2
             }}
         >
-
             <Box
                 sx={{
                     display: "flex",
@@ -60,23 +36,7 @@ export default function PostListCard({ title, posts }: PostListCardProps) {
                 <Typography variant="h5" fontWeight={600}>
                     {title}
                 </Typography>
-                {/* Dropdown Menu */}
-                <IconButton onClick={handleMenuOpen}>
-                    <MoreVertIcon />
-                </IconButton>
-                {/* Dropdown Menu */}
-                <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-                    <MenuItem
-                        onClick={() => {
-                            handleMenuClose();
-                            onDeleteAll();
-                        }}
-                    >
-                        Delete All Posts
-                    </MenuItem>
-                </Menu>
             </Box>
-
             {posts.length > 0 ? (
                 <Box
                     sx={{
@@ -88,7 +48,6 @@ export default function PostListCard({ title, posts }: PostListCardProps) {
                     {renderPosts}
                 </Box>
             ) : <Alert severity="info">No Posts to display</Alert>}
-
         </Card>
     );
 };

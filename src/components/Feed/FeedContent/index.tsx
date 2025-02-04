@@ -1,20 +1,20 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 
-import FeedPost from '../FeedPost';
+import FeedPost from '../../PostCard';
 import { Container } from '@mui/material';
 
-export default function FeedContent({ data }: { data: any }) {
+type FeedContentProps = {
+    posts: any
+}
 
-    const posts = data?.posts
+export default function FeedContent({ posts }: FeedContentProps) {
+
+    console.log('checking posts', posts)
 
     if (posts.lenght <= 0) {
         return <h1>No data to display</h1>
     }
-
-    console.log('data inside feedcontent', posts)
-    console.log(posts[0])
-
     return (
         <Box
             sx={{
@@ -24,7 +24,7 @@ export default function FeedContent({ data }: { data: any }) {
         >
             {posts.map((post: any) => {
                 return (
-                    <FeedPost cardData={post} />
+                    <FeedPost postData={post} />
                 )
             })}
         </Box>

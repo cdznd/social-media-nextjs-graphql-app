@@ -6,7 +6,7 @@ import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileCard from "@/components/MyProfile/UserProfileCard";
 import ErrorAlert from "@/components/ErrorAlert";
 
-async function getCurrentProfileData(userId: any) {
+async function getCurrentProfileData(userId: string) {
     const apolloClient = createApolloClient()
     try {
         const { data: currentProfileData } = await apolloClient.query({
@@ -21,7 +21,7 @@ async function getCurrentProfileData(userId: any) {
 
 export default async function MyProfilePage() {
     const session = await auth()
-    const { data } = await getCurrentProfileData(session?.user?.id)
+    const { data } = await getCurrentProfileData(session?.user?.id!)
     const user = data?.user
     if (!user) {
         return <ErrorAlert message={'No User found'} />

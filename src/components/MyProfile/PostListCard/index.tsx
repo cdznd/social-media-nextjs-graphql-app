@@ -4,10 +4,9 @@ import PostCard from "@/components/PostCard";
 type PostListCardProps = {
     title: String,
     posts: any[],
-    withActions: Boolean
 }
 
-export default function PostListCard({ title, posts, withActions }: PostListCardProps) {
+export default function PostListCard({ title, posts }: PostListCardProps) {
     const renderPosts =
         posts.map((post, key) => {
             return <PostCard postData={post} key={key} />

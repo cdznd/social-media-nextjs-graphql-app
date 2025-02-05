@@ -2,10 +2,21 @@
 import { Box, Chip } from "@mui/material"
 import Search from "@/components/Search";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 export default function FeedHeader() {
 
     const handleClick = () => {
         console.info('You clicked the filter chip.');
+    };
+    
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    
+    const handleCategoryClick = (category: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("category", category);
+        router.push(`?${params.toString()}`, { scroll: false });
     };
 
     return (
@@ -30,7 +41,7 @@ export default function FeedHeader() {
             >
                 <Chip onClick={handleClick} size="medium" label="All categories" />
                 <Chip
-                    onClick={handleClick}
+                    onClick={() => handleCategoryClick('company')}
                     size="medium"
                     label="Company"
                     sx={{

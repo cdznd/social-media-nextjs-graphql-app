@@ -81,9 +81,35 @@ const resolvers = {
     users: () => prisma.user.findMany(),
     // Post Queries
     post: (_: any, args: { id: string }) => prisma.post.findUnique({ where: { id: args.id } }),
-    posts: (_: any, args: { orderBy?: {[key: string]: 'asc' | 'desc' }}) => {
+    posts: async (
+      _: any,
+      args: {
+        userId?: string,
+        search?: string,
+        category?: string,
+        orderBy?: { [key: string]: 'asc' | 'desc' } }
+    ) => {
+      // For this resolver is fetch feed posts, I want to return only
+      // posts by the current user, and current user friends
+      const {
+        userId,
+        search,
+        category,
+      } = args;
       const orderBy = args.orderBy || { createdAt: 'desc' };
-      return prisma.post.findMany({ orderBy })
+      return prisma.post.findMany({
+        where: {
+          ...(search ? { title: { contains: search, mode: "insensitive" } } : {}),
+          // ...(search ? { content: { contains: search, mode: "insensitive" } } : {}),
+        },
+        orderBy,
+        include: {
+          author: true,
+          likes: { include: { user: true } },
+          comments: true,
+          categories: true,
+        },
+      });
     },
     // Category Queries
     category: (_: any, args: { id: string }) => prisma.category.findUnique({ where: { id: args.id } }),

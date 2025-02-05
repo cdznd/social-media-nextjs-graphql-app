@@ -112,7 +112,11 @@ const typeDefs = gql`
 
     # Post Queries
     post(id: ID!): Post
-    posts: [Post!]!
+    posts(
+      userId: ID
+      search: String
+      category: String,
+    ): [Post!]!
 
     # Category Queries
     category(id: ID!): Category

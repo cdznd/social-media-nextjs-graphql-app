@@ -27,6 +27,11 @@ type CreatePostDTO = {
     thumbnail: String
 };
 
+type Category = {
+    value: String
+    label: String,
+}
+
 const NewPostPage = () => {
 
     const router = useRouter()
@@ -60,11 +65,16 @@ const NewPostPage = () => {
         }
     };
 
-    const categories = [
+    const categories: Category[] = [
         { value: "electronics", label: "Electronics" },
         { value: "fashion", label: "Fashion" },
         { value: "home", label: "Home" },
-        { value: "books", label: "Books" }
+        { value: "books", label: "Books" },
+        { value: "hacking", label: "Hacking" },
+        { value: "entertainemnte", label: 'Entertainement'},
+        { value: "cars", label: "Cars" },
+        { value: "bikes", label: "Bikes"},
+        { value: "Unit tests", label: "Unit tests"}
     ];
 
     const [selectedValues, setSelectedValues] = useState([]);
@@ -215,11 +225,10 @@ const NewPostPage = () => {
                 </Box>
             </FormControl>
 
-            {/* Here it starts */}
             <FormControl>
                 <FormLabel id="category-selector-label">Select Categories</FormLabel>
                 <FormGroup row>
-                    {categories.map((category: any) => (
+                    {categories.map((category: Category) => (
                         <FormControlLabel
                             key={category.value}
                             control={
@@ -227,16 +236,19 @@ const NewPostPage = () => {
                                     checked={selectedValues.includes(category.value)}
                                     onChange={handleChange}
                                     value={category.value}
-                                    sx={{ display: "none" }} // Hide default checkbox appearance
+                                    sx={{ display: "none" }}
                                 />
                             }
                             label={
                                 <Box
                                     sx={{
-                                        border: "2px solid",
+                                        border: '1px solid #666',
                                         borderColor: selectedValues.includes(category.value) ? "primary.main" : "grey.400",
-                                        borderRadius: 2,
-                                        padding: 2,
+                                        borderRadius: '1rem',
+                                        padding: '.8rem',
+                                        paddingX: '1.2rem',
+                                        marginRight: '.8rem',
+                                        marginBottom: '.8rem',
                                         cursor: "pointer",
                                         backgroundColor: selectedValues.includes(category.value) ? "primary.light" : "transparent",
                                         transition: "0.3s",
@@ -246,6 +258,9 @@ const NewPostPage = () => {
                                     {category.label}
                                 </Box>
                             }
+                            sx={{
+                                margin: 0
+                            }}
                         />
                     ))}
                 </FormGroup>

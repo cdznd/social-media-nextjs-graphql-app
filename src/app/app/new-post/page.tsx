@@ -8,7 +8,12 @@ import {
     FormLabel,
     TextField,
     Button,
-    Typography
+    Typography,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
+    FormGroup,
+    Checkbox
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { CREATE_POST_MUTATION } from "@/graphql/mutations";
@@ -48,11 +53,27 @@ const NewPostPage = () => {
 
     const handleReset = (event: any) => {
         event.preventDefault();
-        if(imageFileInputRef.current) {
+        if (imageFileInputRef.current) {
             imageFileInputRef.current.value = ""
             setImageFile(null);
             setImageFilePreview('');
         }
+    };
+
+    const categories = [
+        { value: "electronics", label: "Electronics" },
+        { value: "fashion", label: "Fashion" },
+        { value: "home", label: "Home" },
+        { value: "books", label: "Books" }
+    ];
+
+    const [selectedValues, setSelectedValues] = useState([]);
+
+    const handleChange = (event: any) => {
+        const value = event.target.value;
+        setSelectedValues((prev: any) =>
+            prev.includes(value) ? prev.filter((item: any) => item !== value) : [...prev, value]
+        );
     };
 
     const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
@@ -174,7 +195,7 @@ const NewPostPage = () => {
                                 </Button>
                             </FormLabel>
                         ) : <FormLabel>
-                            <Button 
+                            <Button
                                 variant="outlined"
                                 component="span"
                                 onClick={(event) => handleReset(event)}
@@ -193,6 +214,43 @@ const NewPostPage = () => {
                     )}
                 </Box>
             </FormControl>
+
+            {/* Here it starts */}
+            <FormControl>
+                <FormLabel id="category-selector-label">Select Categories</FormLabel>
+                <FormGroup row>
+                    {categories.map((category: any) => (
+                        <FormControlLabel
+                            key={category.value}
+                            control={
+                                <Checkbox
+                                    checked={selectedValues.includes(category.value)}
+                                    onChange={handleChange}
+                                    value={category.value}
+                                    sx={{ display: "none" }} // Hide default checkbox appearance
+                                />
+                            }
+                            label={
+                                <Box
+                                    sx={{
+                                        border: "2px solid",
+                                        borderColor: selectedValues.includes(category.value) ? "primary.main" : "grey.400",
+                                        borderRadius: 2,
+                                        padding: 2,
+                                        cursor: "pointer",
+                                        backgroundColor: selectedValues.includes(category.value) ? "primary.light" : "transparent",
+                                        transition: "0.3s",
+                                        textAlign: "center"
+                                    }}
+                                >
+                                    {category.label}
+                                </Box>
+                            }
+                        />
+                    ))}
+                </FormGroup>
+            </FormControl>
+
             <Button
                 type="submit"
                 variant="contained"

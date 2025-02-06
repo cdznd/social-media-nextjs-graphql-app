@@ -1,6 +1,6 @@
-import { gql } from 'graphql-tag';
 
-const typeDefs = gql`
+
+
   scalar DateTime
 
   type User {
@@ -156,6 +156,3 @@ const typeDefs = gql`
     updateComment(id: ID!, content: String!): Comment!
     deleteComment(id: ID!): Comment!
   }
-`;
-
-export default typeDefs;

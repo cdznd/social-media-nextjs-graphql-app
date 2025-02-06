@@ -1,7 +1,7 @@
 import { Container } from "@mui/material";
 import { auth } from "@/lib/auth";
 import createApolloClient from "@/lib/apolloClient";
-import { GET_USER_PROFILE } from "@/graphql/query/user";
+import { GET_USER_PROFILE } from "@/lib/graphql/queries/user";
 import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileCard from "@/components/MyProfile/UserProfileCard";
 import ErrorAlert from "@/components/ErrorAlert";

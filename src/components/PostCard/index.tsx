@@ -47,6 +47,11 @@ export default function PostCard({ postData, variation }: PostCardProps) {
                     />
                 )
             }
+            {
+                postData.categories.map(c => {
+                    return <p key={c.name}>{c.name}</p>
+                })
+            }
             <FeedPostInfo
                 author={postData.author}
                 createdAt={postData.createdAt}

@@ -81,13 +81,14 @@ const resolvers = {
     users: () => prisma.user.findMany(),
     // Post Queries
     post: (_: any, args: { id: string }) => prisma.post.findUnique({ where: { id: args.id } }),
-    posts: async (
+    posts: (
       _: any,
       args: {
         userId?: string,
         search?: string,
         category?: string,
-        orderBy?: { [key: string]: 'asc' | 'desc' } }
+        orderBy?: { [key: string]: 'asc' | 'desc' }
+      }
     ) => {
       // For this resolver is fetch feed posts, I want to return only
       // posts by the current user, and current user friends
@@ -129,8 +130,30 @@ const resolvers = {
       prisma.user.update({ where: { id: args.id }, data: { name: args.name, email: args.email, image: args.image } }),
     deleteUser: (_: any, args: { id: string }) => prisma.user.delete({ where: { id: args.id } }),
     // Post Mutations
-    createPost: (_: any, args: { title: string; content: string; authorId: string; thumbnail?: string }) =>
-      prisma.post.create({ data: { title: args.title, content: args.content, authorId: args.authorId, thumbnail: args.thumbnail } }),
+    createPost: (
+      _: any,
+      args: {
+        title: string;
+        content: string;
+        authorId: string;
+        thumbnail?: string;
+        categories?: string[]
+      }) => {
+      return prisma.post.create({
+        data: {
+          title: args.title,
+          content: args.content,
+          authorId: args.authorId,
+          thumbnail: args.thumbnail,
+          categories: {
+            connectOrCreate: args.categories?.map((categoryName) => ({
+              where: { name: categoryName },
+              create: { name: categoryName },
+            })) || [],
+          },
+        },
+      });
+    },
     updatePost: (_: any, args: { id: string; title?: string; content?: string; thumbnail?: string }) =>
       prisma.post.update({ where: { id: args.id }, data: { title: args.title, content: args.content, thumbnail: args.thumbnail } }),
     deletePost: (_: any, args: { id: string }) => prisma.post.delete({ where: { id: args.id } }),

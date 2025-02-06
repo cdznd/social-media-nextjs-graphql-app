@@ -138,7 +138,7 @@ const typeDefs = gql`
     deleteUser(id: ID!): User!
 
     # Post Mutations
-    createPost(title: String!, content: String!, authorId: String!, thumbnail: String): Post!
+    createPost(title: String!, content: String!, authorId: String!, thumbnail: String, categories: [String]): Post!
     updatePost(id: ID!, title: String, content: String, thumbnail: String): Post!
     deletePost(id: ID!): Post!
 

@@ -46,6 +46,9 @@ export const GET_FEED_POSTS = gql`
         image
         name
       }
+      categories {
+        name
+      }
     }
   }
 `;

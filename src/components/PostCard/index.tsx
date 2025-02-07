@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react';
-import { Typography } from '@mui/material';
+import { Chip, Typography, Box } from '@mui/material';
 import FeedPostInfo from '../Feed/FeedPostInfo';
 import CardMedia from '@mui/material/CardMedia';
 import { StyledPostCard, StyledPostCardContent, StyledTypography } from './style'
@@ -47,11 +47,19 @@ export default function PostCard({ postData, variation }: PostCardProps) {
                     />
                 )
             }
-            {   
-                postData.categories.lenght > 0 && postData.categories.map(c => {
-                    return <p key={c.name}>{c.name}</p>
-                })
-            }
+            <Box sx={{ display: 'flex' }}>
+                {
+                    postData.categories.length > 0 && postData.categories.map(c => {
+                        return (
+                            <Chip
+                                variant="filled"
+                                label={c?.name}>
+                                {c?.name}
+                            </Chip>
+                        )
+                    })
+                }
+            </Box>
             <FeedPostInfo
                 author={postData.author}
                 createdAt={postData.createdAt}

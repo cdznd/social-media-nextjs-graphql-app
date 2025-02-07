@@ -1,4 +1,4 @@
-import NextAuth, { SessionStrategy, getServerSession } from "next-auth"
+import NextAuth, { SessionStrategy, getServerSession, Session } from "next-auth"
 import type { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
@@ -41,6 +41,6 @@ export const authOptions: NextAuthOptions = {
 
 export const handler = NextAuth(authOptions);
 
-export function auth() {
+export function auth(): Promise<Session | null> {
     return getServerSession(authOptions)
 }

@@ -23,8 +23,12 @@ export default function FeedContent({ posts }: FeedContentProps) {
             }}
         >
             {posts.map((post: any) => {
+
+                console.log('checking post')
+                console.log(post)
+
                 return (
-                    <FeedPost postData={post} />
+                    <FeedPost postData={post} key={post.id} />
                 )
             })}
         </Box>

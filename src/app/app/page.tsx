@@ -4,19 +4,20 @@ import { GET_FEED_POSTS } from "@/lib/graphql/mutations/mutations";
 import { auth } from "@/lib/auth";
 import { Container } from "@mui/system";
 
-async function getFeedData(userId: String, search?: string, category?: string) {
+async function getFeedData(userId: String, searchString?: string, category?: string) {
   const apolloClient = createApolloClient();
   try {
-    const { data: feedData, error } = await apolloClient.query({
+    const { data } = await apolloClient.query({
       query: GET_FEED_POSTS,
       variables: {
         userId,
-        search,
-        category
       },
     });
-    return { data: feedData, feedError: null };
+    return { data, feedError: null };
   } catch (error) {
+
+    console.log(JSON.stringify(error))
+
     return { data: null, feedError: error };
   }
 }
@@ -39,7 +40,7 @@ export default async function Home(
     undefined
   );
 
-  const feedPosts = data?.posts
+  const feedPosts = data?.feedPosts
 
   return (
     <Container>

@@ -2,7 +2,9 @@ import {
     stringArg,
     makeSchema,
     objectType,
-    asNexusMethod
+    asNexusMethod,
+    arg,
+    nonNull
 } from 'nexus'
 import { GraphQLDateTime } from "graphql-scalars";
 import path from 'path';
@@ -11,9 +13,34 @@ import { Context } from '../prisma/context';
 
 const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
 
+import { enumType } from "nexus";
+
+export const SortOrder = enumType({
+  name: "SortOrder",
+  members: ["asc", "desc"],
+});
+
 const Query = objectType({
     name: 'Query',
     definition(t) {
+        t.nullable.field('user', {
+            type: 'User',
+            args: {
+                userId: stringArg()
+            },
+            resolve: (_parent, args, context: Context) => {
+                const { userId } = args; 
+                return context.prisma.user.findUnique({
+                    where: { id: userId ?? undefined }
+                })
+            }
+        }),
+        t.nonNull.list.nonNull.field('users', {
+            type: 'User',
+            resolve: (_parent, args, context: Context) => {
+                return context.prisma.user.findMany()
+            }
+        }),
         t.nullable.field('post', {
             type: 'Post',
             args: {
@@ -29,6 +56,42 @@ const Query = objectType({
             type: 'Post',
             resolve: (_parent, _args, context: Context) => {
                 return context.prisma.post.findMany()
+            }
+        })
+        t.nonNull.list.nonNull.field('feedPosts', {
+            type: 'Post',
+            args: {
+                userId: nonNull(stringArg()),
+                searchString: stringArg(),
+                category: stringArg(),
+                orderBy: arg({ type: SortOrder, default: "desc" })
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { userId, searchString, category, orderBy = 'desc' } = args;
+                return await context.prisma.post.findMany({
+                    where: {
+                        authorId: userId,
+                        AND: [
+                            searchString
+                                ? {
+                                    OR: [
+                                        { title: { contains: searchString, mode: 'insensitive' } },
+                                        { content: { contains: searchString, mode: 'insensitive' } }
+                                    ]
+                                } : {},
+                            category
+                                ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
+                                : {}
+                        ]
+                    },
+                    orderBy: { createdAt: orderBy },
+                    include: { 
+                        author: true,
+                        likes: true,
+                        comments: true,
+                        categories: true,
+                    },
+                })
             }
         })
     }
@@ -122,9 +185,18 @@ const Post = objectType({
         t.nullable.string("thumbnail");
         t.string("authorId");
         t.field("author", { type: "User" });
-        t.list.nonNull.field("likes", { type: "Like" });
-        t.list.nonNull.field("comments", { type: "Comment" });
-        t.list.nonNull.field("categories", { type: "Category" });
+        t.list.nonNull.field("likes", {
+            type: "Like",
+            resolve: (_parent) => _parent.likes ?? []
+        });
+        t.nonNull.list.nonNull.field("comments", {
+            type: "Comment",
+            resolve: (_parent) => _parent.comments ?? []
+        });
+        t.nonNull.list.nonNull.field("categories", { 
+            type: "Category",
+            resolve: (_parent) => _parent.categories ?? []
+        });
         t.nonNull.field("createdAt", { type: "DateTime" });
         t.nonNull.field("updatedAt", { type: "DateTime" });
     },

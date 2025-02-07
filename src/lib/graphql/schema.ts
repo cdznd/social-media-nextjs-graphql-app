@@ -28,17 +28,17 @@ const Query = objectType({
             args: {
                 userId: stringArg()
             },
-            resolve: (_parent, args, context: Context) => {
+            resolve: async (_parent, args, context: Context) => {
                 const { userId } = args; 
-                return context.prisma.user.findUnique({
+                return await context.prisma.user.findUnique({
                     where: { id: userId ?? undefined }
                 })
             }
         }),
         t.nonNull.list.nonNull.field('users', {
             type: 'User',
-            resolve: (_parent, args, context: Context) => {
-                return context.prisma.user.findMany()
+            resolve: async (_parent, args, context: Context) => {
+                return await context.prisma.user.findMany()
             }
         }),
         t.nullable.field('post', {
@@ -46,16 +46,16 @@ const Query = objectType({
             args: {
                 id: stringArg()
             },
-            resolve: (_parent, args, context: Context) => {
-                return context.prisma.post.findUnique({
+            resolve: async (_parent, args, context: Context) => {
+                return await context.prisma.post.findUnique({
                     where: { id: args?.id ?? undefined }
                 })
             }
         })
         t.nonNull.list.nonNull.field('posts', {
             type: 'Post',
-            resolve: (_parent, _args, context: Context) => {
-                return context.prisma.post.findMany()
+            resolve: async (_parent, _args, context: Context) => {
+                return await context.prisma.post.findMany()
             }
         })
         t.nonNull.list.nonNull.field('feedPosts', {
@@ -92,6 +92,12 @@ const Query = objectType({
                         categories: true,
                     },
                 })
+            }
+        }),
+        t.nonNull.list.nonNull.field('categories', {
+            type: 'Category',
+            resolve: async (_parent, args, context: Context) => {
+                return await context.prisma.category.findMany()
             }
         })
     }
@@ -207,7 +213,10 @@ export const Category = objectType({
     definition(t) {
         t.id("id");
         t.string("name");
-        t.list.nonNull.field("posts", { type: "Post" });
+        t.nonNull.list.nonNull.field("posts", { 
+            type: "Post",
+            resolve: (_parent) => _parent.posts ?? []
+        });
     },
 });
 

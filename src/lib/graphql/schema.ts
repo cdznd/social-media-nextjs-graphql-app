@@ -246,6 +246,7 @@ export const Comment = objectType({
     },
 });
 
+// TODO: Read about build in https://nexusjs.org/docs/adoption-guides/nextjs-users
 // Schema
 export const schema = makeSchema({
     types: [
@@ -262,11 +263,11 @@ export const schema = makeSchema({
         DateTime
     ],
     outputs: {
-        schema: path.resolve(__dirname, '../schema.graphql'),
-        typegen: path.resolve(__dirname, 'generated/nexus.ts'),
+        typegen: path.join(process.cwd(), '/src/lib/graphql/generated/nexus-typegen.d.ts'),
+        schema: path.join(process.cwd(), '/src/lib/graphql/generated/schema.graphql'),
     },
     contextType: {
-        module: require.resolve('../prisma/context'),
+        module: path.join(process.cwd(), '/src/lib/prisma/context.ts'),
         export: 'Context',
     },
     sourceTypes: {

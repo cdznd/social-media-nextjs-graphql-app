@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import createApolloClient from "@/lib/apolloClient";
-import { GET_CATEGORIES } from "@/lib/graphql/queries/category";
+import { GET_CATEGORIES } from "@/lib/graphql/fragments/queries/category";
 import Search from "./Search";
 import CategorySelector from "./CategorySelector";
 

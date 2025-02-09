@@ -64,6 +64,10 @@ type Like {
   userId: String
 }
 
+type Mutation {
+  createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
+}
+
 type Post {
   author: User
   authorId: String

@@ -96,6 +96,7 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
     userId?: string | null; // String
   }
+  Mutation: {};
   Post: { // root type
     author?: NexusGenRootTypes['User'] | null; // User
     authorId?: string | null; // String
@@ -199,6 +200,9 @@ export interface NexusGenFieldTypes {
     postId: string | null; // String
     user: NexusGenRootTypes['User'] | null; // User
     userId: string | null; // String
+  }
+  Mutation: { // field return type
+    createPost: NexusGenRootTypes['Post'] | null; // Post
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
@@ -304,6 +308,9 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     userId: 'String'
   }
+  Mutation: { // field return type name
+    createPost: 'Post'
+  }
   Post: { // field return type name
     author: 'User'
     authorId: 'String'
@@ -356,6 +363,15 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    createPost: { // args
+      authorId: string; // String!
+      categories: string[]; // [String!]!
+      content: string; // String!
+      thumbnail?: string | null; // String
+      title: string; // String!
+    }
+  }
   Query: {
     feedPosts: { // args
       category?: string | null; // String

@@ -15,7 +15,6 @@ import {
 } from './style'
 
 import Avatar from '@mui/material/Avatar';
-import AvatarGroup from '@mui/material/AvatarGroup';
 import Typography from '@mui/material/Typography';
 
 import months from '@/utils/months';
@@ -25,10 +24,10 @@ import { gray } from '../common/themePrimitives';
 
 type PostCardProps = {
     postData: PostData,
-    variant?: string
+    variants?: string[]
 }
 
-export default function PostCard({ postData, variant }: PostCardProps) {
+export default function PostCard({ postData, variants = [] }: PostCardProps) {
 
     const author = postData?.author
 
@@ -49,7 +48,7 @@ export default function PostCard({ postData, variant }: PostCardProps) {
     };
 
     const renderCategories =
-        postData?.categories.length > 0 ?
+        postData?.categories && postData?.categories.length > 0 ?
             postData?.categories.map(category => {
                 return (
                     <Chip
@@ -58,6 +57,9 @@ export default function PostCard({ postData, variant }: PostCardProps) {
                     />
                 )
             }) : null
+
+    const displayAuthor = !variants.includes('no-author')
+    const displayImage = !variants.includes('no-media')
 
     return (
         <StyledPostCard
@@ -68,7 +70,7 @@ export default function PostCard({ postData, variant }: PostCardProps) {
             className={focusedCardIndex === 0 ? 'Mui-focused' : ''}
         >
             {
-                (postData?.thumbnail || variant === 'no-media') && (
+                displayImage && postData?.thumbnail && (
                     <CardMedia
                         component="img"
                         alt="green iguana"
@@ -83,23 +85,27 @@ export default function PostCard({ postData, variant }: PostCardProps) {
             }
             <Box>
                 <StyledPostCardInfo>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            gap: 1,
-                            alignItems: 'center'
-                        }}
-                    >
-                        <Avatar
-                            alt={author.name}
-                            src={author.image}
-                            sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
-                        />
-                        <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                            {author.name}
-                        </Typography>
-                    </Box>
+                    {
+                        displayAuthor && (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    gap: 1,
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <Avatar
+                                    alt={author.name}
+                                    src={author.image}
+                                    sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
+                                />
+                                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                                    {author.name}
+                                </Typography>
+                            </Box>
+                        )
+                    }
                     <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
                         {displayDate}
                     </Typography>

@@ -5,6 +5,8 @@ import {
     asNexusMethod,
     arg,
     nonNull,
+    mutationType,
+    list,
 } from 'nexus'
 import { GraphQLDateTime } from "graphql-scalars";
 import path from 'path';
@@ -33,7 +35,14 @@ const Query = objectType({
             resolve: async (_parent, args, context: Context) => {
                 const { userId } = args;
                 return await context.prisma.user.findUnique({
-                    where: { id: userId ?? undefined }
+                    where: { id: userId ?? undefined },
+                    include: {
+                        posts: {
+                            include: {
+                                author: true
+                            }
+                        },
+                    }
                 })
             }
         }),
@@ -102,6 +111,38 @@ const Query = objectType({
                     return await context.prisma.category.findMany()
                 }
             })
+    }
+})
+
+const Mutation = mutationType({
+    definition(t) {
+        t.field('createPost', {
+            type: Post,
+            args: {
+                title: nonNull(stringArg()),
+                content: nonNull(stringArg()),
+                authorId: nonNull(stringArg()),
+                thumbnail: stringArg(),
+                categories: nonNull(list(nonNull(stringArg())))
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { title, content, authorId, thumbnail, categories } = args
+                return context.prisma.post.create({
+                    data: {
+                        title: title as string,
+                        content: content as string,
+                        authorId: authorId as string,
+                        thumbnail,
+                        categories: {
+                            connectOrCreate: categories.map(category => ({
+                                where: { name: category },
+                                create: { name: category}
+                            }))
+                        }
+                    },
+                })
+            }
+        })
     }
 })
 
@@ -253,6 +294,7 @@ export const Comment = objectType({
 export const schema = makeSchema({
     types: [
         Query,
+        Mutation,
         User,
         Account,
         Session,

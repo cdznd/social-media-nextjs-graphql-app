@@ -1,16 +1,18 @@
 import { Card, Typography, Box, Alert } from "@mui/material";
 import PostCard from "@/components/PostCard";
+import { PostData } from "@/types/post";
 
 type PostListCardProps = {
     title: String,
-    posts: any[],
+    posts: PostData[],
 }
 
 export default function PostListCard({ title, posts }: PostListCardProps) {
     const renderPosts =
         posts.map((post, key) => {
-            return <PostCard postData={post} key={key} />
+            return <PostCard postData={post} key={key} variants={['no-author']}/>
         })
+
     return (
         <Card
             sx={{

@@ -4,7 +4,7 @@ import {
     objectType,
     asNexusMethod,
     arg,
-    nonNull
+    nonNull,
 } from 'nexus'
 import { GraphQLDateTime } from "graphql-scalars";
 import path from 'path';
@@ -16,27 +16,29 @@ const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
 import { enumType } from "nexus";
 
 export const SortOrder = enumType({
-  name: "SortOrder",
-  members: ["asc", "desc"],
+    name: "SortOrder",
+    members: ["asc", "desc"],
 });
+
+// TODO: Export all the objectType to external files. Example: https://github.com/graphql-nexus/nexus/blob/main/examples/ghost/src/schema/index.ts
 
 const Query = objectType({
     name: 'Query',
     definition(t) {
         t.nullable.field('user', {
-            type: 'User',
+            type: User,
             args: {
                 userId: stringArg()
             },
             resolve: async (_parent, args, context: Context) => {
-                const { userId } = args; 
+                const { userId } = args;
                 return await context.prisma.user.findUnique({
                     where: { id: userId ?? undefined }
                 })
             }
         }),
         t.nonNull.list.nonNull.field('users', {
-            type: 'User',
+            type: User,
             resolve: async (_parent, args, context: Context) => {
                 return await context.prisma.user.findMany()
             }
@@ -51,7 +53,7 @@ const Query = objectType({
                     where: { id: args?.id ?? undefined }
                 })
             }
-        })
+        }),
         t.nonNull.list.nonNull.field('posts', {
             type: 'Post',
             resolve: async (_parent, _args, context: Context) => {
@@ -84,8 +86,8 @@ const Query = objectType({
                                 : {}
                         ]
                     },
-                    orderBy: { createdAt: orderBy },
-                    include: { 
+                    orderBy: { createdAt: orderBy as "asc" | "desc" },
+                    include: {
                         author: true,
                         likes: true,
                         comments: true,
@@ -94,12 +96,12 @@ const Query = objectType({
                 })
             }
         }),
-        t.nonNull.list.nonNull.field('categories', {
-            type: 'Category',
-            resolve: async (_parent, args, context: Context) => {
-                return await context.prisma.category.findMany()
-            }
-        })
+            t.nonNull.list.nonNull.field('categories', {
+                type: 'Category',
+                resolve: async (_parent, args, context: Context) => {
+                    return await context.prisma.category.findMany()
+                }
+            })
     }
 })
 
@@ -199,7 +201,7 @@ const Post = objectType({
             type: "Comment",
             resolve: (_parent) => _parent.comments ?? []
         });
-        t.nonNull.list.nonNull.field("categories", { 
+        t.nonNull.list.nonNull.field("categories", {
             type: "Category",
             resolve: (_parent) => _parent.categories ?? []
         });
@@ -213,7 +215,7 @@ export const Category = objectType({
     definition(t) {
         t.id("id");
         t.string("name");
-        t.nonNull.list.nonNull.field("posts", { 
+        t.nonNull.list.nonNull.field("posts", {
             type: "Post",
             resolve: (_parent) => _parent.posts ?? []
         });

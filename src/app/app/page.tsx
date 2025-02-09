@@ -1,6 +1,8 @@
 import Feed from "@/components/Feed";
 import createApolloClient from "@/lib/apolloClient";
-import { GET_FEED_POSTS } from "@/lib/graphql/mutations/mutations";
+
+import { GET_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed";
+
 import { auth } from "@/lib/auth";
 import { Container } from "@mui/system";
 

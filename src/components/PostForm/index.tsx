@@ -21,16 +21,11 @@ type CreatePostDTO = {
     title: String,
     content: String,
     authorId: String,
-    thumbnail: String
+    thumbnail: String,
+    categories: String[]
 };
 
-type Category = {
-    value: String
-    label: String,
-}
-
 import { CategoryData } from "@/types/category";
-import { Post } from "@prisma/client";
 
 type PostFormProps = {
     categories: CategoryData[]
@@ -39,6 +34,8 @@ type PostFormProps = {
 export default function PostForm({ categories }: PostFormProps) {
 
     const router = useRouter()
+
+    const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
 
     const [titleError, setTitleError] = useState(false);
     const [contentError, setContentError] = useState(false);
@@ -69,16 +66,14 @@ export default function PostForm({ categories }: PostFormProps) {
         }
     };
 
+    // Categories
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
     const handleChange = (event: any) => {
         const value = event.target.value;
         setSelectedValues((prev: any) =>
             prev.includes(value) ? prev.filter((item: any) => item !== value) : [...prev, value]
         );
     };
-
-    const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
 
     const validateInputs = (formData: any) => {
         let isValid = true;
@@ -130,8 +125,10 @@ export default function PostForm({ categories }: PostFormProps) {
             title: formData.get('title') as string,
             content: formData.get('content') as string,
             authorId: 'cm6h4havf00020hukais5q0g6',
-            thumbnail: imageFileS3Url ?? ''
+            thumbnail: imageFileS3Url ?? '',
+            categories: selectedValues
         }
+
         try {
             const response = await createPost({
                 variables: { ...createPostData },

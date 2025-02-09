@@ -1,21 +1,21 @@
 import gql from "graphql-tag";
 
 export const CREATE_POST_MUTATION = gql`
-    mutation CreatePostMutation(
+    mutation CreatePost(
         $title: String!,
         $content: String!,
-        $authorId: String!
-        $thumbnail: String
+        $authorId: String!,
+        $thumbnail: String,
+        $categories: [String!]!
     ) {
         createPost(
             title: $title,
             content: $content,
             authorId: $authorId,
-            thumbnail: $thumbnail
+            thumbnail: $thumbnail,
+            categories: $categories
         ) {
-            id,
-            title,
-            content
+            id
         }
     }
 `;

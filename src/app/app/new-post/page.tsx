@@ -16,7 +16,7 @@ import {
     Checkbox
 } from "@mui/material";
 import { useMutation } from "@apollo/client";
-import { CREATE_POST_MUTATION } from "@/lib/graphql/mutations/mutations";
+import { CREATE_POST_MUTATION } from "@/lib/graphql/fragments/mutations/mutations";
 import { StyledTextarea } from "@/components/common/CustomTextArea";
 import ClearIcon from '@mui/icons-material/Clear';
 

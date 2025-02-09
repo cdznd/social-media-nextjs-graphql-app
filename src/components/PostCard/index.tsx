@@ -22,6 +22,8 @@ import months from '@/utils/months';
 import { PostData } from '@/types/post';
 import { gray } from '../common/themePrimitives';
 
+import PostEngagement from './PostEngagement';
+
 type PostCardProps = {
     postData: PostData,
     variants?: string[]
@@ -118,6 +120,9 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                 <StyledPostCardCategories direction="row" spacing={2}>
                     {renderCategories}
                 </StyledPostCardCategories>
+                
+                <PostEngagement />
+
             </Box>
         </StyledPostCard>
     );

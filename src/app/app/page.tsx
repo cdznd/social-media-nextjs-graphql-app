@@ -1,46 +1,48 @@
 import Feed from "@/components/Feed";
 import createApolloClient from "@/lib/apolloClient";
-import { GET_FEED_POSTS } from "@/lib/graphql/mutations";
+
+import { GET_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed";
+
 import { auth } from "@/lib/auth";
 import { Container } from "@mui/system";
 
-async function getFeedData(userId: String, search?: string, category?: string) {
+async function getFeedData(userId: string, searchString?: string, category?: string) {
   const apolloClient = createApolloClient();
   try {
-    const { data: feedData, error } = await apolloClient.query({
+    const { data } = await apolloClient.query({
       query: GET_FEED_POSTS,
       variables: {
         userId,
-        search,
+        searchString,
         category
       },
     });
-    return { data: feedData, feedError: null };
+    return { data, feedError: null };
   } catch (error) {
+    console.error(error)
     return { data: null, feedError: error };
   }
 }
 
 type SearchParamsProps = {
   searchParams: {
-    category?: string,
-    search?: string
+    search?: string,
+    category?: string
   }
 }
 
 export default async function Home(
-  { searchParams }: SearchParamsProps
+  { searchParams: { search, category }}: SearchParamsProps
 ) {
   const session = await auth()
-  
+  // TODO: better handle the feed Error here
   const { data, feedError } = await getFeedData(
     session?.user?.id!,
-    searchParams?.search,
-    undefined
+    search,
+    category
   );
-
-  const feedPosts = data?.posts
-
+  // TODO: Add a type for the feedPosts here, like feedPosts: type
+  const feedPosts = data?.feedPosts ?? []
   return (
     <Container>
       <Feed feedData={feedPosts} />

@@ -20,38 +20,37 @@ export const CREATE_POST_MUTATION = gql`
     }
 `;
 
-export const GET_FEED_POSTS = gql`
-  query FeedPosts(
-    $userId: ID!,
-    $search: String,
-  ) {
-    posts(
-      userId: $userId,
-      search: $search  
-    ) {
-      id
-      title
-      content
-      createdAt
-      thumbnail
-      likes {
-        user {
-          id
-          name
-          image
-        }
-      }
-      author {
-        id
-        image
-        name
-      }
-      categories {
-        name
-      }
-    }
-  }
-`;
+//   query FeedPosts(
+//     $userId: String!,
+//     $searchString: String,
+//   ) {
+//     feedPosts(
+//       userId: $userId,
+//       searchString: $searchString  
+//     ) {
+//       id
+//       title
+//       content
+//       createdAt
+//       thumbnail
+//       likes {
+//         user {
+//           id
+//           name
+//           image
+//         }
+//       }
+//       author {
+//         id
+//         image
+//         name
+//       }
+//       categories {
+//         name
+//       }
+//     }
+//   }
+// `;
 
 // export const GET_FEED_POSTS_USER = gql`
 //   query FeedPosts($userId: ID!) {

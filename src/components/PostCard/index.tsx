@@ -1,16 +1,40 @@
 "use client"
 import { useState } from 'react';
-import { Typography } from '@mui/material';
-import FeedPostInfo from '../Feed/FeedPostInfo';
-import CardMedia from '@mui/material/CardMedia';
-import { StyledPostCard, StyledPostCardContent, StyledTypography } from './style'
+import {
+    Chip,
+    Box,
+    CardMedia
+} from '@mui/material';
+
+import {
+    StyledPostCard,
+    StyledPostCardInfo,
+    StyledPostCardContent,
+    StyledTypography,
+    StyledPostCardCategories
+} from './style'
+
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
+import Typography from '@mui/material/Typography';
+
+import months from '@/utils/months';
+
+import { PostData } from '@/types/post';
+import { gray } from '../common/themePrimitives';
 
 type PostCardProps = {
-    postData: any,
-    variation?: string
+    postData: PostData,
+    variant?: string
 }
 
-export default function PostCard({ postData, variation }: PostCardProps) {
+export default function PostCard({ postData, variant }: PostCardProps) {
+
+    const author = postData?.author
+
+    const createdAt = postData?.createdAt
+    const creationDate = new Date(createdAt)
+    const displayDate = `${creationDate.getDay()} ${months[creationDate.getMonth()]} ${creationDate.getFullYear()}`
 
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
         null,
@@ -24,6 +48,17 @@ export default function PostCard({ postData, variation }: PostCardProps) {
         setFocusedCardIndex(null);
     };
 
+    const renderCategories =
+        postData?.categories.length > 0 ?
+            postData?.categories.map(category => {
+                return (
+                    <Chip
+                        variant="filled"
+                        label={category?.name}
+                    />
+                )
+            }) : null
+
     return (
         <StyledPostCard
             variant="outlined"
@@ -31,10 +66,9 @@ export default function PostCard({ postData, variation }: PostCardProps) {
             onBlur={handleBlur}
             tabIndex={0}
             className={focusedCardIndex === 0 ? 'Mui-focused' : ''}
-            sx={variation === 'small' ? { height: '100%' } : {}}
         >
             {
-                (postData?.thumbnail || variation === 'no-media') && (
+                (postData?.thumbnail || variant === 'no-media') && (
                     <CardMedia
                         component="img"
                         alt="green iguana"
@@ -47,20 +81,38 @@ export default function PostCard({ postData, variation }: PostCardProps) {
                     />
                 )
             }
-            {
-                postData.categories.map(c => {
-                    return <p key={c.name}>{c.name}</p>
-                })
-            }
-            <FeedPostInfo
-                author={postData.author}
-                createdAt={postData.createdAt}
-            />
-            <StyledPostCardContent>
-                <StyledTypography color="text.secondary" gutterBottom>
-                    {postData.content}
-                </StyledTypography>
-            </StyledPostCardContent>
+            <Box>
+                <StyledPostCardInfo>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            gap: 1,
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Avatar
+                            alt={author.name}
+                            src={author.image}
+                            sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
+                        />
+                        <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                            {author.name}
+                        </Typography>
+                    </Box>
+                    <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                        {displayDate}
+                    </Typography>
+                </StyledPostCardInfo>
+                <StyledPostCardContent>
+                    <StyledTypography color="text.secondary" gutterBottom>
+                        {postData.content}
+                    </StyledTypography>
+                </StyledPostCardContent>
+                <StyledPostCardCategories direction="row" spacing={2}>
+                    {renderCategories}
+                </StyledPostCardCategories>
+            </Box>
         </StyledPostCard>
     );
 

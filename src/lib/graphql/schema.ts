@@ -105,12 +105,12 @@ const Query = objectType({
                 })
             }
         }),
-            t.nonNull.list.nonNull.field('categories', {
-                type: 'Category',
-                resolve: async (_parent, args, context: Context) => {
-                    return await context.prisma.category.findMany()
-                }
-            })
+        t.nonNull.list.nonNull.field('categories', {
+            type: 'Category',
+            resolve: async (_parent, args, context: Context) => {
+                return await context.prisma.category.findMany()
+            }
+        })
     }
 })
 

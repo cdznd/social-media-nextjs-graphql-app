@@ -123,16 +123,22 @@ const Mutation = mutationType({
                 content: nonNull(stringArg()),
                 authorId: nonNull(stringArg()),
                 thumbnail: stringArg(),
-                // categories: nonNull(list(nonNull(stringArg())))
+                categories: nonNull(list(nonNull(stringArg())))
             },
             resolve: async (_parent, args, context: Context) => {
-                const { title, content, authorId, thumbnail } = args
+                const { title, content, authorId, thumbnail, categories } = args
                 return context.prisma.post.create({
                     data: {
                         title: title as string,
                         content: content as string,
                         authorId: authorId as string,
                         thumbnail,
+                        categories: {
+                            connectOrCreate: categories.map(category => ({
+                                where: { name: category },
+                                create: { name: category}
+                            }))
+                        }
                     },
                 })
             }

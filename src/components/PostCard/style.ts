@@ -1,11 +1,15 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import { gray } from '@/components/common/themePrimitives';
 
 export const StyledPostCard = styled(Card)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    gap: '8px',
     padding: 0,
     height: '100%',
     marginBottom: '2rem',
@@ -21,11 +25,20 @@ export const StyledPostCard = styled(Card)(({ theme }) => ({
     },
 }));
 
-export const StyledPostCardContent = styled(CardContent)({
+export const StyledPostCardInfo = styled(Box)({
     display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
-    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '1rem',
+    paddingTop: '.5rem',
+    paddingBottom: '.5rem',
+    background: gray[700]
+})
+
+export const StyledPostCardContent = styled(CardContent)({
+    padding: '1rem',
+    paddingTop: '1rem',
     flexGrow: 1,
     '&:last-child': {
         paddingBottom: 16,
@@ -35,7 +48,11 @@ export const StyledPostCardContent = styled(CardContent)({
 export const StyledTypography = styled(Typography)({
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: 2,
+    WebkitLineClamp: 3,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
 });
+
+export const StyledPostCardCategories = styled(Stack)({
+    padding: '1rem',
+})

@@ -33,7 +33,14 @@ const Query = objectType({
             resolve: async (_parent, args, context: Context) => {
                 const { userId } = args;
                 return await context.prisma.user.findUnique({
-                    where: { id: userId ?? undefined }
+                    where: { id: userId ?? undefined },
+                    include: {
+                        posts: {
+                            include: {
+                                author: true
+                            }
+                        },
+                    }
                 })
             }
         }),

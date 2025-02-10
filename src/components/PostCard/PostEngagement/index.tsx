@@ -82,7 +82,7 @@ export default function PostEngagement({ postId, likes, comments }: PostEngageme
                     <Box sx={{ marginLeft: '.3rem' }}>{likeCount}</Box>
                 </StyledPostEngagementAction>
             </StyledPostEngagementItem>
-            <StyledPostEngagementItem sx={{ borderRight: 'none' }} onClick={() => router.push('/post/{}')}>
+            <StyledPostEngagementItem sx={{ borderRight: 'none' }} onClick={() => router.push(`app/post/${postId}`)}>
                 <StyledPostEngagementAction>
                     <CommentIcon />
                     <Box sx={{ marginLeft: '.3rem' }}>{comments.length}</Box>

@@ -11,8 +11,6 @@ type FeedContentProps = {
 
 export default function FeedContent({ posts }: FeedContentProps) {
 
-    console.log('checking posts', posts)
-
     if (posts.lenght <= 0) {
         return <h1>No data to display</h1>
     }
@@ -24,10 +22,6 @@ export default function FeedContent({ posts }: FeedContentProps) {
             }}
         >
             {posts.map((post: PostData) => {
-
-                console.log('checking post')
-                console.log(post)
-
                 return (
                     <FeedPost
                         key={post.id}

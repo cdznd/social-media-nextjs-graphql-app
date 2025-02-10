@@ -2,7 +2,7 @@
 import { Box } from "@mui/material"
 import { brand } from '../../common/themePrimitives';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useSession } from "next-auth/react";
 
@@ -28,7 +28,14 @@ export default function PostEngagement({ postId, likes }: PostEngagementProps) {
     const { data: session } = useSession();
     const currentUserId = session?.user?.id!
 
-    const [isLiked, setIsLiked] = useState(likes.some(like => like.userId == currentUserId))
+    const [isLiked, setIsLiked] = useState(false)
+
+    useEffect(() => {
+        if (currentUserId) {
+            setIsLiked(likes.some(like => like.userId === currentUserId))
+        }
+    }, [currentUserId])
+
     const [likeCount, setLikeCount] = useState(likes.length)
     const [triggerLike] = useMutation(TRIGGER_POST_LIKE_MUTATION);
 

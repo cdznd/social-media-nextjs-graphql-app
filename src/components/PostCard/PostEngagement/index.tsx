@@ -1,44 +1,60 @@
-import { useState } from "react";
 import { Box } from "@mui/material"
-import { gray, brand } from '../../common/themePrimitives';
+import { brand } from '../../common/themePrimitives';
+
+import { useSession } from "next-auth/react";
 
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 import CommentIcon from '@mui/icons-material/Comment';
+import {
+    StyledPostEngagementContainer,
+    StyledPostEngagementItem,
+    StyledPostEngagementAction
+} from "./style";
+import { useMutation } from "@apollo/client";
+import { TRIGGER_POST_LIKE_MUTATION } from "@/lib/graphql/fragments/mutations/mutations";
 
-export default function PostEngagement() {
+type PostEngagementProps = {
+    postId: string,
+    likes: any[]
+}
 
-    const [isLike, setIsLike] = useState(false)
+export default function PostEngagement({ postId, likes }: PostEngagementProps) {
+
+    const { data: session, status } = useSession();
+
+    const currentUserId = session?.user?.id!
+    // Identify if the logged user, check all likes to see if any of them are from the user
+    const currentUserLiked = likes.find(like => like.userId === currentUserId)
+
+    // const [isLike, setIsLike] = useState(false)
+
+    const numberOfLikes = likes.length
+
+    const [triggerLike, { loading, error }] = useMutation(TRIGGER_POST_LIKE_MUTATION);
+
+    const triggerLikePost = () => {
+        triggerLike({
+            variables: {
+                userId: session?.user.id,
+                postId: postId
+            }
+        })
+    }
 
     return (
-        <Box sx={{
-            display: 'flex',
-            borderTop: '1px solid',
-            borderColor: gray[700],
-            padding: '.5rem'
-        }}>
-
-            {/* Likes */}
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRight: '1px solid',
-                    borderColor: gray[600],
-                    flex: 1,
-                }}
-                onClick={() => setIsLike(prev => !prev)}
-            >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <StyledPostEngagementContainer>
+            <StyledPostEngagementItem>
+                <StyledPostEngagementAction onClick={triggerLikePost}>
                     {
-                        isLike ? (
+                        currentUserLiked ? (
                             <ThumbUpIcon
                                 sx={{
                                     height: '1.5rem',
                                     width: '1.5rem',
-                                    color: brand[700]
+                                    color: brand[700],
+                                    transition: '100ms',
                                 }}
                             />
                         ) : (
@@ -46,39 +62,20 @@ export default function PostEngagement() {
                                 sx={{
                                     height: '1.5rem',
                                     width: '1.5rem',
+                                    transition: '100ms',
                                 }}
                             />
                         )
                     }
-                    <Box sx={{
-                        marginLeft: '.3rem'
-                    }}>35</Box>
-                </Box>
-            </Box>
-
-            {/* Comments */}
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flex: 1
-                }}
-            >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CommentIcon
-                        sx={{
-                            height: '1.5rem',
-                            width: '1.5rem'
-                        }}
-                    />
-                    <Box sx={{
-                        marginLeft: '.3rem'
-                    }}>35</Box>
-                </Box>
-            </Box>
-
-        </Box>
-    )
-
+                    <Box sx={{ marginLeft: '.3rem' }}>{numberOfLikes}</Box>
+                </StyledPostEngagementAction>
+            </StyledPostEngagementItem>
+            <StyledPostEngagementItem sx={{ borderRight: 'none' }}>
+                <StyledPostEngagementAction>
+                    <CommentIcon />
+                    <Box sx={{ marginLeft: '.3rem' }}>35</Box>
+                </StyledPostEngagementAction>
+            </StyledPostEngagementItem>
+        </StyledPostEngagementContainer>
+    );
 }

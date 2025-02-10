@@ -1,5 +1,8 @@
+"use client"
 import { Box } from "@mui/material"
 import { brand } from '../../common/themePrimitives';
+
+import { useState } from "react";
 
 import { useSession } from "next-auth/react";
 
@@ -22,19 +25,21 @@ type PostEngagementProps = {
 
 export default function PostEngagement({ postId, likes }: PostEngagementProps) {
 
-    const { data: session, status } = useSession();
-
+    const { data: session } = useSession();
     const currentUserId = session?.user?.id!
-    // Identify if the logged user, check all likes to see if any of them are from the user
-    const currentUserLiked = likes.find(like => like.userId === currentUserId)
 
-    // const [isLike, setIsLike] = useState(false)
-
-    const numberOfLikes = likes.length
-
-    const [triggerLike, { loading, error }] = useMutation(TRIGGER_POST_LIKE_MUTATION);
+    const [isLiked, setIsLiked] = useState(likes.some(like => like.userId == currentUserId))
+    const [likeCount, setLikeCount] = useState(likes.length)
+    const [triggerLike] = useMutation(TRIGGER_POST_LIKE_MUTATION);
 
     const triggerLikePost = () => {
+        if (!isLiked) {
+            setIsLiked(true)
+            setLikeCount(prev => prev + 1)
+        } else {
+            setIsLiked(false)
+            setLikeCount(prev => prev - 1)
+        }
         triggerLike({
             variables: {
                 userId: session?.user.id,
@@ -48,7 +53,7 @@ export default function PostEngagement({ postId, likes }: PostEngagementProps) {
             <StyledPostEngagementItem>
                 <StyledPostEngagementAction onClick={triggerLikePost}>
                     {
-                        currentUserLiked ? (
+                        isLiked ? (
                             <ThumbUpIcon
                                 sx={{
                                     height: '1.5rem',
@@ -67,7 +72,7 @@ export default function PostEngagement({ postId, likes }: PostEngagementProps) {
                             />
                         )
                     }
-                    <Box sx={{ marginLeft: '.3rem' }}>{numberOfLikes}</Box>
+                    <Box sx={{ marginLeft: '.3rem' }}>{likeCount}</Box>
                 </StyledPostEngagementAction>
             </StyledPostEngagementItem>
             <StyledPostEngagementItem sx={{ borderRight: 'none' }}>

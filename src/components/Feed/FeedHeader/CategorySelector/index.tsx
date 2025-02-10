@@ -9,10 +9,6 @@ export default function CategorySelector({ categories = [] }: { categories: any 
     const searchParams = useSearchParams();
     const selectedCategory = searchParams.get("category");
 
-
-    console.log('categories lenght')
-    console.log(categories.length)
-
     const handleCategoryClick = (category: string) => {
         // TODO: Better understand this part here
         const params = new URLSearchParams(searchParams.toString());

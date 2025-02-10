@@ -202,7 +202,10 @@ export interface NexusGenFieldTypes {
     userId: string | null; // String
   }
   Mutation: { // field return type
+    createCategory: NexusGenRootTypes['Category'] | null; // Category
+    createLike: NexusGenRootTypes['Like'] | null; // Like
     createPost: NexusGenRootTypes['Post'] | null; // Post
+    triggerLike: NexusGenRootTypes['Like'] | null; // Like
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
@@ -309,7 +312,10 @@ export interface NexusGenFieldTypeNames {
     userId: 'String'
   }
   Mutation: { // field return type name
+    createCategory: 'Category'
+    createLike: 'Like'
     createPost: 'Post'
+    triggerLike: 'Like'
   }
   Post: { // field return type name
     author: 'User'
@@ -364,12 +370,23 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createCategory: { // args
+      name: string; // String!
+    }
+    createLike: { // args
+      postId: string; // String!
+      userId: string; // String!
+    }
     createPost: { // args
       authorId: string; // String!
       categories: string[]; // [String!]!
       content: string; // String!
       thumbnail?: string | null; // String
       title: string; // String!
+    }
+    triggerLike: { // args
+      postId: string; // String!
+      userId: string; // String!
     }
   }
   Query: {

@@ -16,6 +16,10 @@ export const GET_FEED_POSTS = gql`
       content
       createdAt
       thumbnail
+      likes {
+        id
+        userId
+      }
       author {
         id
         name

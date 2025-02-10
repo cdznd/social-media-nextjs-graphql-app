@@ -121,10 +121,11 @@ export default function PostForm({ categories }: PostFormProps) {
                 console.error("Error uploading file:", error);
             }
         }
+
         const createPostData: CreatePostDTO = {
             title: formData.get('title') as string,
             content: formData.get('content') as string,
-            authorId: 'cm6h4havf00020hukais5q0g6',
+            authorId: 'cm6xvqp10000c0hummbypxlqw',
             thumbnail: imageFileS3Url ?? '',
             categories: selectedValues
         }
@@ -136,6 +137,7 @@ export default function PostForm({ categories }: PostFormProps) {
             console.log('Post created successfully:', response.data.createPost);
             router.push('/app')
         } catch (err) {
+            console.log(JSON.stringify(err))
             console.error('Error creating post:', err);
         }
     };

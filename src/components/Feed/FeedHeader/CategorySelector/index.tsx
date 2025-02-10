@@ -3,15 +3,14 @@
 import { Box, Chip } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 
+import { CategoryData } from '@/types/category';
+import { brand } from '@/components/common/themePrimitives';
+
 export default function CategorySelector({ categories = [] }: { categories: any }) {
 
     const router = useRouter();
     const searchParams = useSearchParams();
     const selectedCategory = searchParams.get("category");
-
-
-    console.log('categories lenght')
-    console.log(categories.length)
 
     const handleCategoryClick = (category: string) => {
         // TODO: Better understand this part here
@@ -33,7 +32,7 @@ export default function CategorySelector({ categories = [] }: { categories: any 
                 overflow: "auto",
             }}
         >
-            {categories.map((category) => (
+            {categories.map((category: CategoryData) => (
                 <Chip
                     key={category.id}
                     onClick={() => handleCategoryClick(category.name)}
@@ -41,8 +40,8 @@ export default function CategorySelector({ categories = [] }: { categories: any 
                     variant="filled"
                     label={category.name}
                     sx={{
-                        color: selectedCategory === category ? "white" : "inherit",
-                        border: selectedCategory === category ? "1px solid red" : "none",
+                        border: selectedCategory === category.name ? "2px solid" : "none",
+                        borderColor: `${brand[500]} !important`
                     }}
                 />
             ))}

@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "prisma": {
-    "schema": "src/lib/db/schema.prisma"
+    "schema": "src/lib/prisma/schema.prisma"
   },
   "dependencies": {
     "@apollo/server": "^4.11.3",

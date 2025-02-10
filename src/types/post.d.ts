@@ -12,6 +12,7 @@ export type PostData = {
     likes: {
         id: string;
         userId: string
+        postId: string;
     }[];
     comments: {
         id: string;

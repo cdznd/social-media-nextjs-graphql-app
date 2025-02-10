@@ -1,10 +1,14 @@
 "use client"
 import { useState } from 'react';
+
 import {
     Chip,
     Box,
-    CardMedia
+    CardMedia,
+    Avatar,
+    Typography
 } from '@mui/material';
+import { gray } from '../common/themePrimitives';
 
 import {
     StyledPostCard,
@@ -14,13 +18,11 @@ import {
     StyledPostCardCategories
 } from './style'
 
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-
 import months from '@/utils/months';
 
 import { PostData } from '@/types/post';
-import { gray } from '../common/themePrimitives';
+
+import PostEngagement from './PostEngagement';
 
 type PostCardProps = {
     postData: PostData,
@@ -33,7 +35,8 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
 
     const createdAt = postData?.createdAt
     const creationDate = new Date(createdAt)
-    const displayDate = `${creationDate.getDay()} ${months[creationDate.getMonth()]} ${creationDate.getFullYear()}`
+
+    const displayDate = `${creationDate.getDate()} ${months[creationDate.getMonth()]} ${creationDate.getFullYear()}`
 
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
         null,
@@ -47,11 +50,13 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
         setFocusedCardIndex(null);
     };
 
+    // TODO: Add a click to send to the category filter feed
     const renderCategories =
         postData?.categories && postData?.categories.length > 0 ?
             postData?.categories.map(category => {
                 return (
                     <Chip
+                        key={category?.name}
                         variant="filled"
                         label={category?.name}
                     />
@@ -60,6 +65,9 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
 
     const displayAuthor = !variants.includes('no-author')
     const displayImage = !variants.includes('no-media')
+
+    const postLikes = postData?.likes ?? []
+    const postComments = postData?.comments ?? []
 
     return (
         <StyledPostCard
@@ -118,6 +126,13 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                 <StyledPostCardCategories direction="row" spacing={2}>
                     {renderCategories}
                 </StyledPostCardCategories>
+
+                <PostEngagement
+                    postId={postData?.id}
+                    likes={postLikes}
+                    comments={postComments}
+                />
+
             </Box>
         </StyledPostCard>
     );

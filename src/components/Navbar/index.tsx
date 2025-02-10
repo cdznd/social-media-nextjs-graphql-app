@@ -44,9 +44,6 @@ export default function Navbar() {
 
   const userLogged = session?.user
 
-  console.log('userLogged by useSession client')
-  console.log(session)
-
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };

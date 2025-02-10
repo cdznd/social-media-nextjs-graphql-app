@@ -65,7 +65,10 @@ type Like {
 }
 
 type Mutation {
+  createCategory(name: String!): Category
+  createLike(postId: String!, userId: String!): Like
   createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
+  triggerLike(postId: String!, userId: String!): Like
 }
 
 type Post {

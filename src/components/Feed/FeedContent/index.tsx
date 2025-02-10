@@ -3,16 +3,13 @@ import Grid from '@mui/material/Grid2';
 
 import FeedPost from '../../PostCard';
 import { Container } from '@mui/material';
-
-import { Post } from '@prisma/client';
+import { PostData } from '@/types/post';
 
 type FeedContentProps = {
     posts: any
 }
 
 export default function FeedContent({ posts }: FeedContentProps) {
-
-    console.log('checking posts', posts)
 
     if (posts.lenght <= 0) {
         return <h1>No data to display</h1>
@@ -24,13 +21,11 @@ export default function FeedContent({ posts }: FeedContentProps) {
                 marginX: 'auto'
             }}
         >
-            {posts.map((post: Post) => {
-
-                console.log('checking post')
-                console.log(post)
-
+            {posts.map((post: PostData) => {
                 return (
-                    <FeedPost postData={post} key={post.id} />
+                    <FeedPost
+                        key={post.id}
+                        postData={post} />
                 )
             })}
         </Box>

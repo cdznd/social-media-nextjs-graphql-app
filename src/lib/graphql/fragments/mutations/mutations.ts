@@ -19,3 +19,12 @@ export const CREATE_POST_MUTATION = gql`
         }
     }
 `;
+
+
+export const TRIGGER_POST_LIKE_MUTATION = gql`
+    mutation TriggerLike($userId: String!, $postId: String!) {
+        triggerLike(userId: $userId, postId: $postId) {
+            id
+        }
+    }
+`

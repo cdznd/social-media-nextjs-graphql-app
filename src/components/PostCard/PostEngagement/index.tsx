@@ -17,10 +17,11 @@ import { brand } from '../../common/themePrimitives';
 
 type PostEngagementProps = {
     postId: string,
-    likes: any[]
+    likes: any[],
+    comments: any[]
 }
 
-export default function PostEngagement({ postId, likes }: PostEngagementProps) {
+export default function PostEngagement({ postId, likes, comments }: PostEngagementProps) {
 
     const { data: session } = useSession();
     const currentUserId = session?.user?.id!
@@ -84,7 +85,7 @@ export default function PostEngagement({ postId, likes }: PostEngagementProps) {
             <StyledPostEngagementItem sx={{ borderRight: 'none' }} onClick={() => router.push('/post/{}')}>
                 <StyledPostEngagementAction>
                     <CommentIcon />
-                    <Box sx={{ marginLeft: '.3rem' }}>35</Box>
+                    <Box sx={{ marginLeft: '.3rem' }}>{comments.length}</Box>
                 </StyledPostEngagementAction>
             </StyledPostEngagementItem>
         </StyledPostEngagementContainer>

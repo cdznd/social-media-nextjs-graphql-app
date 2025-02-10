@@ -30,12 +30,13 @@ type PostCardProps = {
 }
 
 export default function PostCard({ postData, variants = [] }: PostCardProps) {
-    
+
     const author = postData?.author
 
     const createdAt = postData?.createdAt
     const creationDate = new Date(createdAt)
-    const displayDate = `${creationDate.getDay()} ${months[creationDate.getMonth()]} ${creationDate.getFullYear()}`
+
+    const displayDate = `${creationDate.getDate()} ${months[creationDate.getMonth()]} ${creationDate.getFullYear()}`
 
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
         null,
@@ -66,6 +67,7 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
     const displayImage = !variants.includes('no-media')
 
     const postLikes = postData?.likes ?? []
+    const postComments = postData?.comments ?? []
 
     return (
         <StyledPostCard
@@ -127,7 +129,9 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
 
                 <PostEngagement
                     postId={postData?.id}
-                    likes={postLikes} />
+                    likes={postLikes}
+                    comments={postComments}
+                />
 
             </Box>
         </StyledPostCard>

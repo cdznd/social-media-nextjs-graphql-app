@@ -46,29 +46,29 @@ const Query = objectType({
                 })
             }
         }),
-        t.nonNull.list.nonNull.field('users', {
-            type: User,
-            resolve: async (_parent, args, context: Context) => {
-                return await context.prisma.user.findMany()
-            }
-        }),
-        t.nullable.field('post', {
-            type: 'Post',
-            args: {
-                id: stringArg()
-            },
-            resolve: async (_parent, args, context: Context) => {
-                return await context.prisma.post.findUnique({
-                    where: { id: args?.id ?? undefined }
-                })
-            }
-        }),
-        t.nonNull.list.nonNull.field('posts', {
-            type: 'Post',
-            resolve: async (_parent, _args, context: Context) => {
-                return await context.prisma.post.findMany()
-            }
-        })
+            t.nonNull.list.nonNull.field('users', {
+                type: User,
+                resolve: async (_parent, args, context: Context) => {
+                    return await context.prisma.user.findMany()
+                }
+            }),
+            t.nullable.field('post', {
+                type: 'Post',
+                args: {
+                    id: stringArg()
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    return await context.prisma.post.findUnique({
+                        where: { id: args?.id ?? undefined }
+                    })
+                }
+            }),
+            t.nonNull.list.nonNull.field('posts', {
+                type: 'Post',
+                resolve: async (_parent, _args, context: Context) => {
+                    return await context.prisma.post.findMany()
+                }
+            })
         t.nonNull.list.nonNull.field('feedPosts', {
             type: 'Post',
             args: {
@@ -105,12 +105,12 @@ const Query = objectType({
                 })
             }
         }),
-        t.nonNull.list.nonNull.field('categories', {
-            type: 'Category',
-            resolve: async (_parent, args, context: Context) => {
-                return await context.prisma.category.findMany()
-            }
-        })
+            t.nonNull.list.nonNull.field('categories', {
+                type: 'Category',
+                resolve: async (_parent, args, context: Context) => {
+                    return await context.prisma.category.findMany()
+                }
+            })
     }
 })
 
@@ -136,10 +136,77 @@ const Mutation = mutationType({
                         categories: {
                             connectOrCreate: categories.map(category => ({
                                 where: { name: category },
-                                create: { name: category}
+                                create: { name: category }
                             }))
                         }
                     },
+                })
+            }
+        }),
+            t.field('createLike', {
+                type: Like,
+                args: {
+                    userId: nonNull(stringArg()),
+                    postId: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { userId, postId } = args
+                    return context.prisma.like.create({
+                        data: {
+                            userId,
+                            postId
+                        }
+                    })
+                }
+            }),
+            t.field('triggerLike', {
+                type: Like,
+                args: {
+                    userId: nonNull(stringArg()),
+                    postId: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { userId, postId } = args
+                    // Checks if the like for the post by the user alredy exists
+                    const existingLike = await context.prisma.like.findUnique({
+                        where: {
+                            userId_postId: {
+                                userId: userId as string,
+                                postId: postId as string
+                            }
+                        }
+                    })
+                    // If it exists, delete it, if now create.
+                    if (existingLike) {
+                        return context.prisma.like.delete({
+                            where: {
+                                userId_postId: {
+                                    userId: userId as string,
+                                    postId: postId as string
+                                }
+                            }
+                        })
+                    } else {
+                        return context.prisma.like.create({
+                            data: {
+                                userId,
+                                postId
+                            }
+                        })
+                    }
+                }
+            })
+        t.field('createCategory', {
+            type: Category,
+            args: {
+                name: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { name } = args
+                return context.prisma.category.create({
+                    data: {
+                        name
+                    }
                 })
             }
         })
@@ -269,8 +336,8 @@ export const Like = objectType({
         t.id("id");
         t.string("userId");
         t.string("postId");
-        t.field("user", { type: "User" });
-        t.field("post", { type: "Post" });
+        t.field("user", { type: User });
+        t.field("post", { type: Post });
         t.nonNull.field("createdAt", { type: "DateTime" });
     },
 });

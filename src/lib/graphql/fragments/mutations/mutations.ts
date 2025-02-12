@@ -29,9 +29,22 @@ export const TRIGGER_POST_LIKE_MUTATION = gql`
     }
 `
 
-// export const CREATE_USER_MUTATION = gql`
-//     mutation CreateUser {
-//         createUser {
-//         }       
-//     }
-// `
+export const CREATE_USER_MUTATION = gql`
+    mutation CreateUser(
+        $name: String!,
+        $email: String!,
+        $password: String,
+        $username: String!,
+        $image: String
+    ) {
+        createUser(
+            name: $name,
+            email: $email,
+            password: $password,
+            username: $username,
+            image: $image
+        ) {
+            id
+        }
+    }
+`

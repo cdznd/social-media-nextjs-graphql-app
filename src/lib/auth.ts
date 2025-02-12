@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "./prisma"
+import { compare } from "bcrypt"
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -15,25 +16,30 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-
-                if(!credentials) {
-                    return null
-                }
-
-                const credentialsEmail = credentials.username
-                const credentialsPassword = credentials.password
-
-                console.log('credentialsEmail', credentialsEmail);
-                console.log('credentialsPassword', credentialsPassword);
-
                 try {
-                    const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
-                    if(user) {
-                        return user
+                    if (!credentials) {
+                        return null
+                    }
+                    const credentialsUsername = credentials.username
+                    const credentialsPassword = credentials.password
+                    const currentUser = await prisma.user.findUnique({
+                        where: {
+                            username: credentialsUsername
+                        }
+                    })
+                    if (!currentUser?.password) {
+                        return null
+                    }
+                    const isCorrectPassword = await compare(
+                        credentialsPassword,
+                        currentUser.password
+                    )
+                    if (isCorrectPassword) {
+                        return currentUser
                     } else {
                         throw new Error("User not found.")
                     }
-                } catch(error) {
+                } catch (error) {
                     console.error(error)
                     return null
                 }

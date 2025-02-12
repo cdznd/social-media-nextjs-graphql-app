@@ -28,3 +28,10 @@ export const TRIGGER_POST_LIKE_MUTATION = gql`
         }
     }
 `
+
+// export const CREATE_USER_MUTATION = gql`
+//     mutation CreateUser {
+//         createUser {
+//         }       
+//     }
+// `

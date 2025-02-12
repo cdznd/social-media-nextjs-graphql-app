@@ -127,9 +127,11 @@ export interface NexusGenObjects {
     image?: string | null; // String
     likes?: NexusGenRootTypes['Like'][] | null; // [Like!]
     name?: string | null; // String
+    password?: string | null; // String
     posts?: NexusGenRootTypes['Post'][] | null; // [Post!]
     sessions?: NexusGenRootTypes['Session'][] | null; // [Session!]
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    username: string; // String!
   }
   VerificationToken: { // root type
     expires: NexusGenScalars['DateTime']; // DateTime!
@@ -203,8 +205,8 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createCategory: NexusGenRootTypes['Category'] | null; // Category
-    createLike: NexusGenRootTypes['Like'] | null; // Like
     createPost: NexusGenRootTypes['Post'] | null; // Post
+    createUser: NexusGenRootTypes['User'] | null; // User
     triggerLike: NexusGenRootTypes['Like'] | null; // Like
   }
   Post: { // field return type
@@ -247,9 +249,11 @@ export interface NexusGenFieldTypes {
     image: string | null; // String
     likes: NexusGenRootTypes['Like'][] | null; // [Like!]
     name: string | null; // String
+    password: string | null; // String
     posts: NexusGenRootTypes['Post'][] | null; // [Post!]
     sessions: NexusGenRootTypes['Session'][] | null; // [Session!]
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    username: string; // String!
   }
   VerificationToken: { // field return type
     expires: NexusGenScalars['DateTime']; // DateTime!
@@ -313,8 +317,8 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createCategory: 'Category'
-    createLike: 'Like'
     createPost: 'Post'
+    createUser: 'User'
     triggerLike: 'Like'
   }
   Post: { // field return type name
@@ -357,9 +361,11 @@ export interface NexusGenFieldTypeNames {
     image: 'String'
     likes: 'Like'
     name: 'String'
+    password: 'String'
     posts: 'Post'
     sessions: 'Session'
     updatedAt: 'DateTime'
+    username: 'String'
   }
   VerificationToken: { // field return type name
     expires: 'DateTime'
@@ -373,16 +379,19 @@ export interface NexusGenArgTypes {
     createCategory: { // args
       name: string; // String!
     }
-    createLike: { // args
-      postId: string; // String!
-      userId: string; // String!
-    }
     createPost: { // args
       authorId: string; // String!
       categories: string[]; // [String!]!
       content: string; // String!
       thumbnail?: string | null; // String
       title: string; // String!
+    }
+    createUser: { // args
+      email: string; // String!
+      image?: string | null; // String
+      name: string; // String!
+      password?: string | null; // String
+      username: string; // String!
     }
     triggerLike: { // args
       postId: string; // String!

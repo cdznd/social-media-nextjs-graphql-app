@@ -16,6 +16,7 @@ import { Context } from '../prisma/context';
 const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
 
 import { enumType } from "nexus";
+import { hash } from 'bcrypt';
 
 export const SortOrder = enumType({
     name: "SortOrder",
@@ -49,7 +50,11 @@ const Query = objectType({
             t.nonNull.list.nonNull.field('users', {
                 type: User,
                 resolve: async (_parent, args, context: Context) => {
-                    return await context.prisma.user.findMany()
+                    return await context.prisma.user.findMany({
+                        include: {
+                            accounts: true
+                        }
+                    })
                 }
             }),
             t.nullable.field('post', {
@@ -81,7 +86,6 @@ const Query = objectType({
                 const { userId, searchString, category, orderBy = 'desc' } = args;
                 return await context.prisma.post.findMany({
                     where: {
-                        authorId: userId,
                         AND: [
                             searchString
                                 ? {
@@ -116,46 +120,58 @@ const Query = objectType({
 
 const Mutation = mutationType({
     definition(t) {
-        t.field('createPost', {
-            type: Post,
+        t.field('createUser', {
+            type: User,
             args: {
-                title: nonNull(stringArg()),
-                content: nonNull(stringArg()),
-                authorId: nonNull(stringArg()),
-                thumbnail: stringArg(),
-                categories: nonNull(list(nonNull(stringArg())))
+                name: nonNull(stringArg()),
+                email: nonNull(stringArg()),
+                password: stringArg(),
+                username: nonNull(stringArg()),
+                image: stringArg()
             },
             resolve: async (_parent, args, context: Context) => {
-                const { title, content, authorId, thumbnail, categories } = args
-                return context.prisma.post.create({
+                const {
+                    name,
+                    email,
+                    password,
+                    username,
+                    image
+                } = args
+                return context.prisma.user.create({
                     data: {
-                        title: title as string,
-                        content: content as string,
-                        authorId: authorId as string,
-                        thumbnail,
-                        categories: {
-                            connectOrCreate: categories.map(category => ({
-                                where: { name: category },
-                                create: { name: category }
-                            }))
-                        }
-                    },
+                        name,
+                        email,
+                        password: password ? await hash(password, 10) : null,
+                        username,
+                        image
+                    }
                 })
             }
         }),
-            t.field('createLike', {
-                type: Like,
+            t.field('createPost', {
+                type: Post,
                 args: {
-                    userId: nonNull(stringArg()),
-                    postId: nonNull(stringArg())
+                    title: nonNull(stringArg()),
+                    content: nonNull(stringArg()),
+                    authorId: nonNull(stringArg()),
+                    thumbnail: stringArg(),
+                    categories: nonNull(list(nonNull(stringArg())))
                 },
                 resolve: async (_parent, args, context: Context) => {
-                    const { userId, postId } = args
-                    return context.prisma.like.create({
+                    const { title, content, authorId, thumbnail, categories } = args
+                    return context.prisma.post.create({
                         data: {
-                            userId,
-                            postId
-                        }
+                            title: title as string,
+                            content: content as string,
+                            authorId: authorId as string,
+                            thumbnail,
+                            categories: {
+                                connectOrCreate: categories.map(category => ({
+                                    where: { name: category },
+                                    create: { name: category }
+                                }))
+                            }
+                        },
                     })
                 }
             }),
@@ -218,9 +234,11 @@ const User = objectType({
     name: "User",
     definition(t) {
         t.id("id");
-        t.nullable.string("name");
+        t.string("name");
         t.string("email");
         t.nullable.field("emailVerified", { type: "DateTime" });
+        t.nullable.string("password")
+        t.nonNull.string("username")
         t.nullable.string("image");
         t.list.nonNull.field("accounts", { type: "Account" });
         t.list.nonNull.field("sessions", { type: "Session" });

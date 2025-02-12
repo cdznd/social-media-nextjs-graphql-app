@@ -18,7 +18,7 @@ import { signIn } from 'next-auth/react';
 
 export default function SignInPage() {
 
-    const handleSignIn = async () => {
+    const handleGoogleSignIn = async () => {
         const result = await signIn('google', {
             callbackUrl: '/',
             redirect: true,
@@ -48,7 +48,7 @@ export default function SignInPage() {
                     <Button
                         fullWidth
                         variant="outlined"
-                        onClick={() => handleSignIn()}
+                        onClick={() => handleGoogleSignIn()}
                         startIcon={<GoogleIcon />}
                     >
                         Sign in with Google

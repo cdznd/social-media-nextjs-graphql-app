@@ -12,10 +12,10 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "jsmith" },
+                username: { label: "Username", type: "text" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 try {
                     if (!credentials) {
                         return null
@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
                     if (isCorrectPassword) {
                         return currentUser
                     } else {
-                        throw new Error("User not found.")
+                        return null
                     }
                 } catch (error) {
                     console.error(error)
@@ -82,7 +82,6 @@ export const authOptions: NextAuthOptions = {
 
 export const handler = NextAuth(authOptions);
 
-// 
 export function auth(): Promise<Session | null> {
     return getServerSession(authOptions)
 }

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import {
   Box,
   FormControl,
@@ -6,76 +8,56 @@ import {
   FormLabel,
   TextField,
   Button,
-  Link,
   Checkbox
 } from "@mui/material";
-
-import { signIn } from "next-auth/react";
+import ErrorAlert from "../ErrorAlert";
 
 const CredentialsSigninForm = () => {
 
-  const [emailError, setEmailError] = useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-  const [open, setOpen] = useState(false);
+  const router = useRouter()
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleCredentialsSignIn = async (formData: FormData) => {
-    try {
-      console.log('before sign in');
-      return signIn('credentials',
-        {
-          username: formData.get('email'),
-          password: formData.get('password'),
-          redirect: false
-        }
-      )
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const [usernameError, setUsernameError] = useState<boolean>(false);
+  const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
+  const [loginError, setLoginError] = useState<boolean>(false)
+  const [loginErrorMessage, setLoginErrorMessage] = useState<string>('')
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (emailError || passwordError) {
+    if (usernameError || passwordError) {
       event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
-
-    const y = await handleCredentialsSignIn(data)
-    console.log('checking');
-    console.log(y);
-
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    // NextAuth SignIn
+    const result = await signIn('credentials',
+      {
+        username: data.get('username'),
+        password: data.get('password'),
+        redirect: false
+      }
+    )
+    if (result?.error) {
+      setLoginError(true)
+      setLoginErrorMessage(result?.error)
+    } else {
+      router.push('/app')
+    }
   };
 
   const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
+    const username = document.getElementById('username') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
-
     let isValid = true;
-
-    // if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-    //   setEmailError(true);
-    //   setEmailErrorMessage('Please enter a valid email address.');
-    //   isValid = false;
-    // } else {
-    //   setEmailError(false);
-    //   setEmailErrorMessage('');
-    // }
-
+    if (!username.value) {
+      setUsernameError(true);
+      setUsernameErrorMessage('Please enter a valid username address.');
+      isValid = false;
+    } else {
+      setUsernameError(false);
+      setUsernameErrorMessage('');
+    }
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
@@ -84,7 +66,6 @@ const CredentialsSigninForm = () => {
       setPasswordError(false);
       setPasswordErrorMessage('');
     }
-
     return isValid;
   };
 
@@ -100,21 +81,21 @@ const CredentialsSigninForm = () => {
         gap: 2,
       }}
     >
+      {loginError ? <ErrorAlert message={loginErrorMessage} /> : null }
       <FormControl>
-        <FormLabel htmlFor="email">Email</FormLabel>
+        <FormLabel htmlFor="username">Username</FormLabel>
         <TextField
-          error={emailError}
-          helperText={emailErrorMessage}
-          id="email"
-          type="email"
-          name="email"
-          placeholder="your@email.com"
-          autoComplete="email"
+          error={usernameError}
+          helperText={usernameErrorMessage}
+          id="username"
+          type="text"
+          name="username"
+          placeholder="Username"
           autoFocus
           required
           fullWidth
           variant="outlined"
-          color={emailError ? 'error' : 'primary'}
+          color={usernameError ? 'error' : 'primary'}
         />
       </FormControl>
       <FormControl>
@@ -147,15 +128,6 @@ const CredentialsSigninForm = () => {
       >
         Sign in
       </Button>
-      <Link
-        component="button"
-        type="button"
-        onClick={handleClickOpen}
-        variant="body2"
-        sx={{ alignSelf: 'center' }}
-      >
-        Forgot your password?
-      </Link>
     </Box>
   )
 }

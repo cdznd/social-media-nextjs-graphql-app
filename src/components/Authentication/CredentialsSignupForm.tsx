@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 import {
     Box,
@@ -17,6 +19,8 @@ const CredentialsSignupForm = () => {
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
     const [nameError, setNameError] = useState(false);
     const [nameErrorMessage, setNameErrorMessage] = useState('');
+    const [usernameError, setUsernameError] = useState(false)
+    const [usernameErrorMessage, setUsernameErrorMessage] = useState('')
 
     const validateInputs = () => {
         const email = document.getElementById('email') as HTMLInputElement;
@@ -55,12 +59,27 @@ const CredentialsSignupForm = () => {
         return isValid;
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // const [createUser] = useMutation()
+
+    const handleCredentialsSignUp = async (formData: FormData) => {
+        const response = await fetch('api/auth/signup', {
+            method: 'POST',
+            body: formData
+        })
+        const result = await response.json()
+        if(!response.ok) {
+            console.error('Error on signup')
+        }
+    }
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         if (nameError || emailError || passwordError) {
             event.preventDefault();
             return;
         }
         const data = new FormData(event.currentTarget);
+        await handleCredentialsSignUp(data)
         console.log({
             name: data.get('name'),
             lastName: data.get('lastName'),
@@ -118,6 +137,18 @@ const CredentialsSignupForm = () => {
                     error={passwordError}
                     helperText={passwordErrorMessage}
                     color={passwordError ? 'error' : 'primary'}
+                />
+            </FormControl>
+            <FormControl>
+                <FormLabel htmlFor="username">Create your unique username</FormLabel>
+                <TextField
+                    name="username"
+                    required
+                    fullWidth
+                    id="username"
+                    error={usernameError}
+                    helperText={usernameErrorMessage}
+                    color={usernameError ? 'error' : 'primary'}
                 />
             </FormControl>
             <FormControlLabel

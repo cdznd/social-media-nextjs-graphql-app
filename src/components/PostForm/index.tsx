@@ -17,6 +17,8 @@ import { CREATE_POST_MUTATION } from "@/lib/graphql/fragments/mutations/mutation
 import { StyledTextarea } from "@/components/common/CustomTextArea";
 import ClearIcon from '@mui/icons-material/Clear';
 
+import { useSession } from "next-auth/react";
+
 type CreatePostDTO = {
     title: String,
     content: String,
@@ -34,6 +36,8 @@ type PostFormProps = {
 export default function PostForm({ categories }: PostFormProps) {
 
     const router = useRouter()
+
+    const { data: session, status } = useSession();
 
     const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
 
@@ -125,7 +129,7 @@ export default function PostForm({ categories }: PostFormProps) {
         const createPostData: CreatePostDTO = {
             title: formData.get('title') as string,
             content: formData.get('content') as string,
-            authorId: 'cm6xvqp10000c0hummbypxlqw',
+            authorId: session?.user.id as string,
             thumbnail: imageFileS3Url ?? '',
             categories: selectedValues
         }

@@ -31,12 +31,12 @@ const Query = objectType({
         t.nullable.field('user', {
             type: User,
             args: {
-                userId: stringArg()
+                userId: nonNull(stringArg())
             },
             resolve: async (_parent, args, context: Context) => {
                 const { userId } = args;
                 return await context.prisma.user.findUnique({
-                    where: { id: userId ?? undefined },
+                    where: { id: userId as string },
                     include: {
                         posts: {
                             include: {
@@ -289,7 +289,24 @@ const User = objectType({
         t.list.nonNull.field("likes", { type: "Like" });
         t.list.nonNull.field("comments", { type: "Comment" });
 
-        t.list.nonNull.field("friends", { type: User })
+        t.list.nonNull.field("friends", {
+            type: User,
+            resolve: async (parent, _args, context: Context) => {
+                const friendships = await context.prisma.friendship.findMany({
+                    where: {
+                        OR: [
+                            { userAId: parent.id as string },
+                            { userBId: parent.id as string }
+                        ],
+                        // status: "ACCEPTED",  // Optional: Filter only accepted friendships
+                    },
+                    include: { userA: true, userB: true }
+                });
+
+                // Return the other user in the friendship
+                return friendships.map(f => (f.userAId === parent.id ? f.userB : f.userA));
+            }
+        });
 
         t.nonNull.field("createdAt", { type: "DateTime" });
         t.nonNull.field("updatedAt", { type: "DateTime" });

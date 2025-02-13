@@ -99,7 +99,7 @@ type Query {
   friends(userId: String!): [Friendship!]!
   post(id: String): Post
   posts: [Post!]!
-  user(userId: String): User
+  user(userId: String!): User
   users: [User!]!
 }
 

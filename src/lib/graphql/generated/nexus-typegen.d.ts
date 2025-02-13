@@ -129,7 +129,6 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     email?: string | null; // String
     emailVerified?: NexusGenScalars['DateTime'] | null; // DateTime
-    friends?: NexusGenRootTypes['User'][] | null; // [User!]
     id?: string | null; // ID
     image?: string | null; // String
     likes?: NexusGenRootTypes['Like'][] | null; // [Like!]
@@ -441,7 +440,7 @@ export interface NexusGenArgTypes {
       id?: string | null; // String
     }
     user: { // args
-      userId?: string | null; // String
+      userId: string; // String!
     }
   }
 }

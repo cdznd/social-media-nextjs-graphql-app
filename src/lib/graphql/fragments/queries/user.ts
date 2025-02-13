@@ -2,12 +2,16 @@ import gql from "graphql-tag";
 
 export const GET_USER_PROFILE = gql`
     query GetUserProfile(
-        $userId: String
+        $userId: String!
     ) {
         user(userId: $userId) {
             email
             name
             image
+            friends {
+                id
+                name
+            }
             posts {
                 id
                 title

@@ -88,6 +88,12 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
     userId?: string | null; // String
   }
+  Friendship: { // root type
+    id?: string | null; // String
+    status?: string | null; // String
+    userA: NexusGenRootTypes['User']; // User!
+    userB: NexusGenRootTypes['User']; // User!
+  }
   Like: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id?: string | null; // ID
@@ -123,6 +129,7 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     email?: string | null; // String
     emailVerified?: NexusGenScalars['DateTime'] | null; // DateTime
+    friends?: NexusGenRootTypes['User'][] | null; // [User!]
     id?: string | null; // ID
     image?: string | null; // String
     likes?: NexusGenRootTypes['Like'][] | null; // [Like!]
@@ -195,6 +202,12 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
     userId: string | null; // String
   }
+  Friendship: { // field return type
+    id: string | null; // String
+    status: string | null; // String
+    userA: NexusGenRootTypes['User']; // User!
+    userB: NexusGenRootTypes['User']; // User!
+  }
   Like: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string | null; // ID
@@ -205,6 +218,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createCategory: NexusGenRootTypes['Category'] | null; // Category
+    createFriendship: NexusGenRootTypes['Friendship'] | null; // Friendship
     createPost: NexusGenRootTypes['Post'] | null; // Post
     createUser: NexusGenRootTypes['User'] | null; // User
     triggerLike: NexusGenRootTypes['Like'] | null; // Like
@@ -225,6 +239,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     feedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
+    friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
     post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     user: NexusGenRootTypes['User'] | null; // User
@@ -245,6 +260,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     email: string | null; // String
     emailVerified: NexusGenScalars['DateTime'] | null; // DateTime
+    friends: NexusGenRootTypes['User'][] | null; // [User!]
     id: string | null; // ID
     image: string | null; // String
     likes: NexusGenRootTypes['Like'][] | null; // [Like!]
@@ -307,6 +323,12 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     userId: 'String'
   }
+  Friendship: { // field return type name
+    id: 'String'
+    status: 'String'
+    userA: 'User'
+    userB: 'User'
+  }
   Like: { // field return type name
     createdAt: 'DateTime'
     id: 'ID'
@@ -317,6 +339,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createCategory: 'Category'
+    createFriendship: 'Friendship'
     createPost: 'Post'
     createUser: 'User'
     triggerLike: 'Like'
@@ -337,6 +360,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     categories: 'Category'
     feedPosts: 'Post'
+    friends: 'Friendship'
     post: 'Post'
     posts: 'Post'
     user: 'User'
@@ -357,6 +381,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     email: 'String'
     emailVerified: 'DateTime'
+    friends: 'User'
     id: 'ID'
     image: 'String'
     likes: 'Like'
@@ -378,6 +403,10 @@ export interface NexusGenArgTypes {
   Mutation: {
     createCategory: { // args
       name: string; // String!
+    }
+    createFriendship: { // args
+      fromUserId: string; // String!
+      toUserId: string; // String!
     }
     createPost: { // args
       authorId: string; // String!
@@ -403,6 +432,9 @@ export interface NexusGenArgTypes {
       category?: string | null; // String
       orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
       searchString?: string | null; // String
+      userId: string; // String!
+    }
+    friends: { // args
       userId: string; // String!
     }
     post: { // args

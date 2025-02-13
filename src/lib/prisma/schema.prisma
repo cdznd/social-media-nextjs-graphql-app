@@ -24,6 +24,9 @@ model User {
   likes Like[]
   comments Comment[]
 
+  friendsA Friendship[] @relation("FriendshipA") // When a user sends the friend request and is the friendA
+  friendsB Friendship[] @relation("FriendshipB") // When a user receives the friend request is the friendB
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -83,6 +86,21 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Friendship {
+  id        String            @id @default(cuid())
+  userAId   String
+  userBId   String
+  userA     User              @relation("FriendshipA", fields: [userAId], references: [id])
+  userB     User              @relation("FriendshipB", fields: [userBId], references: [id])
+  status    FriendshipStatus  @default(PENDING)
+}
+
 model Post {
   id          String    @id @default(cuid())
   title       String
@@ -96,6 +114,7 @@ model Post {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+
 model Category {
   id    String    @id @default(cuid())
   name  String    @unique    

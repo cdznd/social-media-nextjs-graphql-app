@@ -46,28 +46,49 @@ const Query = objectType({
                     }
                 })
             }
+        })
+        t.nonNull.list.nonNull.field('users', {
+            type: User,
+            resolve: async (_parent, args, context: Context) => {
+                return await context.prisma.user.findMany({
+                    include: {
+                        accounts: true
+                    }
+                })
+            }
+        })
+        t.nonNull.list.nonNull.field('friends', {
+            type: Friendship,
+            args: {
+                userId: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { userId } = args
+                return await context.prisma.friendship.findMany({
+                    where: {
+                        OR: [
+                            { userAId: userId as string },
+                            { userBId: userId as string }
+                        ]
+                    },
+                    include: {
+                        userA: true,
+                        userB: true
+                    }
+                })
+            }
+        })
+        t.nullable.field('post', {
+            type: 'Post',
+            args: {
+                id: stringArg()
+            },
+            resolve: async (_parent, args, context: Context) => {
+                return await context.prisma.post.findUnique({
+                    where: { id: args?.id ?? undefined }
+                })
+            }
         }),
-            t.nonNull.list.nonNull.field('users', {
-                type: User,
-                resolve: async (_parent, args, context: Context) => {
-                    return await context.prisma.user.findMany({
-                        include: {
-                            accounts: true
-                        }
-                    })
-                }
-            }),
-            t.nullable.field('post', {
-                type: 'Post',
-                args: {
-                    id: stringArg()
-                },
-                resolve: async (_parent, args, context: Context) => {
-                    return await context.prisma.post.findUnique({
-                        where: { id: args?.id ?? undefined }
-                    })
-                }
-            }),
             t.nonNull.list.nonNull.field('posts', {
                 type: 'Post',
                 resolve: async (_parent, _args, context: Context) => {
@@ -108,13 +129,13 @@ const Query = objectType({
                     },
                 })
             }
-        }),
-            t.nonNull.list.nonNull.field('categories', {
-                type: 'Category',
-                resolve: async (_parent, args, context: Context) => {
-                    return await context.prisma.category.findMany()
-                }
-            })
+        })
+        t.nonNull.list.nonNull.field('categories', {
+            type: 'Category',
+            resolve: async (_parent, args, context: Context) => {
+                return await context.prisma.category.findMany()
+            }
+        })
     }
 })
 
@@ -147,44 +168,74 @@ const Mutation = mutationType({
                     }
                 })
             }
-        }),
-            t.field('createPost', {
-                type: Post,
-                args: {
-                    title: nonNull(stringArg()),
-                    content: nonNull(stringArg()),
-                    authorId: nonNull(stringArg()),
-                    thumbnail: stringArg(),
-                    categories: nonNull(list(nonNull(stringArg())))
-                },
-                resolve: async (_parent, args, context: Context) => {
-                    const { title, content, authorId, thumbnail, categories } = args
-                    return context.prisma.post.create({
-                        data: {
-                            title: title as string,
-                            content: content as string,
-                            authorId: authorId as string,
-                            thumbnail,
-                            categories: {
-                                connectOrCreate: categories.map(category => ({
-                                    where: { name: category },
-                                    create: { name: category }
-                                }))
-                            }
+        })
+        t.field('createFriendship', {
+            type: Friendship,
+            args: {
+                fromUserId: nonNull(stringArg()),
+                toUserId: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { fromUserId, toUserId } = args
+                return context.prisma.friendship.create({
+                    data: {
+                        userA: {
+                            connect: { id: fromUserId }
                         },
-                    })
-                }
-            }),
-            t.field('triggerLike', {
-                type: Like,
-                args: {
-                    userId: nonNull(stringArg()),
-                    postId: nonNull(stringArg())
-                },
-                resolve: async (_parent, args, context: Context) => {
-                    const { userId, postId } = args
-                    // Checks if the like for the post by the user alredy exists
-                    const existingLike = await context.prisma.like.findUnique({
+                        userB: {
+                            connect: { id: toUserId }
+                        },
+                    }
+                })
+            }
+        })
+        t.field('createPost', {
+            type: Post,
+            args: {
+                title: nonNull(stringArg()),
+                content: nonNull(stringArg()),
+                authorId: nonNull(stringArg()),
+                thumbnail: stringArg(),
+                categories: nonNull(list(nonNull(stringArg())))
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { title, content, authorId, thumbnail, categories } = args
+                return context.prisma.post.create({
+                    data: {
+                        title: title as string,
+                        content: content as string,
+                        authorId: authorId as string,
+                        thumbnail,
+                        categories: {
+                            connectOrCreate: categories.map(category => ({
+                                where: { name: category },
+                                create: { name: category }
+                            }))
+                        }
+                    },
+                })
+            }
+        })
+        t.field('triggerLike', {
+            type: Like,
+            args: {
+                userId: nonNull(stringArg()),
+                postId: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { userId, postId } = args
+                // Checks if the like for the post by the user alredy exists
+                const existingLike = await context.prisma.like.findUnique({
+                    where: {
+                        userId_postId: {
+                            userId: userId as string,
+                            postId: postId as string
+                        }
+                    }
+                })
+                // If it exists, delete it, if now create.
+                if (existingLike) {
+                    return context.prisma.like.delete({
                         where: {
                             userId_postId: {
                                 userId: userId as string,
@@ -192,26 +243,16 @@ const Mutation = mutationType({
                             }
                         }
                     })
-                    // If it exists, delete it, if now create.
-                    if (existingLike) {
-                        return context.prisma.like.delete({
-                            where: {
-                                userId_postId: {
-                                    userId: userId as string,
-                                    postId: postId as string
-                                }
-                            }
-                        })
-                    } else {
-                        return context.prisma.like.create({
-                            data: {
-                                userId,
-                                postId
-                            }
-                        })
-                    }
+                } else {
+                    return context.prisma.like.create({
+                        data: {
+                            userId,
+                            postId
+                        }
+                    })
                 }
-            })
+            }
+        })
         t.field('createCategory', {
             type: Category,
             args: {
@@ -240,12 +281,16 @@ const User = objectType({
         t.nullable.string("password")
         t.nonNull.string("username")
         t.nullable.string("image");
+
         t.list.nonNull.field("accounts", { type: "Account" });
         t.list.nonNull.field("sessions", { type: "Session" });
         t.list.nonNull.field("authenticators", { type: "Authenticator" });
         t.list.nonNull.field("posts", { type: "Post" });
         t.list.nonNull.field("likes", { type: "Like" });
         t.list.nonNull.field("comments", { type: "Comment" });
+
+        t.list.nonNull.field("friends", { type: User })
+
         t.nonNull.field("createdAt", { type: "DateTime" });
         t.nonNull.field("updatedAt", { type: "DateTime" });
     },
@@ -308,6 +353,22 @@ const Authenticator = objectType({
         t.field("user", { type: "User" });
     },
 });
+
+enum FriendshipStatus {
+    PENDING,
+    ACCEPTED,
+    REJECTED
+}
+
+const Friendship = objectType({
+    name: "Friendship",
+    definition(t) {
+        t.string("id");
+        t.nonNull.field("userA", { type: User });
+        t.nonNull.field("userB", { type: User });
+        t.string("status")
+    }
+})
 
 // App Components
 const Post = objectType({
@@ -385,6 +446,7 @@ export const schema = makeSchema({
         Session,
         VerificationToken,
         Authenticator,
+        Friendship,
         Post,
         Category,
         Like,

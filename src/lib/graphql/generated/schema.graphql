@@ -55,6 +55,13 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type Friendship {
+  id: String
+  status: String
+  userA: User!
+  userB: User!
+}
+
 type Like {
   createdAt: DateTime!
   id: ID
@@ -66,6 +73,7 @@ type Like {
 
 type Mutation {
   createCategory(name: String!): Category
+  createFriendship(fromUserId: String!, toUserId: String!): Friendship
   createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
   createUser(email: String!, image: String, name: String!, password: String, username: String!): User
   triggerLike(postId: String!, userId: String!): Like
@@ -88,9 +96,10 @@ type Post {
 type Query {
   categories: [Category!]!
   feedPosts(category: String, orderBy: SortOrder = desc, searchString: String, userId: String!): [Post!]!
+  friends(userId: String!): [Friendship!]!
   post(id: String): Post
   posts: [Post!]!
-  user(userId: String): User
+  user(userId: String!): User
   users: [User!]!
 }
 
@@ -115,6 +124,7 @@ type User {
   createdAt: DateTime!
   email: String
   emailVerified: DateTime
+  friends: [User!]
   id: ID
   image: String
   likes: [Like!]

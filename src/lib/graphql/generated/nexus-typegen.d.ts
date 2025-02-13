@@ -437,7 +437,7 @@ export interface NexusGenArgTypes {
       userId: string; // String!
     }
     post: { // args
-      id?: string | null; // String
+      postId: string; // String!
     }
     user: { // args
       userId: string; // String!

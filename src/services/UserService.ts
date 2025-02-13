@@ -1,15 +1,30 @@
-import { PrismaClient } from "@prisma/client";
+import { Context } from "@/lib/prisma"
 
 export class UserService {
 
     constructor(
-        private prisma: PrismaClient
+        private context: Context
     ) {}
 
     async getUserById(userId: string) {
-        return this.prisma.user.findUnique({
+        return this.context.prisma.user.findUnique({
             where: {
                 id: userId
+            },
+            include: {
+                posts: {
+                    include: {
+                        author: true
+                    }
+                }
+            }
+        })
+    }
+
+    async getUsers() {
+        return this.context.prisma.user.findMany({
+            include: {
+                accounts: true
             }
         })
     }

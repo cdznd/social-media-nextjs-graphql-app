@@ -23,6 +23,11 @@ export const SortOrder = enumType({
     members: ["asc", "desc"],
 });
 
+import { UserService } from '@/services/UserService';
+import { FriendshipService } from '@/services/FriendshipService';
+import { PostService } from '@/services/PostService';
+import { CategoryService } from '@/services/CategoryService';
+
 // TODO: Export all the objectType to external files. Example: https://github.com/graphql-nexus/nexus/blob/main/examples/ghost/src/schema/index.ts
 
 const Query = objectType({
@@ -35,26 +40,15 @@ const Query = objectType({
             },
             resolve: async (_parent, args, context: Context) => {
                 const { userId } = args;
-                return await context.prisma.user.findUnique({
-                    where: { id: userId as string },
-                    include: {
-                        posts: {
-                            include: {
-                                author: true
-                            }
-                        },
-                    }
-                })
+                const userService = new UserService(context)
+                return userService.getUserById(userId)
             }
         })
         t.nonNull.list.nonNull.field('users', {
             type: User,
             resolve: async (_parent, args, context: Context) => {
-                return await context.prisma.user.findMany({
-                    include: {
-                        accounts: true
-                    }
-                })
+                const userService = new UserService(context)
+                return userService.getUsers()
             }
         })
         t.nonNull.list.nonNull.field('friends', {
@@ -64,39 +58,30 @@ const Query = objectType({
             },
             resolve: async (_parent, args, context: Context) => {
                 const { userId } = args
-                return await context.prisma.friendship.findMany({
-                    where: {
-                        OR: [
-                            { userAId: userId as string },
-                            { userBId: userId as string }
-                        ]
-                    },
-                    include: {
-                        userA: true,
-                        userB: true
-                    }
-                })
+                const friendshipService = new FriendshipService(context)
+                return friendshipService.getFriendsByUserId(userId)
             }
         })
         t.nullable.field('post', {
-            type: 'Post',
+            type: Post,
             args: {
-                id: stringArg()
+                postId: nonNull(stringArg())
             },
             resolve: async (_parent, args, context: Context) => {
-                return await context.prisma.post.findUnique({
-                    where: { id: args?.id ?? undefined }
-                })
+                const { postId } = args
+                const postService = new PostService(context)
+                return postService.getPostById(postId)
             }
-        }),
-            t.nonNull.list.nonNull.field('posts', {
-                type: 'Post',
-                resolve: async (_parent, _args, context: Context) => {
-                    return await context.prisma.post.findMany()
-                }
-            })
+        })
+        t.nonNull.list.nonNull.field('posts', {
+            type: Post,
+            resolve: async (_parent, _args, context: Context) => {
+                const postService = new PostService(context)
+                return postService.getPosts()
+            }
+        })
         t.nonNull.list.nonNull.field('feedPosts', {
-            type: 'Post',
+            type: Post,
             args: {
                 userId: nonNull(stringArg()),
                 searchString: stringArg(),
@@ -105,35 +90,24 @@ const Query = objectType({
             },
             resolve: async (_parent, args, context: Context) => {
                 const { userId, searchString, category, orderBy = 'desc' } = args;
-                return await context.prisma.post.findMany({
-                    where: {
-                        AND: [
-                            searchString
-                                ? {
-                                    OR: [
-                                        { title: { contains: searchString, mode: 'insensitive' } },
-                                        { content: { contains: searchString, mode: 'insensitive' } }
-                                    ]
-                                } : {},
-                            category
-                                ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
-                                : {}
-                        ]
+                const postService = new PostService(context)
+                return postService.getFeedByUserId(
+                    userId,
+                    {
+                        searchString,
+                        category
                     },
-                    orderBy: { createdAt: orderBy as "asc" | "desc" },
-                    include: {
-                        author: true,
-                        likes: true,
-                        comments: true,
-                        categories: true,
-                    },
-                })
+                    { 
+                        orderBy
+                    }
+                )
             }
         })
         t.nonNull.list.nonNull.field('categories', {
-            type: 'Category',
+            type: Category,
             resolve: async (_parent, args, context: Context) => {
-                return await context.prisma.category.findMany()
+                const categoryService = new CategoryService(context)
+                return categoryService.getCategories()
             }
         })
     }

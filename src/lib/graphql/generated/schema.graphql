@@ -62,6 +62,12 @@ type Friendship {
   userB: User!
 }
 
+enum FriendshipStatus {
+  ACCEPTED
+  PENDING
+  REJECTED
+}
+
 type Like {
   createdAt: DateTime!
   id: ID
@@ -73,9 +79,9 @@ type Like {
 
 type Mutation {
   createCategory(name: String!): Category
-  createFriendship(fromUserId: String!, toUserId: String!): Friendship
+  createFriendship(fromUserId: String!, status: FriendshipStatus = PENDING, toUserId: String!): Friendship
   createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
-  createUser(email: String!, image: String, name: String!, password: String, username: String!): User
+  createUser(email: String!, image: String, name: String!, password: String!, username: String!): User
   triggerLike(postId: String!, userId: String!): Like
 }
 

@@ -34,6 +34,11 @@ export const SortOrder = enumType({
     members: ["asc", "desc"],
 });
 
+export const FriendshipStatus = enumType({
+    name: "FriendshipStatus",
+    members: ["PENDING", "ACCEPTED", "REJECTED"],
+});
+
 const Query = objectType({
     name: 'Query',
     definition(t) {
@@ -124,7 +129,7 @@ const Mutation = mutationType({
             args: {
                 name: nonNull(stringArg()),
                 email: nonNull(stringArg()),
-                password: stringArg(),
+                password: nonNull(stringArg()),
                 username: nonNull(stringArg()),
                 image: stringArg()
             },
@@ -136,35 +141,21 @@ const Mutation = mutationType({
                     username,
                     image
                 } = args
-                return context.prisma.user.create({
-                    data: {
-                        name,
-                        email,
-                        password: password ? await hash(password, 10) : null,
-                        username,
-                        image
-                    }
-                })
+                const userService = new UserService(context)
+                return userService.createUser({ name, email, password, username, image })
             }
         })
         t.field('createFriendship', {
             type: Friendship,
             args: {
                 fromUserId: nonNull(stringArg()),
-                toUserId: nonNull(stringArg())
+                toUserId: nonNull(stringArg()),
+                status: arg({ type: 'FriendshipStatus', default: "PENDING" })
             },
             resolve: async (_parent, args, context: Context) => {
-                const { fromUserId, toUserId } = args
-                return context.prisma.friendship.create({
-                    data: {
-                        userA: {
-                            connect: { id: fromUserId }
-                        },
-                        userB: {
-                            connect: { id: toUserId }
-                        },
-                    }
-                })
+                const { fromUserId, toUserId, status } = args
+                const friendshipService = new FriendshipService(context)
+                return friendshipService.createFriendship({ fromUserId, toUserId, status })
             }
         })
         t.field('createPost', {
@@ -263,7 +254,9 @@ export const schema = makeSchema({
         Category,
         Like,
         Comment,
-        DateTime
+        DateTime,
+        FriendshipStatus,
+        SortOrder
     ],
     outputs: {
         typegen: path.join(process.cwd(), '/src/lib/graphql/generated/nexus-typegen.d.ts'),

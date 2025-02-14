@@ -41,19 +41,26 @@ export default class PostService {
     }
 
     async getPostById(postId: string) {
-        return this.context.prisma.post.findUnique({
+        const result = await this.context.prisma.post.findUnique({
             where: { id: postId }
         })
+        if(!result) {
+            throw new Error('Post not found')
+        }
+        return result
     }
 
     async getPosts() {
-        return this.context.prisma.post.findMany({})
+        const result = await this.context.prisma.post.findMany({})
+        if(!result) {
+            throw new Error('Posts not found')
+        }
+        return result
     }
 
-    // TODO: Replace any types
-    async getFeedByUserId(userId: string, filters: FeedFilters, options: FeedOptions) {
-        const { searchString, category } = filters
-        const { orderBy } = options
+    async getFeedByUserId(userId: string, filters?: FeedFilters, options?: FeedOptions) {
+        const { searchString, category } = filters || {}
+        const { orderBy } = options || {}
         return this.context.prisma.post.findMany({
             where: {
                 AND: [

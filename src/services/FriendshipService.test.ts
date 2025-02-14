@@ -1,6 +1,6 @@
 import { Context } from "@/lib/prisma/context"
 import { MockContext, createMockContext } from '../lib/prisma/tests/PrismaContextUtils'
-import { FriendshipService } from './FriendshipService'
+import FriendshipService from './FriendshipService'
 
 let mockCtx: MockContext
 let ctx: Context

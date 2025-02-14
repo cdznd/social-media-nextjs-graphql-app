@@ -4,10 +4,12 @@ import FriendshipService from './FriendshipService'
 
 let mockCtx: MockContext
 let ctx: Context
+let friendshipService: FriendshipService
 
 beforeEach(() => {
     mockCtx = createMockContext()
     ctx = mockCtx as unknown as Context
+    friendshipService = new FriendshipService(ctx)
 })
 
 // TODO: Find a way to mock the include option from findMany, 
@@ -28,7 +30,6 @@ test('Should return friends list for a given user', async () => {
             status: 'PENDING'
         }
     ])
-    const friendshipService = new FriendshipService(ctx)
     await expect(friendshipService.getFriendsByUserId(userId)).resolves.toEqual([
         {
             id: 'friendship-1',

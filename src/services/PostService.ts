@@ -1,6 +1,6 @@
 import { Context } from "@/lib/prisma/context"
 
-export class PostService {
+export default class PostService {
     
     constructor(
         private context: Context

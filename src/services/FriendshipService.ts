@@ -1,6 +1,6 @@
 import { Context } from "@/lib/prisma/context"
 
-export class FriendshipService {
+export default class FriendshipService {
 
     constructor(
         private context: Context

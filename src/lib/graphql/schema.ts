@@ -7,25 +7,31 @@ import {
     nonNull,
     mutationType,
     list,
+    enumType,
 } from 'nexus'
-import { GraphQLDateTime } from "graphql-scalars";
 import path from 'path';
-import { Context } from '../prisma/context';
-import { enumType } from "nexus";
 import { hash } from 'bcrypt';
-// Service Layer
-import { UserService } from '@/services/UserService';
-import { FriendshipService } from '@/services/FriendshipService';
-import { PostService } from '@/services/PostService';
+import { Context } from '../prisma/context';
+// Services
+import UserService from '@/services/UserService';
+import FriendshipService from '@/services/FriendshipService';
+import PostService from '@/services/PostService';
 import CategoryService from '@/services/CategoryService';
+// ObjectTypes
+import { User, Account, Session, VerificationToken, Authenticator } from './objects/Auth'
+import { Friendship } from './objects/Friendship';
+import { Post } from './objects/Post';
+import { Category } from './objects/Category';
+import { Like } from './objects/Like';
+
+import { GraphQLDateTime } from "graphql-scalars";
+
+const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
 
 export const SortOrder = enumType({
     name: "SortOrder",
     members: ["asc", "desc"],
 });
-
-const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
-// TODO: Export all the objectType to external files. Example: https://github.com/graphql-nexus/nexus/blob/main/examples/ghost/src/schema/index.ts
 
 const Query = objectType({
     name: 'Query',
@@ -241,190 +247,7 @@ const Mutation = mutationType({
     }
 })
 
-// User + Auth
-const User = objectType({
-    name: "User",
-    definition(t) {
-        t.id("id");
-        t.string("name");
-        t.string("email");
-        t.nullable.field("emailVerified", { type: "DateTime" });
-        t.nullable.string("password")
-        t.nonNull.string("username")
-        t.nullable.string("image");
-
-        t.list.nonNull.field("accounts", { type: "Account" });
-        t.list.nonNull.field("sessions", { type: "Session" });
-        t.list.nonNull.field("authenticators", { type: "Authenticator" });
-        t.list.nonNull.field("posts", { type: "Post" });
-        t.list.nonNull.field("likes", { type: "Like" });
-        t.list.nonNull.field("comments", { type: "Comment" });
-
-        t.list.nonNull.field("friends", {
-            type: User,
-            resolve: async (parent, _args, context: Context) => {
-                const friendships = await context.prisma.friendship.findMany({
-                    where: {
-                        OR: [
-                            { userAId: parent.id as string },
-                            { userBId: parent.id as string }
-                        ],
-                        // status: "ACCEPTED",  // Optional: Filter only accepted friendships
-                    },
-                    include: { userA: true, userB: true }
-                });
-
-                // Return the other user in the friendship
-                return friendships.map(f => (f.userAId === parent.id ? f.userB : f.userA));
-            }
-        });
-
-        t.nonNull.field("createdAt", { type: "DateTime" });
-        t.nonNull.field("updatedAt", { type: "DateTime" });
-    },
-});
-
-const Account = objectType({
-    name: "Account",
-    definition(t) {
-        t.string("userId");
-        t.string("type");
-        t.string("provider");
-        t.string("providerAccountId");
-        t.nullable.string("refresh_token");
-        t.nullable.string("access_token");
-        t.nullable.int("expires_at");
-        t.nullable.string("token_type");
-        t.nullable.string("scope");
-        t.nullable.string("id_token");
-        t.nullable.string("session_state");
-        t.nonNull.field("createdAt", { type: "DateTime" });
-        t.nonNull.field("updatedAt", { type: "DateTime" });
-        t.field("user", { type: "User" });
-    },
-});
-
-const Session = objectType({
-    name: "Session",
-    definition(t) {
-        t.string("sessionToken");
-        t.string("userId");
-        t.nonNull.field("expires", { type: "DateTime" });
-        t.nonNull.field("createdAt", { type: "DateTime" });
-        t.nonNull.field("updatedAt", { type: "DateTime" });
-        t.field("user", { type: "User" });
-    },
-});
-
-const VerificationToken = objectType({
-    name: "VerificationToken",
-    definition(t) {
-        t.string("identifier");
-        t.string("token");
-        t.nonNull.field("expires", { type: "DateTime" });
-    },
-});
-
-const Authenticator = objectType({
-    name: "Authenticator",
-    definition(t) {
-        t.string("credentialID");
-        t.string("userId");
-        t.string("providerAccountId");
-        t.string("credentialPublicKey");
-        t.int("counter");
-        t.string("credentialDeviceType");
-        t.boolean("credentialBackedUp");
-        t.nullable.string("transports");
-        t.nonNull.field("createdAt", { type: "DateTime" });
-        t.nonNull.field("updatedAt", { type: "DateTime" });
-        t.field("user", { type: "User" });
-    },
-});
-
-enum FriendshipStatus {
-    PENDING,
-    ACCEPTED,
-    REJECTED
-}
-
-const Friendship = objectType({
-    name: "Friendship",
-    definition(t) {
-        t.string("id");
-        t.nonNull.field("userA", { type: User });
-        t.nonNull.field("userB", { type: User });
-        t.string("status")
-    }
-})
-
-// App Components
-const Post = objectType({
-    name: "Post",
-    definition(t) {
-        t.id("id");
-        t.string("title");
-        t.string("content");
-        t.nullable.string("thumbnail");
-        t.string("authorId");
-        t.field("author", { type: "User" });
-        t.list.nonNull.field("likes", {
-            type: "Like",
-            resolve: (_parent) => _parent.likes ?? []
-        });
-        t.nonNull.list.nonNull.field("comments", {
-            type: "Comment",
-            resolve: (_parent) => _parent.comments ?? []
-        });
-        t.nonNull.list.nonNull.field("categories", {
-            type: "Category",
-            resolve: (_parent) => _parent.categories ?? []
-        });
-        t.nonNull.field("createdAt", { type: "DateTime" });
-        t.nonNull.field("updatedAt", { type: "DateTime" });
-    },
-});
-
-export const Category = objectType({
-    name: "Category",
-    definition(t) {
-        t.id("id");
-        t.string("name");
-        t.nonNull.list.nonNull.field("posts", {
-            type: "Post",
-            resolve: (_parent) => _parent.posts ?? []
-        });
-    },
-});
-
-export const Like = objectType({
-    name: "Like",
-    definition(t) {
-        t.id("id");
-        t.string("userId");
-        t.string("postId");
-        t.field("user", { type: User });
-        t.field("post", { type: Post });
-        t.nonNull.field("createdAt", { type: "DateTime" });
-    },
-});
-
-export const Comment = objectType({
-    name: "Comment",
-    definition(t) {
-        t.id("id");
-        t.string("content");
-        t.string("userId");
-        t.string("postId");
-        t.field("user", { type: "User" });
-        t.field("post", { type: "Post" });
-        t.nonNull.field("createdAt", { type: "DateTime" });
-        t.nonNull.field("updatedAt", { type: "DateTime" });
-    },
-});
-
 // TODO: Read about build in https://nexusjs.org/docs/adoption-guides/nextjs-users
-// Schema
 export const schema = makeSchema({
     types: [
         Query,

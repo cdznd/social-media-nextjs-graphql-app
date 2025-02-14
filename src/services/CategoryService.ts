@@ -6,6 +6,14 @@ export default class CategoryService {
         private context: Context
     ) {}
 
+    async createCategory(name: string) {
+        return this.context.prisma.category.create({
+            data: {
+                name
+            }
+        })
+    }
+
     async getCategories() {
         return this.context.prisma.category.findMany({})
     }

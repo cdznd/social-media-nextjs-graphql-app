@@ -4,7 +4,7 @@ type CreatePostDTO = {
     title: string
     content: string
     authorId: string
-    thumbnail: string | null
+    thumbnail?: string | null
     categories: string[]
 }
 

@@ -7,16 +7,9 @@ import {
     nonNull,
     mutationType,
     list,
-    enumType,
 } from 'nexus'
 import path from 'path';
-import { hash } from 'bcrypt';
 import { Context } from '../prisma/context';
-// Services
-import UserService from '@/services/UserService';
-import FriendshipService from '@/services/FriendshipService';
-import PostService from '@/services/PostService';
-import CategoryService from '@/services/CategoryService';
 // ObjectTypes
 import { User, Account, Session, VerificationToken, Authenticator } from './objects/Auth'
 import { Friendship } from './objects/Friendship';
@@ -24,20 +17,18 @@ import { Post } from './objects/Post';
 import { Category } from './objects/Category';
 import { Like } from './objects/Like';
 import { Comment } from './objects/Comment';
+// Enums
+import { SortOrder, FriendshipStatus } from './enums/common';
+// Services
+import UserService from '@/services/UserService';
+import FriendshipService from '@/services/FriendshipService';
+import PostService from '@/services/PostService';
+import CategoryService from '@/services/CategoryService';
+import LikeService from '@/services/LikeService';
 
 import { GraphQLDateTime } from "graphql-scalars";
 
 const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
-
-export const SortOrder = enumType({
-    name: "SortOrder",
-    members: ["asc", "desc"],
-});
-
-export const FriendshipStatus = enumType({
-    name: "FriendshipStatus",
-    members: ["PENDING", "ACCEPTED", "REJECTED"],
-});
 
 const Query = objectType({
     name: 'Query',
@@ -134,13 +125,7 @@ const Mutation = mutationType({
                 image: stringArg()
             },
             resolve: async (_parent, args, context: Context) => {
-                const {
-                    name,
-                    email,
-                    password,
-                    username,
-                    image
-                } = args
+                const { name, email, password, username, image } = args
                 const userService = new UserService(context)
                 return userService.createUser({ name, email, password, username, image })
             }
@@ -169,20 +154,8 @@ const Mutation = mutationType({
             },
             resolve: async (_parent, args, context: Context) => {
                 const { title, content, authorId, thumbnail, categories } = args
-                return context.prisma.post.create({
-                    data: {
-                        title: title as string,
-                        content: content as string,
-                        authorId: authorId as string,
-                        thumbnail,
-                        categories: {
-                            connectOrCreate: categories.map(category => ({
-                                where: { name: category },
-                                create: { name: category }
-                            }))
-                        }
-                    },
-                })
+                const postService = new PostService(context)
+                return postService.createPost({ title, content, authorId, thumbnail, categories })
             }
         })
         t.field('triggerLike', {
@@ -193,33 +166,8 @@ const Mutation = mutationType({
             },
             resolve: async (_parent, args, context: Context) => {
                 const { userId, postId } = args
-                // Checks if the like for the post by the user alredy exists
-                const existingLike = await context.prisma.like.findUnique({
-                    where: {
-                        userId_postId: {
-                            userId: userId as string,
-                            postId: postId as string
-                        }
-                    }
-                })
-                // If it exists, delete it, if now create.
-                if (existingLike) {
-                    return context.prisma.like.delete({
-                        where: {
-                            userId_postId: {
-                                userId: userId as string,
-                                postId: postId as string
-                            }
-                        }
-                    })
-                } else {
-                    return context.prisma.like.create({
-                        data: {
-                            userId,
-                            postId
-                        }
-                    })
-                }
+                const likeService = new LikeService(context)
+                return likeService.triggerLike({ userId, postId })
             }
         })
         t.field('createCategory', {
@@ -229,11 +177,8 @@ const Mutation = mutationType({
             },
             resolve: async (_parent, args, context: Context) => {
                 const { name } = args
-                return context.prisma.category.create({
-                    data: {
-                        name
-                    }
-                })
+                const categoryService = new CategoryService(context)
+                return categoryService.createCategory(name)
             }
         })
     }

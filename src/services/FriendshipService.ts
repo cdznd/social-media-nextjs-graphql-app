@@ -1,5 +1,4 @@
-import { Context } from "@/lib/prisma";
-
+import { Context } from "@/lib/prisma/context"
 
 export class FriendshipService {
 

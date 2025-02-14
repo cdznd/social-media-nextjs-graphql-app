@@ -1,6 +1,6 @@
-import { Context } from "@/lib/prisma";
+import { Context } from "@/lib/prisma/context"
 
-export class CategoryService {
+export default class CategoryService {
 
     constructor(
         private context: Context

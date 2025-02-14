@@ -2,7 +2,7 @@ import PostForm from "@/components/PostForm";
 
 import { Container } from "@mui/material";
 
-import createApolloClient from "@/lib/apolloClient";
+import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_CATEGORIES } from "@/lib/graphql/fragments/queries/category";
 import { CategoryData } from "@/types/category";
 

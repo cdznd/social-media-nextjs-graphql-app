@@ -5,7 +5,7 @@ export type Context = {
   prisma: PrismaClient
 }
 
-const prisma = new PrismaClient()
+export const prisma = new PrismaClient()
 
 export const createContext = async () => ({
   prisma: prisma,
@@ -21,3 +21,15 @@ export const createContext = async () => ({
 //     prisma: mockDeep<PrismaClient>()
 //   }
 // }
+
+// import { PrismaClient } from "@prisma/client"
+ 
+// const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+ 
+// export const prisma = globalForPrisma.prisma || new PrismaClient()
+ 
+// if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+
+// export type Context = {
+//     prisma: PrismaClient;
+// };

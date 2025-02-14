@@ -10,24 +10,21 @@ import {
 } from 'nexus'
 import { GraphQLDateTime } from "graphql-scalars";
 import path from 'path';
-
 import { Context } from '../prisma/context';
-
-const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
-
 import { enumType } from "nexus";
 import { hash } from 'bcrypt';
+// Service Layer
+import { UserService } from '@/services/UserService';
+import { FriendshipService } from '@/services/FriendshipService';
+import { PostService } from '@/services/PostService';
+import CategoryService from '@/services/CategoryService';
 
 export const SortOrder = enumType({
     name: "SortOrder",
     members: ["asc", "desc"],
 });
 
-import { UserService } from '@/services/UserService';
-import { FriendshipService } from '@/services/FriendshipService';
-import { PostService } from '@/services/PostService';
-import { CategoryService } from '@/services/CategoryService';
-
+const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
 // TODO: Export all the objectType to external files. Example: https://github.com/graphql-nexus/nexus/blob/main/examples/ghost/src/schema/index.ts
 
 const Query = objectType({

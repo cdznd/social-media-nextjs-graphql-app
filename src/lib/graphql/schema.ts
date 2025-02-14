@@ -23,6 +23,7 @@ import { Friendship } from './objects/Friendship';
 import { Post } from './objects/Post';
 import { Category } from './objects/Category';
 import { Like } from './objects/Like';
+import { Comment } from './objects/Comment';
 
 import { GraphQLDateTime } from "graphql-scalars";
 

@@ -8,6 +8,15 @@ type CreatePostDTO = {
     categories: string[]
 }
 
+type FeedFilters = {
+    searchString?: string
+    category?: string
+}
+
+type FeedOptions = {
+    orderBy?: any
+}
+
 export default class PostService {
     
     constructor(
@@ -42,7 +51,7 @@ export default class PostService {
     }
 
     // TODO: Replace any types
-    async getFeedByUserId(userId: string, filters: any, options: any) {
+    async getFeedByUserId(userId: string, filters: FeedFilters, options: FeedOptions) {
         const { searchString, category } = filters
         const { orderBy } = options
         return this.context.prisma.post.findMany({

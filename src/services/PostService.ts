@@ -67,7 +67,7 @@ export default class PostService {
                     searchString
                         ? {
                             OR: [
-                                { title: { contains: searchString, mode: 'insensitive' } },
+                                //{ title: { contains: searchString, mode: 'insensitive' } },
                                 { content: { contains: searchString, mode: 'insensitive' } }
                             ]
                         } : {},

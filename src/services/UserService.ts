@@ -28,26 +28,34 @@ export default class UserService {
     }
 
     async getUserById(userId: string) {
-        return this.context.prisma.user.findUnique({
+        const result = this.context.prisma.user.findUnique({
             where: {
                 id: userId
             },
             include: {
                 posts: {
                     include: {
-                        author: true
+                        author: true // TODO: Why including author again? if the userId is the author
                     }
                 }
             }
         })
+        if(!result) {
+            throw new Error('User not found')
+        }
+        return result
     }
 
     async getUsers() {
-        return this.context.prisma.user.findMany({
+        const result = this.context.prisma.user.findMany({
             include: {
                 accounts: true
             }
         })
+        if(!result) {
+            throw new Error('Users not found')
+        }
+        return result
     }
 
 }

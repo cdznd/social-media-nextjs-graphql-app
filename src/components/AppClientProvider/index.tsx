@@ -1,7 +1,7 @@
 "use client";
 
 import { ApolloProvider } from "@apollo/client";
-import createApolloClient from "@/lib/apolloClient";
+import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { CssBaseline } from "@mui/material";
 import AppSessionProvider from "@/components/AppSessionProvider";
 

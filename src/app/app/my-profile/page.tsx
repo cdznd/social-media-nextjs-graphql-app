@@ -1,6 +1,6 @@
 import { Container } from "@mui/material";
-import { auth } from "@/lib/auth";
-import createApolloClient from "@/lib/apolloClient";
+import { auth } from "@/lib/next-auth/auth";
+import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_USER_PROFILE } from "@/lib/graphql/fragments/queries/user";
 import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileCard from "@/components/MyProfile/UserProfileCard";

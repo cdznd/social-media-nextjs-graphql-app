@@ -1,9 +1,9 @@
 import Feed from "@/components/Feed";
-import createApolloClient from "@/lib/apolloClient";
+import createApolloClient from "@/lib/apollo-client/apolloClient";
 
 import { GET_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed";
 
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/next-auth/auth";
 import { Container } from "@mui/system";
 
 async function getFeedData(userId: string, searchString?: string, category?: string) {

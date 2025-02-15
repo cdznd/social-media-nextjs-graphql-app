@@ -32,6 +32,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  FriendshipStatus: "ACCEPTED" | "PENDING" | "REJECTED"
   SortOrder: "asc" | "desc"
 }
 
@@ -405,6 +406,7 @@ export interface NexusGenArgTypes {
     }
     createFriendship: { // args
       fromUserId: string; // String!
+      status: NexusGenEnums['FriendshipStatus'] | null; // FriendshipStatus
       toUserId: string; // String!
     }
     createPost: { // args
@@ -418,7 +420,7 @@ export interface NexusGenArgTypes {
       email: string; // String!
       image?: string | null; // String
       name: string; // String!
-      password?: string | null; // String
+      password: string; // String!
       username: string; // String!
     }
     triggerLike: { // args
@@ -437,7 +439,7 @@ export interface NexusGenArgTypes {
       userId: string; // String!
     }
     post: { // args
-      id?: string | null; // String
+      postId: string; // String!
     }
     user: { // args
       userId: string; // String!

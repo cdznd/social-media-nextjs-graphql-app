@@ -25,7 +25,7 @@ export const StyledPostCard = styled(Card)(({ theme }) => ({
     },
 }));
 
-export const StyledPostCardInfo = styled(Box)({
+export const StyledPostCardInfo = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -33,8 +33,8 @@ export const StyledPostCardInfo = styled(Box)({
     padding: '1rem',
     paddingTop: '.5rem',
     paddingBottom: '.5rem',
-    background: gray[700]
-})
+    background: (theme.vars || theme).palette.background.paper
+}))
 
 export const StyledPostCardContent = styled(CardContent)({
     padding: '1rem',

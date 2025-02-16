@@ -34,6 +34,9 @@ export default async function MyProfilePage() {
     const userFriends = user?.friends ?? []
     return (
         <Container>
+
+            <h1>My Profile</h1>
+
             <UserProfileCard
                 user={user}
             />

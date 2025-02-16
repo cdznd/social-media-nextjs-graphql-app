@@ -31,8 +31,6 @@ export const User = objectType({
                     },
                     include: { userA: true, userB: true }
                 });
-
-                // Return both the user and the status
                 return friendships.map(f => ({
                     user: f.userAId === parent.id ? f.userB : f.userA,
                     status: f.status

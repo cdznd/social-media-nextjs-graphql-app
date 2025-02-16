@@ -9,8 +9,12 @@ export const GET_USER_PROFILE = gql`
             name
             image
             friends {
-                id
-                name
+                user {
+                    id
+                    name
+                    email
+                }
+                status
             }
             posts {
                 id

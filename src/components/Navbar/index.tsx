@@ -61,7 +61,7 @@ export default function Navbar() {
   }
 
   const handleOpenMyProfile = () => {
-    router.push('app/my-profile')
+    router.push('my-profile')
   }
 
   const navbarItems = [

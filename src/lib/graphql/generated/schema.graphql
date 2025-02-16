@@ -55,6 +55,11 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type FriendWithStatus {
+  status: FriendshipStatus!
+  user: User!
+}
+
 type Friendship {
   id: String
   status: String
@@ -130,7 +135,7 @@ type User {
   createdAt: DateTime!
   email: String
   emailVerified: DateTime
-  friends: [User!]
+  friends: [FriendWithStatus!]
   id: ID
   image: String
   likes: [Like!]

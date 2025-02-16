@@ -1,4 +1,5 @@
 import { objectType } from "nexus";
+import { Context } from "@/lib/prisma/context";
 
 export const User = objectType({
     name: "User",
@@ -19,7 +20,7 @@ export const User = objectType({
         t.list.nonNull.field("comments", { type: "Comment" });
 
         t.list.nonNull.field("friends", {
-            type: User,
+            type: "FriendWithStatus",
             resolve: async (parent, _args, context: Context) => {
                 const friendships = await context.prisma.friendship.findMany({
                     where: {
@@ -27,13 +28,15 @@ export const User = objectType({
                             { userAId: parent.id as string },
                             { userBId: parent.id as string }
                         ],
-                        // status: "ACCEPTED",  // Optional: Filter only accepted friendships
                     },
                     include: { userA: true, userB: true }
                 });
 
-                // Return the other user in the friendship
-                return friendships.map(f => (f.userAId === parent.id ? f.userB : f.userA));
+                // Return both the user and the status
+                return friendships.map(f => ({
+                    user: f.userAId === parent.id ? f.userB : f.userA,
+                    status: f.status
+                }));
             }
         });
 
@@ -98,4 +101,16 @@ export const Authenticator = objectType({
         t.nonNull.field("updatedAt", { type: "DateTime" });
         t.field("user", { type: "User" });
     },
+});
+
+export const FriendWithStatus = objectType({
+    name: "FriendWithStatus",
+    definition(t) {
+        t.nonNull.field("user", {
+            type: User
+        });
+        t.nonNull.field("status", {
+            type: "FriendshipStatus"
+        });
+    }
 });

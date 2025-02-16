@@ -89,6 +89,10 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
     userId?: string | null; // String
   }
+  FriendWithStatus: { // root type
+    status: NexusGenEnums['FriendshipStatus']; // FriendshipStatus!
+    user: NexusGenRootTypes['User']; // User!
+  }
   Friendship: { // root type
     id?: string | null; // String
     status?: string | null; // String
@@ -202,6 +206,10 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
     userId: string | null; // String
   }
+  FriendWithStatus: { // field return type
+    status: NexusGenEnums['FriendshipStatus']; // FriendshipStatus!
+    user: NexusGenRootTypes['User']; // User!
+  }
   Friendship: { // field return type
     id: string | null; // String
     status: string | null; // String
@@ -260,7 +268,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     email: string | null; // String
     emailVerified: NexusGenScalars['DateTime'] | null; // DateTime
-    friends: NexusGenRootTypes['User'][] | null; // [User!]
+    friends: NexusGenRootTypes['FriendWithStatus'][] | null; // [FriendWithStatus!]
     id: string | null; // ID
     image: string | null; // String
     likes: NexusGenRootTypes['Like'][] | null; // [Like!]
@@ -323,6 +331,10 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     userId: 'String'
   }
+  FriendWithStatus: { // field return type name
+    status: 'FriendshipStatus'
+    user: 'User'
+  }
   Friendship: { // field return type name
     id: 'String'
     status: 'String'
@@ -381,7 +393,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     email: 'String'
     emailVerified: 'DateTime'
-    friends: 'User'
+    friends: 'FriendWithStatus'
     id: 'ID'
     image: 'String'
     likes: 'Like'

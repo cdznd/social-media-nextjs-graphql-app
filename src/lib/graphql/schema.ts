@@ -11,7 +11,7 @@ import {
 import path from 'path';
 import { Context } from '../prisma/context';
 // ObjectTypes
-import { User, Account, Session, VerificationToken, Authenticator } from './objects/Auth'
+import { User, Account, Session, VerificationToken, Authenticator, FriendWithStatus } from './objects/Auth'
 import { Friendship } from './objects/Friendship';
 import { Post } from './objects/Post';
 import { Category } from './objects/Category';
@@ -190,6 +190,7 @@ export const schema = makeSchema({
         Query,
         Mutation,
         User,
+        FriendWithStatus,
         Account,
         Session,
         VerificationToken,

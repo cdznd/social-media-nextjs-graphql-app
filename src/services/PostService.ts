@@ -9,8 +9,8 @@ type CreatePostDTO = {
 }
 
 type FeedFilters = {
-    searchString?: string
-    category?: string
+    searchString?: string | null
+    category?: string | null
 }
 
 type FeedOptions = {

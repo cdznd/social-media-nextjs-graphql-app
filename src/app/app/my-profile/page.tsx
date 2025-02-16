@@ -6,7 +6,7 @@ import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileCard from "@/components/MyProfile/UserProfileCard";
 import ErrorAlert from "@/components/ErrorAlert";
 
-import { Box } from '@mui/material'
+import ProfileFriendList from "@/components/MyProfile/ProfileFriendList";
 
 async function getCurrentProfileData(userId: string) {
     const apolloClient = createApolloClient()
@@ -32,26 +32,21 @@ export default async function MyProfilePage() {
     const userPosts = user?.posts ?? []
     const userLikedPosts = user?.likes ?? []
     const userFriends = user?.friends ?? []
+
+    console.log('userFriends');
+    console.log(userFriends);
+
     return (
         <Container>
+
+            <h1>My Profile</h1>
+
             <UserProfileCard
                 user={user}
             />
-
-            <Box sx={{
-                border: '1px solid red'
-            }}>
-                <h1>friends</h1>
-                {
-                    userFriends.map((f: any) => {
-                        return (
-                            <>
-                                <p>{f.name}</p>
-                            </>
-                        )
-                    })
-                }
-            </Box>
+            
+            {/* Profile Friend list */}
+            <ProfileFriendList userFriends={userFriends} />
 
             <PostListCard
                 title={'My Posts'}

@@ -150,7 +150,7 @@ export default function PostForm({ categories }: PostFormProps) {
         <Box
             component={'form'}
             onSubmit={handleSubmit}
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2, padding: 3, border: '1px solid red' }}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
             <FormControl>
                 <FormLabel htmlFor="title">Title</FormLabel>

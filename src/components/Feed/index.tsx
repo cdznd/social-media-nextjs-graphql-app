@@ -10,9 +10,18 @@ export default async function Feed({ feedData }: FeedProps) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FeedHeader />
-      {
-        feedData.length > 0 ? (<FeedContent posts={feedData} />) : <h1>no posts found</h1>
-      }
+      <Box sx={{ display: 'flex', gap: 4 }}>
+        <Box>
+          {
+            feedData.length > 0 ? (<FeedContent posts={feedData} />) : <h1>no posts found</h1>
+          }
+        </Box>
+        <Box>
+          {
+            feedData.length > 0 ? (<FeedContent posts={feedData} />) : <h1>no posts found</h1>
+          }
+        </Box>
+      </Box>
       {/* <ErrorAlert message={`${feedError}`} /> */}
     </Box>
   );

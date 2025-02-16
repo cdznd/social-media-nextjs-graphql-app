@@ -70,12 +70,8 @@ export default function Navbar() {
       open: () => { router.push('/') }
     },
     {
-      label: 'Friends',
-      open: () => { router.push('/friends') }
-    },
-    {
       label: 'Explore',
-      open: () => { router.push('/explore') }
+      open: () => { router.push('/app/explore') }
     },
     {
       label: 'New Post',

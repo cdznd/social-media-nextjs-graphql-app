@@ -86,4 +86,33 @@ export default class PostService {
         })
     }
 
+    // TODO: Implement unit tests
+    async getExploreFeed(filters?: FeedFilters, options?: FeedOptions) {
+        const { searchString, category } = filters || {}
+        const { orderBy } = options || {}
+        return this.context.prisma.post.findMany({
+            where: {
+                AND: [
+                    searchString
+                        ? {
+                            OR: [
+                                { title: { contains: searchString, mode: 'insensitive' } },
+                                { content: { contains: searchString, mode: 'insensitive' } }
+                            ]
+                        } : {},
+                    category
+                        ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
+                        : {}
+                ]
+            },
+            orderBy: { createdAt: orderBy as "asc" | "desc" },
+            include: {
+                author: true,
+                likes: true,
+                comments: true,
+                categories: true,
+            },
+        })
+    }
+
 }

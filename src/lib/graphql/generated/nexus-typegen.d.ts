@@ -246,6 +246,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
+    exploreFeedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     feedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
     post: NexusGenRootTypes['Post'] | null; // Post
@@ -371,6 +372,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     categories: 'Category'
+    exploreFeedPosts: 'Post'
     feedPosts: 'Post'
     friends: 'Friendship'
     post: 'Post'
@@ -441,6 +443,11 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    exploreFeedPosts: { // args
+      category?: string | null; // String
+      orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
+      searchString?: string | null; // String
+    }
     feedPosts: { // args
       category?: string | null; // String
       orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder

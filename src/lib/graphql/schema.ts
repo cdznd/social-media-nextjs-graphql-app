@@ -28,6 +28,8 @@ import LikeService from '@/services/LikeService';
 
 import { GraphQLDateTime } from "graphql-scalars";
 
+import { auth } from '../next-auth/auth';
+
 const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
 
 const Query = objectType({

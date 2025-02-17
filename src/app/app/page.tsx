@@ -1,16 +1,16 @@
-import Feed from "@/components/Feed";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-
-import { GET_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed";
-
+import { GET_PRIVATE_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed";
 import { auth } from "@/lib/next-auth/auth";
 import { Container } from "@mui/system";
+import Feed from "@/components/Feed";
 
-async function getFeedData(userId: string, searchString?: string, category?: string) {
+import { SearchParamsProps } from "@/types/feed";
+
+async function getPrivateFeedData(userId: string, searchString?: string, category?: string) {
   const apolloClient = createApolloClient();
   try {
     const { data } = await apolloClient.query({
-      query: GET_FEED_POSTS,
+      query: GET_PRIVATE_FEED_POSTS,
       variables: {
         userId,
         searchString,
@@ -24,19 +24,12 @@ async function getFeedData(userId: string, searchString?: string, category?: str
   }
 }
 
-type SearchParamsProps = {
-  searchParams: {
-    search?: string,
-    category?: string
-  }
-}
-
 export default async function Home(
-  { searchParams: { search, category }}: SearchParamsProps
+  { searchParams: { search, category } }: SearchParamsProps
 ) {
   const session = await auth()
   // TODO: better handle the feed Error here
-  const { data, feedError } = await getFeedData(
+  const { data, feedError } = await getPrivateFeedData(
     session?.user?.id!,
     search,
     category
@@ -45,7 +38,10 @@ export default async function Home(
   const feedPosts = data?.feedPosts ?? []
   return (
     <Container>
-      <Feed feedData={feedPosts} />
+      <Feed
+        feedData={feedPosts}
+        feedType="private"
+      />
     </Container>
   );
 }

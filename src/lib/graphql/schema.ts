@@ -86,13 +86,34 @@ const Query = objectType({
                 userId: nonNull(stringArg()),
                 searchString: stringArg(),
                 category: stringArg(),
-                orderBy: arg({ type: SortOrder, default: "desc" })
+                orderBy: arg({ type: SortOrder, default: 'desc' })
             },
             resolve: async (_parent, args, context: Context) => {
                 const { userId, searchString, category, orderBy = 'desc' } = args;
                 const postService = new PostService(context)
                 return postService.getFeedByUserId(
                     userId,
+                    {
+                        searchString,
+                        category
+                    },
+                    { 
+                        orderBy
+                    }
+                )
+            }
+        })
+        t.nonNull.list.nonNull.field('exploreFeedPosts', {
+            type: Post,
+            args: {
+                searchString: stringArg(),
+                category: stringArg(),
+                orderBy: arg({ type: SortOrder, default: 'desc' })
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { searchString, category, orderBy = 'desc' } = args;
+                const postService = new PostService(context)
+                return postService.getExploreFeed(
                     {
                         searchString,
                         category

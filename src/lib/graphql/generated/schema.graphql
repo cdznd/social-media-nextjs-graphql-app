@@ -106,6 +106,7 @@ type Post {
 
 type Query {
   categories: [Category!]!
+  exploreFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String): [Post!]!
   feedPosts(category: String, orderBy: SortOrder = desc, searchString: String, userId: String!): [Post!]!
   friends(userId: String!): [Friendship!]!
   post(postId: String!): Post

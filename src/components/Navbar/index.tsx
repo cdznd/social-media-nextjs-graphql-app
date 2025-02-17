@@ -15,6 +15,8 @@ import {
   Menu
 } from '@mui/material'
 
+import Link from 'next/link';
+
 import { StyledToolbar } from './style';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -61,7 +63,7 @@ export default function Navbar() {
   }
 
   const handleOpenMyProfile = () => {
-    router.push('my-profile')
+    router.push('app/my-profile')
   }
 
   const navbarItems = [
@@ -72,6 +74,10 @@ export default function Navbar() {
     {
       label: 'Explore',
       open: () => { router.push('/app/explore') }
+    },
+    {
+      label: 'Users',
+      open: () => { router.push('/app/users') }
     },
     {
       label: 'New Post',
@@ -175,10 +181,12 @@ export default function Navbar() {
                           Logout
                         </Button>
                       </MenuItem>
-                      <MenuItem onClick={handleOpenMyProfile}>
-                        <Button color="primary" variant="contained" size="small" fullWidth>
-                          My Profile
-                        </Button>
+                      <MenuItem>
+                        <Link href={`/app/my-profile`}>
+                          <Button color="primary" variant="contained" size="small" fullWidth>
+                            My Profile
+                          </Button>
+                        </Link>
                       </MenuItem>
                     </Menu>
                   </Box>

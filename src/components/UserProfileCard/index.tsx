@@ -1,6 +1,8 @@
 import { Box, Card, CardContent, Avatar, Typography, Button } from "@mui/material"
-import Link from "next/link";
 import { brand } from "../common/themePrimitives";
+
+// TODO: Implement Nextjs Link
+import Link from "next/link";
 
 type UserProfileCardProps = {
   user: {

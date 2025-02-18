@@ -61,6 +61,7 @@ export const GET_USER_PROFILE = gql`
         $userId: String!
     ) {
         user(userId: $userId) {
+            id
             email
             name
             image

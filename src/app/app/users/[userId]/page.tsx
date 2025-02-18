@@ -3,6 +3,7 @@ import ErrorAlert from "@/components/ErrorAlert"
 import createApolloClient from "@/lib/apollo-client/apolloClient"
 import { GET_USER_PROFILE } from "@/lib/graphql/fragments/queries/user"
 import UserProfileInfoCard from "@/components/UserProfileInfoCard"
+import { auth } from "@/lib/next-auth/auth"
 
 type UserPageParams = {
     params: {
@@ -25,19 +26,39 @@ async function getCurrentProfileData(userId: string) {
 }
 
 export default async function UserPage(
-    { params: { userId } }: UserPageParams
+    { params }: UserPageParams
 ) {
-    const { data } = await getCurrentProfileData(userId)
-    const user = data?.user
-    if (!user) {
-        return <ErrorAlert message={'No User found'} />
-    }
+
+    const { userId } = await params
+
+    const session = await auth()
+    const loggedUserId = session?.user?.id!
+
+    console.log('loggedUserId', loggedUserId);
+
+    const { data: { user: currentUser } } = await getCurrentProfileData(userId);
+    // const user = data?.user
+    if (!currentUser) return <ErrorAlert message={'No User found'} />;
+
+    // Get all friends from this currentUser
+    const currentProfileFriends = currentUser.friends;
+    // Checks if the logged currentUser is friend of the currentUser
+    const friendFriendship = currentProfileFriends.find((friend: any) => friend.user.id === loggedUserId)
+
+    console.log('Logged User');
+    console.log(session?.user);
+    console.log('Current User');
+    console.log(currentUser);
+
+    if (currentUser?.id === session?.user?.id) return <ErrorAlert message={'The user is the same of the logged one'} />;
+
     return (
         <Container>
             <UserProfileInfoCard
-                user={user}
+                user={currentUser}
+                displayFriendshipButton
             />
-            Feed Here
+            <ErrorAlert message="Private account" />
         </Container>
     )
 }

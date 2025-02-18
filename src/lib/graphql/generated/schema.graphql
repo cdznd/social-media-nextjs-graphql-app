@@ -88,6 +88,7 @@ type Mutation {
   createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
   createUser(email: String!, image: String, name: String!, password: String!, username: String!): User
   triggerLike(postId: String!, userId: String!): Like
+  updateFriendshipStatus(friendshipId: String!, status: String!): Friendship
 }
 
 type Post {
@@ -109,6 +110,7 @@ type Query {
   exploreFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String): [Post!]!
   feedPosts(category: String, orderBy: SortOrder = desc, searchString: String, userId: String!): [Post!]!
   friends(userId: String!): [Friendship!]!
+  friendship(fromUserId: String!, toUserId: String!): Friendship!
   post(postId: String!): Post
   posts: [Post!]!
   user(userId: String!): User

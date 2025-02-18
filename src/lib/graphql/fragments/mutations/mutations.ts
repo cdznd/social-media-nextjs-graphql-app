@@ -48,3 +48,11 @@ export const CREATE_USER_MUTATION = gql`
         }
     }
 `
+
+export const TRIGGER_FRIENDSHIP_MUTATION = gql`
+    mutation CreateFriendship($fromUserId: String!, $toUserId: String!) {
+        createFriendship(fromUserId: $fromUserId, toUserId: $toUserId) {
+            id
+        }
+    }
+`

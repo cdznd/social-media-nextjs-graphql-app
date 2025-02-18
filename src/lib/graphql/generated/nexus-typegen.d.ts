@@ -230,6 +230,7 @@ export interface NexusGenFieldTypes {
     createPost: NexusGenRootTypes['Post'] | null; // Post
     createUser: NexusGenRootTypes['User'] | null; // User
     triggerLike: NexusGenRootTypes['Like'] | null; // Like
+    updateFriendshipStatus: NexusGenRootTypes['Friendship'] | null; // Friendship
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
@@ -249,6 +250,7 @@ export interface NexusGenFieldTypes {
     exploreFeedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     feedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
+    friendship: NexusGenRootTypes['Friendship']; // Friendship!
     post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     user: NexusGenRootTypes['User'] | null; // User
@@ -356,6 +358,7 @@ export interface NexusGenFieldTypeNames {
     createPost: 'Post'
     createUser: 'User'
     triggerLike: 'Like'
+    updateFriendshipStatus: 'Friendship'
   }
   Post: { // field return type name
     author: 'User'
@@ -375,6 +378,7 @@ export interface NexusGenFieldTypeNames {
     exploreFeedPosts: 'Post'
     feedPosts: 'Post'
     friends: 'Friendship'
+    friendship: 'Friendship'
     post: 'Post'
     posts: 'Post'
     user: 'User'
@@ -441,6 +445,10 @@ export interface NexusGenArgTypes {
       postId: string; // String!
       userId: string; // String!
     }
+    updateFriendshipStatus: { // args
+      friendshipId: string; // String!
+      status: string; // String!
+    }
   }
   Query: {
     exploreFeedPosts: { // args
@@ -456,6 +464,10 @@ export interface NexusGenArgTypes {
     }
     friends: { // args
       userId: string; // String!
+    }
+    friendship: { // args
+      fromUserId: string; // String!
+      toUserId: string; // String!
     }
     post: { // args
       postId: string; // String!

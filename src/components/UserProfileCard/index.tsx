@@ -4,6 +4,8 @@ import { brand } from "../common/themePrimitives";
 // TODO: Implement Nextjs Link
 import Link from "next/link";
 
+import FriendshipTriggerButton from "../FriendshipTriggerButton";
+
 type UserProfileCardProps = {
   user: {
     id: string;
@@ -65,15 +67,9 @@ export default function UserProfileCard(
           </Box>
         </Box>
 
-        <Button
-          variant={friendshipStatus === 'PENDING' ? 'outlined' : 'contained'}
-          color={friendshipStatus === 'PENDING' ? undefined : 'primary'}
-          sx={{
-            width: 1,
-          }}
-        >
-          {friendshipStatus === 'PENDING' ? 'Pending' : 'Add Friend'}
-        </Button>
+        <FriendshipTriggerButton
+          toUserId={user.id}
+        />
 
       </CardContent>
 

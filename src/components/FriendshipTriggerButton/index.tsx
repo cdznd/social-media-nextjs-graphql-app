@@ -13,9 +13,6 @@ export default function FriendshipTriggerButton(
     const session = useSession()
     const loggedUser = session?.data?.user
 
-    // Create a mutation that based on the loggedUser id, checks if there's a friendship with the currentUser.
-    // If there is one, it should return the friendship object, otherwise it should return null.
-
     // Get all friends from the logged user
     const { data: friendshipData, loading: queryLoading } = useQuery(GET_FRIENDSHIP, {
         variables: {
@@ -26,8 +23,8 @@ export default function FriendshipTriggerButton(
     })
 
     const currentFriendship = friendshipData?.friendship
+    const friendshipStatus = currentFriendship?.status || null
 
-    // Triggers friendship invite :working on
     const [triggerFriendship, { loading: mutationLoading }] = useMutation(TRIGGER_FRIENDSHIP_MUTATION, {
         refetchQueries: [
             {
@@ -36,8 +33,6 @@ export default function FriendshipTriggerButton(
             }
         ]
     })
-
-    const friendshipStatus = currentFriendship?.status || null
 
     const sendFriendRequest = () => {
         triggerFriendship({
@@ -48,18 +43,43 @@ export default function FriendshipTriggerButton(
         })
     }
 
+    const getButtonConfig = () => {
+        switch (friendshipStatus) {
+            case 'PENDING':
+                return {
+                    variant: 'outlined' as const,
+                    color: 'primary' as const,
+                    text: 'Pending Approval',
+                    disabled: true
+                }
+            case 'ACCEPTED':
+                return {
+                    variant: 'contained' as const,
+                    color: 'success' as const,
+                    text: 'Friends',
+                    disabled: true
+                }
+            default:
+                return {
+                    variant: 'contained' as const,
+                    color: 'primary' as const,
+                    text: 'Add Friend',
+                    disabled: false
+                }
+        }
+    }
+
+    const buttonConfig = getButtonConfig()
+
     return (
-        friendshipStatus !== 'ACCEPTED' ? (
-            <Button
-                variant={friendshipStatus === 'PENDING' ? 'outlined' : 'contained'}
-                color={friendshipStatus === 'PENDING' ? undefined : 'primary'}
-                onClick={() => sendFriendRequest()}
-                disabled={queryLoading || mutationLoading}
-            >
-                {friendshipStatus === 'PENDING' ? 'Pending' : 'Add Friend'}
-            </Button>
-        ) : (
-            <h1>Friends</h1>
-        )
+        <Button
+            variant={buttonConfig.variant}
+            color={buttonConfig.color}
+            onClick={sendFriendRequest}
+            disabled={buttonConfig.disabled || queryLoading || mutationLoading}
+            size="small"
+        >
+            {buttonConfig.text}
+        </Button>
     );
 }

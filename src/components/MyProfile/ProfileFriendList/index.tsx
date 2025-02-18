@@ -4,9 +4,7 @@ import { Box, Card, CardContent, Avatar, Typography } from "@mui/material"
 export default function ProfileFriendList({ userFriends }: { userFriends: any }) {
 
     const renderUserFriends = userFriends.map((friend: any) => {
-
         const userFriend = friend.user
-
         return <UserProfileCard user={userFriend} />
     });
 

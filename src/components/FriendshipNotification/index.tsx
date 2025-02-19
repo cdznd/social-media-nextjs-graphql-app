@@ -1,6 +1,8 @@
 'use client'
 
+import { useMutation } from "@apollo/client"
 import { Box, Button, ListItem, Typography, Avatar } from "@mui/material"
+import { UPDATE_FRIENDSHIP_STATUE_MUTATION } from "@/lib/graphql/fragments/mutations/friendship"
 
 export default function FriendshipNotification({ notification }: any) {
 
@@ -9,6 +11,34 @@ export default function FriendshipNotification({ notification }: any) {
 
     // The person who sent the friend request
     const actor = notification?.actor
+
+    const [updateFriendshipStatus, { loading, error }] = useMutation(UPDATE_FRIENDSHIP_STATUE_MUTATION)
+
+    const handleAcceptFriendship = async () => {
+        try {
+            await updateFriendshipStatus({
+                variables: {
+                    friendshipId: notification.entityId,
+                    status: 'ACCEPTED'
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleDeclineFriendship = async () => {
+        try {
+            await updateFriendshipStatus({
+                variables: {
+                    friendshipId: notification.entityId,
+                    status: 'DECLINED'
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <ListItem
@@ -44,8 +74,8 @@ export default function FriendshipNotification({ notification }: any) {
                 </Box>
             </Box>
             <Box sx={{ display: 'flex' }}>
-                <Button variant="contained" color="success" sx={{ mr: 1 }}>Accept</Button>
-                <Button variant="contained" color="error">Decline</Button>
+                <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={handleAcceptFriendship}>Accept</Button>
+                <Button variant="contained" color="error" onClick={handleDeclineFriendship}>Decline</Button>
             </Box>
         </ListItem>
     )

@@ -110,7 +110,7 @@ export default function FriendshipTriggerButton(
     const buttonConfig = getButtonConfig()
 
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 1 }}>
             <Button
                 variant={buttonConfig.variant}
                 color={buttonConfig.color}

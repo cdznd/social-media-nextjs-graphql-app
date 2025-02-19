@@ -1,4 +1,4 @@
-import { Card, Container } from "@mui/material";
+import { Card, Container, Grid, Typography } from "@mui/material";
 import UserProfileCard from "@/components/UserProfileCard";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_ALL_USERS } from "@/lib/graphql/fragments/queries/user";
@@ -25,16 +25,17 @@ export default async function usersPage() {
     const allUsers = Array.isArray(data?.users)
         ? data?.users.filter((user: any) => user.id !== session?.user?.id)
         : []
-    const renderAllUsers = allUsers.map((user: any) => {
-        return <UserProfileCard
-            key={user.id}
-            user={user}
-        />
-    })
     return (
         <Container>
-            <Card sx={{ display: 'flex', gap: 4 }}>
-                {renderAllUsers}
+            <Card>
+                <Typography variant="h3" sx={{ textAlign: "center" }}>All Users</Typography>
+                <Grid container spacing={3} sx={{ py: 4 }}>
+                    {allUsers.map((user: any) => (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={user.id}>
+                            <UserProfileCard user={user} />
+                        </Grid>
+                    ))}
+                </Grid>
             </Card>
         </Container>
     )

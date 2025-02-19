@@ -19,9 +19,7 @@ export default function UserProfileCard(
   { user }: UserProfileCardProps
 ) {
 
-  const isFriend = true
-  // False if don't have a friendship status
-  const friendshipStatus = 'PENDING'
+  console.log('checking user', user);
 
   return (
     <Card
@@ -32,7 +30,6 @@ export default function UserProfileCard(
         justifyContent: "center",
         alignItems: "center",
         p: '1rem',
-        flex: 1
       }}
     >
 
@@ -66,11 +63,9 @@ export default function UserProfileCard(
             </Typography>
           </Box>
         </Box>
-
         <FriendshipTriggerButton
           toUserId={user.id}
         />
-
       </CardContent>
 
     </Card>

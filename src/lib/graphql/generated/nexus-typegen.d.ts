@@ -33,7 +33,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   FriendshipStatus: "ACCEPTED" | "PENDING" | "REJECTED"
-  NotificationEntityType: "COMMENT" | "POST" | "USER"
+  NotificationEntityType: "COMMENT" | "FRIENDSHIP" | "POST"
   NotificationType: "COMMENT" | "FRIEND_REQUEST" | "LIKE"
   SortOrder: "asc" | "desc"
 }
@@ -111,17 +111,19 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Notification: { // root type
-    actorId?: string | null; // String
-    content?: string | null; // String
-    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    actor: NexusGenRootTypes['User']; // User!
+    actorId: string; // String!
+    content: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     entityId?: string | null; // String
-    entityType?: string | null; // String
-    expiresAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    id?: string | null; // ID
-    read?: boolean | null; // Boolean
-    type?: string | null; // String
-    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    userId?: string | null; // String
+    entityType: string; // String!
+    expiresAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    read: boolean; // Boolean!
+    type: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    user: NexusGenRootTypes['User']; // User!
+    userId: string; // String!
   }
   Post: { // root type
     author?: NexusGenRootTypes['User'] | null; // User
@@ -153,6 +155,8 @@ export interface NexusGenObjects {
     image?: string | null; // String
     likes?: NexusGenRootTypes['Like'][] | null; // [Like!]
     name?: string | null; // String
+    notificationsReceived?: NexusGenRootTypes['Notification'][] | null; // [Notification!]
+    notificationsSent?: NexusGenRootTypes['Notification'][] | null; // [Notification!]
     password?: string | null; // String
     posts?: NexusGenRootTypes['Post'][] | null; // [Post!]
     sessions?: NexusGenRootTypes['Session'][] | null; // [Session!]
@@ -249,17 +253,19 @@ export interface NexusGenFieldTypes {
     updateFriendshipStatus: NexusGenRootTypes['Friendship'] | null; // Friendship
   }
   Notification: { // field return type
-    actorId: string | null; // String
-    content: string | null; // String
-    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    actor: NexusGenRootTypes['User']; // User!
+    actorId: string; // String!
+    content: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     entityId: string | null; // String
-    entityType: string | null; // String
-    expiresAt: NexusGenScalars['DateTime'] | null; // DateTime
-    id: string | null; // ID
-    read: boolean | null; // Boolean
-    type: string | null; // String
-    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
-    userId: string | null; // String
+    entityType: string; // String!
+    expiresAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    read: boolean; // Boolean!
+    type: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    user: NexusGenRootTypes['User']; // User!
+    userId: string; // String!
   }
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
@@ -280,6 +286,7 @@ export interface NexusGenFieldTypes {
     feedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
     friendship: NexusGenRootTypes['Friendship']; // Friendship!
+    likes: Array<NexusGenRootTypes['Like'] | null>; // [Like]!
     notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
@@ -306,6 +313,8 @@ export interface NexusGenFieldTypes {
     image: string | null; // String
     likes: NexusGenRootTypes['Like'][] | null; // [Like!]
     name: string | null; // String
+    notificationsReceived: NexusGenRootTypes['Notification'][] | null; // [Notification!]
+    notificationsSent: NexusGenRootTypes['Notification'][] | null; // [Notification!]
     password: string | null; // String
     posts: NexusGenRootTypes['Post'][] | null; // [Post!]
     sessions: NexusGenRootTypes['Session'][] | null; // [Session!]
@@ -392,6 +401,7 @@ export interface NexusGenFieldTypeNames {
     updateFriendshipStatus: 'Friendship'
   }
   Notification: { // field return type name
+    actor: 'User'
     actorId: 'String'
     content: 'String'
     createdAt: 'DateTime'
@@ -402,6 +412,7 @@ export interface NexusGenFieldTypeNames {
     read: 'Boolean'
     type: 'String'
     updatedAt: 'DateTime'
+    user: 'User'
     userId: 'String'
   }
   Post: { // field return type name
@@ -423,6 +434,7 @@ export interface NexusGenFieldTypeNames {
     feedPosts: 'Post'
     friends: 'Friendship'
     friendship: 'Friendship'
+    likes: 'Like'
     notifications: 'Notification'
     post: 'Post'
     posts: 'Post'
@@ -449,6 +461,8 @@ export interface NexusGenFieldTypeNames {
     image: 'String'
     likes: 'Like'
     name: 'String'
+    notificationsReceived: 'Notification'
+    notificationsSent: 'Notification'
     password: 'String'
     posts: 'Post'
     sessions: 'Session'

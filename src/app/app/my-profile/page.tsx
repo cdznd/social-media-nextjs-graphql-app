@@ -1,9 +1,9 @@
 import { Container } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { GET_USER_PROFILE } from "@/lib/graphql/fragments/queries/user";
+import { GET_MY_USER_PROFILE } from "@/lib/graphql/fragments/queries/user";
 import PostListCard from "@/components/MyProfile/PostListCard";
-import UserProfileCard from "@/components/MyProfile/UserProfileCard";
+import UserProfileInfoCard from "@/components/UserProfileInfoCard";
 import ErrorAlert from "@/components/ErrorAlert";
 
 import ProfileFriendList from "@/components/MyProfile/ProfileFriendList";
@@ -12,7 +12,7 @@ async function getCurrentProfileData(userId: string) {
     const apolloClient = createApolloClient()
     try {
         const { data: currentProfileData } = await apolloClient.query({
-            query: GET_USER_PROFILE,
+            query: GET_MY_USER_PROFILE,
             variables: { userId }
         })
         return { data: currentProfileData, feedError: null }
@@ -41,11 +41,10 @@ export default async function MyProfilePage() {
 
             <h1>My Profile</h1>
 
-            <UserProfileCard
+            <UserProfileInfoCard
                 user={user}
             />
-            
-            {/* Profile Friend list */}
+
             <ProfileFriendList userFriends={userFriends} />
 
             <PostListCard

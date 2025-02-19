@@ -28,6 +28,8 @@ import LikeService from '@/services/LikeService';
 
 import { GraphQLDateTime } from "graphql-scalars";
 
+import { auth } from '../next-auth/auth';
+
 const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
 
 const Query = objectType({
@@ -131,6 +133,19 @@ const Query = objectType({
                 return categoryService.getCategories()
             }
         })
+        t.nonNull.field('friendship', {
+            type: Friendship,
+            args: {
+                fromUserId: nonNull(stringArg()),
+                toUserId: nonNull(stringArg()),
+            },
+            resolve: async (_parent, args, context: Context) => {
+                // TODO: Fix typo error
+                const { fromUserId, toUserId } = args
+                const friendshipService = new FriendshipService(context)
+                return friendshipService.getFriendship(fromUserId, toUserId)
+            }
+        })
     }
 })
 
@@ -200,6 +215,18 @@ const Mutation = mutationType({
                 const { name } = args
                 const categoryService = new CategoryService(context)
                 return categoryService.createCategory(name)
+            }
+        })
+        t.field('updateFriendshipStatus', {
+            type: Friendship,
+            args: {
+                friendshipId: nonNull(stringArg()),
+                status: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { friendshipId, status } = args
+                const friendshipService = new FriendshipService(context)
+                return friendshipService.updateFriendshipStatus({ id: friendshipId, status })
             }
         })
     }

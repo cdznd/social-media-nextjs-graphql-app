@@ -84,6 +84,12 @@ const Query = objectType({
                 return postService.getPosts()
             }
         })
+        t.nonNull.list.field("likes", {
+            type: Like,
+            resolve: (parent, args, context) => {
+                return context.prisma.like.findMany({});
+            },
+        });
         t.nonNull.list.nonNull.field('feedPosts', {
             type: Post,
             args: {
@@ -101,7 +107,7 @@ const Query = objectType({
                         searchString,
                         category
                     },
-                    { 
+                    {
                         orderBy
                     }
                 )
@@ -122,7 +128,7 @@ const Query = objectType({
                         searchString,
                         category
                     },
-                    { 
+                    {
                         orderBy
                     }
                 )
@@ -189,7 +195,19 @@ const Mutation = mutationType({
             resolve: async (_parent, args, context: Context) => {
                 const { fromUserId, toUserId, status } = args
                 const friendshipService = new FriendshipService(context)
-                return friendshipService.createFriendship({ fromUserId, toUserId, status })
+                const notificationService = new NotificationService(context)
+                // First create the friendship
+                const createdFriendship = await friendshipService.createFriendship({ fromUserId, toUserId, status })
+                // Create the notification with the friendship data
+                const createdNotification = await notificationService.createNotification({
+                    type: 'FRIEND_REQUEST',
+                    content: 'someone has sent you a friend request!',
+                    userId: toUserId,
+                    actorId: fromUserId,
+                    entityType: 'FRIENDSHIP',
+                    entityId: createdFriendship?.id
+                })
+                return createdFriendship
             }
         })
         t.field('createPost', {

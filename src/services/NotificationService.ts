@@ -42,5 +42,29 @@ export default class NotificationService {
             }
         })
     }
+    
+    async deleteNotification(userId: string, notificationId: string) {
+        return this.context.prisma.notification.delete({
+            where: {
+                id: notificationId,
+                userId
+            }
+        })
+    }
+
+    async deleteFriendRequestNotification(entityId: string) {
+        const currentFRNotification = await this.context.prisma.notification.findFirst({
+            where: {
+                entityType: 'FRIENDSHIP',
+                entityId
+            }
+        })
+        if (!currentFRNotification) return
+        return this.context.prisma.notification.delete({
+            where: {
+                id: currentFRNotification.id
+            }
+        })
+    }
 
 }

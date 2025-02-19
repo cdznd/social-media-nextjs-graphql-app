@@ -203,7 +203,7 @@ const Mutation = mutationType({
                 // First create the friendship
                 const createdFriendship = await friendshipService.createFriendship({ fromUserId, toUserId })
                 // Create the notification with the friendship data
-                const createdNotification = await notificationService.createNotification({
+                await notificationService.createNotification({
                     type: 'FRIEND_REQUEST',
                     content: 'someone has sent you a friend request!',
                     userId: toUserId,
@@ -239,6 +239,8 @@ const Mutation = mutationType({
             resolve: async (_parent, args, context: Context) => {
                 const { friendshipId } = args
                 const friendshipService = new FriendshipService(context)
+                const notificationService = new NotificationService(context)
+                await notificationService.deleteFriendRequestNotification(friendshipId)
                 return friendshipService.deleteFriendship(friendshipId)
             }
         })

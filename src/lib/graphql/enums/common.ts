@@ -17,5 +17,5 @@ export const NotificationType = enumType({
 
 export const NotificationEntityType = enumType({
     name: "NotificationEntityType",
-    members: ["POST", "COMMENT", "USER"]
+    members: ["POST", "COMMENT", "FRIENDSHIP"]
 })

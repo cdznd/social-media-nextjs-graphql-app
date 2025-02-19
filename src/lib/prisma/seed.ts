@@ -4,8 +4,12 @@ import { hash } from "bcrypt";
 
 async function main() {
 
+    const numberOfUsers = 10
+    const numberOfCategories = 10
+    const numberOfPosts = 100
+
     // Creating users
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < numberOfUsers; i++) {
         const firstName = faker.person.firstName();
         const lastName = faker.person.lastName();
         const hashedPassword = await hash('password123', 10);
@@ -22,6 +26,44 @@ async function main() {
     }
     console.log('Users created');
 
+    // Creating categories
+    const categories = new Set<string>();
+    while (categories.size < numberOfCategories) {
+        const category = faker.word.noun();
+        categories.add(category.charAt(0).toUpperCase() + category.slice(1));
+    }
+    for (const categoryName of categories) {
+        await prisma.category.create({
+            data: {
+                name: categoryName
+            }
+        });
+    }
+    console.log('Categories created');
+
+    // Get all users and categories for reference
+    const users = await prisma.user.findMany();
+    const createdCategories = await prisma.category.findMany();
+
+    // Creating posts
+    for (let i = 0; i < numberOfPosts; i++) {
+        const randomUser = users[Math.floor(Math.random() * users.length)];
+        const randomCategories = createdCategories
+            .sort(() => Math.random() - 0.5)
+            .slice(0, Math.floor(Math.random() * 3) + 1); // 1-3 categories per post
+        await prisma.post.create({
+            data: {
+                title: faker.lorem.sentence(),
+                content: faker.lorem.paragraphs(),
+                thumbnail: faker.image.url(),
+                authorId: randomUser.id,
+                categories: {
+                    connect: randomCategories.map(cat => ({ id: cat.id }))
+                }
+            }
+        });
+    }
+    console.log('Posts created');
 }
 
 main()

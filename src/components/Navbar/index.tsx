@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-
 import {
   Box,
   AppBar,
@@ -14,23 +15,18 @@ import {
   Avatar,
   Menu
 } from '@mui/material'
-
-import Link from 'next/link';
-
-import { StyledToolbar } from './style';
-
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-
-import { useRouter } from 'next/navigation';
+import { StyledToolbar } from './style';
 import { SitemarkIcon } from '../common/CustomIcons';
 import ColorModeIconDropdown from '../ColorModeIconDropdown';
+import NotificationButton from '../NotificationButton';
 
 export default function Navbar() {
 
   const router = useRouter();
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -152,7 +148,7 @@ export default function Navbar() {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     {/* User Email */}
                     <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                      {userLogged.email}
+                      {userLogged.name}
                     </Typography>
 
                     {/* Profile Picture with Dropdown Menu */}
@@ -193,6 +189,8 @@ export default function Navbar() {
                 </>
               )
             }
+            {/* DarkMode + Notifications */}
+            <NotificationButton />
             <ColorModeIconDropdown />
           </Box>
           {/* Mobile */}

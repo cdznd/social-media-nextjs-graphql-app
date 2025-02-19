@@ -2,7 +2,7 @@
 
 import { useMutation } from "@apollo/client"
 import { Box, Button, ListItem, Typography, Avatar } from "@mui/material"
-import { UPDATE_FRIENDSHIP_STATUE_MUTATION } from "@/lib/graphql/fragments/mutations/friendship"
+import { UPDATE_FRIENDSHIP_STATUS_MUTATION } from "@/lib/graphql/fragments/mutations/friendship"
 
 export default function FriendshipNotification({ notification }: any) {
 
@@ -12,7 +12,7 @@ export default function FriendshipNotification({ notification }: any) {
     // The person who sent the friend request
     const actor = notification?.actor
 
-    const [updateFriendshipStatus, { loading, error }] = useMutation(UPDATE_FRIENDSHIP_STATUE_MUTATION)
+    const [updateFriendshipStatus, { loading, error }] = useMutation(UPDATE_FRIENDSHIP_STATUS_MUTATION)
 
     const handleAcceptFriendship = async () => {
         try {

@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { Context } from "@/lib/prisma/context";
 
 type createNotificationDTO = {
@@ -6,7 +7,7 @@ type createNotificationDTO = {
     userId: string,
     actorId: string,
     entityId?: string,
-    entityType?: "POST" | "COMMENT" | "USER" | undefined | null, // TODO: Remove undefined and null
+    entityType?: "POST" | "COMMENT" | "FRIENDSHIP" | undefined | null, // TODO: Remove undefined and null
     read?: boolean,
 }
 
@@ -25,7 +26,7 @@ export default class NotificationService {
                 actorId,
                 entityId,
                 entityType,
-                read
+                read: false
             }
         })
     }
@@ -34,6 +35,10 @@ export default class NotificationService {
         return this.context.prisma.notification.findMany({
             where: {
                 userId
+            },
+            include: {
+                user: true,
+                actor: true
             }
         })
     }

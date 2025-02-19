@@ -1,9 +1,8 @@
 import { Context } from "@/lib/prisma/context"
 
-type createFriendshipDTO = {
+type createFriendshipRequestDTO = {
     fromUserId: string
     toUserId: string
-    status?: "PENDING" | "ACCEPTED" | "REJECTED" | null
 }
 
 export default class FriendshipService {
@@ -12,7 +11,7 @@ export default class FriendshipService {
         private context: Context
     ) { }
 
-    async createFriendship({ fromUserId, toUserId, status }: createFriendshipDTO) {
+    async createFriendship({ fromUserId, toUserId }: createFriendshipRequestDTO) {
         return this.context.prisma.friendship.create({
             data: {
                 userA: {
@@ -21,7 +20,6 @@ export default class FriendshipService {
                 userB: {
                     connect: { id: toUserId }
                 },
-                status: status ?? "PENDING"
             },
             include: {
                 userA: true,
@@ -71,14 +69,14 @@ export default class FriendshipService {
     }
 
     async updateFriendshipStatus(
-        { id, status }: { id: string, status?: "PENDING" | "ACCEPTED" | "REJECTED" }
+        { friendshipId, status }: { friendshipId: string, status?: "PENDING" | "ACCEPTED" | "REJECTED" }
     ) {
         return this.context.prisma.friendship.update({
             where: {
-                id
+                id: friendshipId
             },
             data: {
-                status: status ?? 'PENDING'
+                status
             }
         })
     }

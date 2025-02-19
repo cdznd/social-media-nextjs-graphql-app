@@ -85,10 +85,37 @@ type Like {
 type Mutation {
   createCategory(name: String!): Category
   createFriendship(fromUserId: String!, status: FriendshipStatus = PENDING, toUserId: String!): Friendship
+  createNotification(actorId: String!, content: String!, entityId: String!, entityType: NotificationEntityType!, read: Boolean! = false, type: NotificationType!, userId: String!): Notification
   createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
   createUser(email: String!, image: String, name: String!, password: String!, username: String!): User
   triggerLike(postId: String!, userId: String!): Like
   updateFriendshipStatus(friendshipId: String!, status: String!): Friendship
+}
+
+type Notification {
+  actorId: String
+  content: String
+  createdAt: DateTime
+  entityId: String
+  entityType: String
+  expiresAt: DateTime
+  id: ID
+  read: Boolean
+  type: String
+  updatedAt: DateTime
+  userId: String
+}
+
+enum NotificationEntityType {
+  COMMENT
+  POST
+  USER
+}
+
+enum NotificationType {
+  COMMENT
+  FRIEND_REQUEST
+  LIKE
 }
 
 type Post {
@@ -111,6 +138,7 @@ type Query {
   feedPosts(category: String, orderBy: SortOrder = desc, searchString: String, userId: String!): [Post!]!
   friends(userId: String!): [Friendship!]!
   friendship(fromUserId: String!, toUserId: String!): Friendship!
+  notifications(userId: String!): [Notification!]!
   post(postId: String!): Post
   posts: [Post!]!
   user(userId: String!): User

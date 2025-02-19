@@ -7,9 +7,11 @@ import {
     nonNull,
     mutationType,
     list,
+    booleanArg,
 } from 'nexus'
 import path from 'path';
 import { Context } from '../prisma/context';
+
 // ObjectTypes
 import { User, Account, Session, VerificationToken, Authenticator, FriendWithStatus } from './objects/Auth'
 import { Friendship } from './objects/Friendship';
@@ -17,18 +19,18 @@ import { Post } from './objects/Post';
 import { Category } from './objects/Category';
 import { Like } from './objects/Like';
 import { Comment } from './objects/Comment';
+import { Notification } from './objects/Notification';
 // Enums
-import { SortOrder, FriendshipStatus } from './enums/common';
+import { SortOrder, FriendshipStatus, NotificationType, NotificationEntityType } from './enums/common';
 // Services
 import UserService from '@/services/UserService';
 import FriendshipService from '@/services/FriendshipService';
 import PostService from '@/services/PostService';
 import CategoryService from '@/services/CategoryService';
 import LikeService from '@/services/LikeService';
-
+import NotificationService from '@/services/NotificationService';
+// Utils
 import { GraphQLDateTime } from "graphql-scalars";
-
-import { auth } from '../next-auth/auth';
 
 const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
 
@@ -146,6 +148,17 @@ const Query = objectType({
                 return friendshipService.getFriendship(fromUserId, toUserId)
             }
         })
+        t.nonNull.list.nonNull.field('notifications', {
+            type: Notification,
+            args: {
+                userId: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { userId } = args
+                const notificationService = new NotificationService(context)
+                return notificationService.getNotifications(userId)
+            }
+        })
     }
 })
 
@@ -224,9 +237,35 @@ const Mutation = mutationType({
                 status: nonNull(stringArg())
             },
             resolve: async (_parent, args, context: Context) => {
+                // TODO: Fix typo errors
                 const { friendshipId, status } = args
                 const friendshipService = new FriendshipService(context)
                 return friendshipService.updateFriendshipStatus({ id: friendshipId, status })
+            }
+        })
+        t.field('createNotification', {
+            type: Notification,
+            args: {
+                type: nonNull(arg({ type: 'NotificationType' })),
+                content: nonNull(stringArg()),
+                userId: nonNull(stringArg()),
+                actorId: nonNull(stringArg()),
+                entityId: nonNull(stringArg()),
+                entityType: nonNull(arg({ type: 'NotificationEntityType' })),
+                read: nonNull(booleanArg({ default: false }))
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { type, content, userId, actorId, entityId, entityType, read } = args
+                const notificationService = new NotificationService(context)
+                return notificationService.createNotification({
+                    type,
+                    content,
+                    userId,
+                    actorId,
+                    entityId,
+                    entityType,
+                    read
+                })
             }
         })
     }
@@ -248,6 +287,9 @@ export const schema = makeSchema({
         Category,
         Like,
         Comment,
+        Notification,
+        NotificationType,
+        NotificationEntityType,
         DateTime,
         FriendshipStatus,
         SortOrder

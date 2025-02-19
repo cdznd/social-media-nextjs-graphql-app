@@ -63,8 +63,8 @@ type FriendWithStatus {
 type Friendship {
   id: String
   status: String
-  userA: User!
-  userB: User!
+  userA: User
+  userB: User
 }
 
 enum FriendshipStatus {
@@ -84,11 +84,41 @@ type Like {
 
 type Mutation {
   createCategory(name: String!): Category
-  createFriendship(fromUserId: String!, status: FriendshipStatus = PENDING, toUserId: String!): Friendship
+  createFriendshipRequest(fromUserId: String!, toUserId: String!): Friendship
+  createNotification(actorId: String!, content: String!, entityId: String!, entityType: NotificationEntityType!, read: Boolean! = false, type: NotificationType!, userId: String!): Notification
   createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
   createUser(email: String!, image: String, name: String!, password: String!, username: String!): User
+  deleteFriendship(friendshipId: String!): Friendship
   triggerLike(postId: String!, userId: String!): Like
   updateFriendshipStatus(friendshipId: String!, status: String!): Friendship
+}
+
+type Notification {
+  actor: User!
+  actorId: String!
+  content: String!
+  createdAt: DateTime!
+  entityId: String
+  entityType: String!
+  expiresAt: DateTime!
+  id: ID!
+  read: Boolean!
+  type: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+enum NotificationEntityType {
+  COMMENT
+  FRIENDSHIP
+  POST
+}
+
+enum NotificationType {
+  COMMENT
+  FRIEND_REQUEST
+  LIKE
 }
 
 type Post {
@@ -110,7 +140,9 @@ type Query {
   exploreFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String): [Post!]!
   feedPosts(category: String, orderBy: SortOrder = desc, searchString: String, userId: String!): [Post!]!
   friends(userId: String!): [Friendship!]!
-  friendship(fromUserId: String!, toUserId: String!): Friendship!
+  friendship(fromUserId: String!, toUserId: String!): Friendship
+  likes: [Like]!
+  notifications(userId: String!): [Notification!]!
   post(postId: String!): Post
   posts: [Post!]!
   user(userId: String!): User
@@ -143,6 +175,8 @@ type User {
   image: String
   likes: [Like!]
   name: String
+  notificationsReceived: [Notification!]
+  notificationsSent: [Notification!]
   password: String
   posts: [Post!]
   sessions: [Session!]

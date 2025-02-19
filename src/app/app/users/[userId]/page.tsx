@@ -45,11 +45,6 @@ export default async function UserPage(
     // Checks if the logged currentUser is friend of the currentUser
     const friendFriendship = currentProfileFriends.find((friend: any) => friend.user.id === loggedUserId)
 
-    console.log('Logged User');
-    console.log(session?.user);
-    console.log('Current User');
-    console.log(currentUser);
-
     if (currentUser?.id === session?.user?.id) return <ErrorAlert message={'The user is the same of the logged one'} />;
 
     return (

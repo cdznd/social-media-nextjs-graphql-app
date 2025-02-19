@@ -16,6 +16,12 @@ export const GET_FRIENDSHIP = gql`
         friendship(fromUserId: $fromUserId, toUserId: $toUserId) {
             id
             status
+            userA {
+                id
+            }
+            userB {
+                id
+            }
         }
     }
 `

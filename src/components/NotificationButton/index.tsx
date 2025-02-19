@@ -1,26 +1,31 @@
 'use client'
 import { IconButton } from "@mui/material"
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-
-import { useRouter } from "next/navigation";
+import NotificationModal from "../NotificationModal";
+import { useState } from "react";
 
 export default function NotificationButton() {
+    const [open, setOpen] = useState(false);
 
-    const router = useRouter()
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     return (
-        <IconButton
-            sx={{
-                width: '2.25rem',
-                height: '2.25rem',
-                '& > svg': {
-                    width: '1.2rem',
-                    height: '1.2rem'
-                }
-            }}
-            onClick={() => router.push('app/notifications')}
-        >
-            <NotificationsNoneIcon />
-        </IconButton>
+        <>
+            <IconButton
+                sx={{
+                    width: '2.25rem',
+                    height: '2.25rem',
+                    '& > svg': {
+                        width: '1.2rem',
+                        height: '1.2rem'
+                    }
+                }}
+                onClick={handleOpen}
+            >
+                <NotificationsNoneIcon />
+            </IconButton>
+            <NotificationModal open={open} onClose={handleClose} />
+        </>
     )
 }

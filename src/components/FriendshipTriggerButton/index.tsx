@@ -2,7 +2,7 @@
 
 import { Button } from "@mui/material"
 import { useMutation, useQuery } from "@apollo/client"
-import { TRIGGER_FRIENDSHIP_REQUEST_MUTATION } from "@/lib/graphql/fragments/mutations/friendship"
+import { CREATE_FRIENDSHIP_REQUEST_MUTATION } from "@/lib/graphql/fragments/mutations/friendship"
 import { useSession } from "next-auth/react"
 import { GET_FRIENDSHIP } from "@/lib/graphql/fragments/queries/friendship"
 
@@ -25,7 +25,7 @@ export default function FriendshipTriggerButton(
     const currentFriendship = friendshipData?.friendship
     const friendshipStatus = currentFriendship?.status || null
 
-    const [triggerFriendship, { loading: mutationLoading }] = useMutation(TRIGGER_FRIENDSHIP_REQUEST_MUTATION, {
+    const [triggerFriendship, { loading: mutationLoading }] = useMutation(CREATE_FRIENDSHIP_REQUEST_MUTATION, {
         refetchQueries: [
             {
                 query: GET_FRIENDSHIP,

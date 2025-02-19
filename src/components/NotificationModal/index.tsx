@@ -5,9 +5,11 @@ import Modal from '@mui/material/Modal';
 import { List, ListItem, ListItemText, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { borderRadius } from '@mui/system';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 
 import { useSession } from 'next-auth/react';
+
+import FriendshipNotification from '../FriendshipNotification';
 
 import { GET_USER_NOTIFICATIONS } from '@/lib/graphql/fragments/queries/notification';
 
@@ -42,20 +44,19 @@ export default function NotificationModal(
         skip: !session?.user?.id
     })
 
-    const userNotifications = data?.notifications
+    const userNotifications = data?.notifications ?? []
 
     if(loading || error) {
         return null;
     }
 
-    const notifications = [
-        {
-            id: 1,
-            title: 'New follower',
-            description: 'John Doe started following you',
-            timestamp: new Date().toISOString()
-        },
-    ];
+    const notifications = userNotifications
+
+    const acceptFriendship = (friendshipId: string) => {
+
+
+
+    }
 
     return (
         <Modal
@@ -64,6 +65,7 @@ export default function NotificationModal(
             aria-labelledby="notifications-modal"
         >
             <Box sx={style}>
+                {/* Title */}
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="h6" component="h2">
                         Notifications
@@ -72,25 +74,15 @@ export default function NotificationModal(
                         <CloseIcon />
                     </IconButton>
                 </Box>
+                {/* List of friends request */}
                 <Box sx={{ border: '1px solid gray', p: '1rem', borderRadius: '1rem', background: 'gray' }}>
                     <Typography variant="h6" component="h6">
                         Friend Requests
                     </Typography>
                     <List sx={{ p: 0 }}>
                         {notifications.length > 0 ? (
-                            notifications.map((notification) => (
-                                <ListItem
-                                    key={notification.id}
-                                    sx={{
-                                        border: '1px solid black',
-                                        borderColor: 'divider',
-                                    }}
-                                >
-                                    <ListItemText
-                                        primary={notification.title}
-                                        secondary={notification.description}
-                                    />
-                                </ListItem>
+                            notifications.map((notification: any) => (
+                                <FriendshipNotification key={notification.id} notification={notification} />
                             ))
                         ) : (
                             <Typography color="text.secondary" align="center" py={2}>
@@ -99,10 +91,10 @@ export default function NotificationModal(
                         )}
                     </List>
                 </Box>
-                <Box sx={{ marginTop: '1rem' }}>
+                {/* <Box sx={{ marginTop: '1rem' }}>
                     <List sx={{ p: 0 }}>
                         {notifications.length > 0 ? (
-                            notifications.map((notification) => (
+                            notifications.map((notification: any) => (
                                 <ListItem
                                     key={notification.id}
                                     sx={{
@@ -114,6 +106,7 @@ export default function NotificationModal(
                                         primary={notification.title}
                                         secondary={notification.description}
                                     />
+                                    <h1 onClick={() => acceptFriendship(notification.entityId)}>Accept</h1>
                                 </ListItem>
                             ))
                         ) : (
@@ -162,7 +155,7 @@ export default function NotificationModal(
                             </Typography>
                         )}
                     </List>
-                </Box>
+                </Box> */}
             </Box>
         </Modal>
     );

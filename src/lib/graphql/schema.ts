@@ -226,6 +226,17 @@ const Mutation = mutationType({
                 return friendshipService.updateFriendshipStatus({ friendshipId, status })
             }
         })
+        t.field('deleteFriendship', {
+            type: Friendship,
+            args: {
+                friendshipId: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { friendshipId } = args
+                const friendshipService = new FriendshipService(context)
+                return friendshipService.deleteFriendship(friendshipId)
+            }
+        })
         t.field('createPost', {
             type: Post,
             args: {

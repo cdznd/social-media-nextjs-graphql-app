@@ -15,3 +15,11 @@ export const UPDATE_FRIENDSHIP_STATUS_MUTATION = gql`
         }
     }
 `
+
+export const DELETE_FRIENDSHIP_MUTATION = gql`
+    mutation DeleteFriendship($friendshipId: String!) {
+        deleteFriendship(friendshipId: $friendshipId) {
+            id
+        }
+    }
+`

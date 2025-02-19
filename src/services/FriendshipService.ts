@@ -81,4 +81,12 @@ export default class FriendshipService {
         })
     }
 
+    async deleteFriendship(friendshipId: string) {
+        return this.context.prisma.friendship.delete({
+            where: {
+                id: friendshipId
+            }
+        })
+    }
+
 }

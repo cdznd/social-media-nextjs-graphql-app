@@ -8,6 +8,12 @@ export const GET_USER_NOTIFICATIONS = gql`
             content
             userId
             actorId
+            actor {
+                id
+                name
+                username
+                image
+            }
             entityId
             entityType
         }

@@ -5,6 +5,11 @@ import Modal from '@mui/material/Modal';
 import { List, ListItem, ListItemText, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { borderRadius } from '@mui/system';
+import { useQuery } from '@apollo/client';
+
+import { useSession } from 'next-auth/react';
+
+import { GET_USER_NOTIFICATIONS } from '@/lib/graphql/fragments/queries/notification';
 
 const style = {
     position: 'absolute',
@@ -27,6 +32,21 @@ interface NotificationModalProps {
 
 export default function NotificationModal(
     { open, onClose }: NotificationModalProps) {
+
+    const { data: session } = useSession();
+
+    const { data, loading, error } = useQuery(GET_USER_NOTIFICATIONS, {
+        variables: {
+            userId: session?.user?.id
+        },
+        skip: !session?.user?.id
+    })
+
+    const userNotifications = data?.notifications
+
+    if(loading || error) {
+        return null;
+    }
 
     const notifications = [
         {

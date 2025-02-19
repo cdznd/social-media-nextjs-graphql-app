@@ -141,7 +141,7 @@ const Query = objectType({
                 return categoryService.getCategories()
             }
         })
-        t.nonNull.field('friendship', {
+        t.field('friendship', {
             type: Friendship,
             args: {
                 fromUserId: nonNull(stringArg()),
@@ -192,7 +192,12 @@ const Mutation = mutationType({
                 toUserId: nonNull(stringArg()),
             },
             resolve: async (_parent, args, context: Context) => {
-                const { fromUserId, toUserId, status } = args
+                const { fromUserId, toUserId } = args
+
+                console.log('inside create');
+                console.log('fromUserId', fromUserId);
+                console.log('toUserId', toUserId);
+
                 const friendshipService = new FriendshipService(context)
                 const notificationService = new NotificationService(context)
                 // First create the friendship

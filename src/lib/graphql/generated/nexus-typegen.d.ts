@@ -98,8 +98,8 @@ export interface NexusGenObjects {
   Friendship: { // root type
     id?: string | null; // String
     status?: string | null; // String
-    userA: NexusGenRootTypes['User']; // User!
-    userB: NexusGenRootTypes['User']; // User!
+    userA?: NexusGenRootTypes['User'] | null; // User
+    userB?: NexusGenRootTypes['User'] | null; // User
   }
   Like: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -232,8 +232,8 @@ export interface NexusGenFieldTypes {
   Friendship: { // field return type
     id: string | null; // String
     status: string | null; // String
-    userA: NexusGenRootTypes['User']; // User!
-    userB: NexusGenRootTypes['User']; // User!
+    userA: NexusGenRootTypes['User'] | null; // User
+    userB: NexusGenRootTypes['User'] | null; // User
   }
   Like: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -249,6 +249,7 @@ export interface NexusGenFieldTypes {
     createNotification: NexusGenRootTypes['Notification'] | null; // Notification
     createPost: NexusGenRootTypes['Post'] | null; // Post
     createUser: NexusGenRootTypes['User'] | null; // User
+    deleteFriendship: NexusGenRootTypes['Friendship'] | null; // Friendship
     triggerLike: NexusGenRootTypes['Like'] | null; // Like
     updateFriendshipStatus: NexusGenRootTypes['Friendship'] | null; // Friendship
   }
@@ -285,7 +286,7 @@ export interface NexusGenFieldTypes {
     exploreFeedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     feedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
-    friendship: NexusGenRootTypes['Friendship']; // Friendship!
+    friendship: NexusGenRootTypes['Friendship'] | null; // Friendship
     likes: Array<NexusGenRootTypes['Like'] | null>; // [Like]!
     notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     post: NexusGenRootTypes['Post'] | null; // Post
@@ -397,6 +398,7 @@ export interface NexusGenFieldTypeNames {
     createNotification: 'Notification'
     createPost: 'Post'
     createUser: 'User'
+    deleteFriendship: 'Friendship'
     triggerLike: 'Like'
     updateFriendshipStatus: 'Friendship'
   }
@@ -507,6 +509,9 @@ export interface NexusGenArgTypes {
       name: string; // String!
       password: string; // String!
       username: string; // String!
+    }
+    deleteFriendship: { // args
+      friendshipId: string; // String!
     }
     triggerLike: { // args
       postId: string; // String!

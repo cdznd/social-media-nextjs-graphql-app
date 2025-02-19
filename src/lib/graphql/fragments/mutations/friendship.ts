@@ -1,8 +1,8 @@
 import gql from "graphql-tag"
 
 export const CREATE_FRIENDSHIP_REQUEST_MUTATION = gql`
-    mutation CreateFriendship($fromUserId: String!, $toUserId: String!) {
-        createFriendship(fromUserId: $fromUserId, toUserId: $toUserId) {
+    mutation CreateFriendshipRequest($fromUserId: String!, $toUserId: String!) {
+        createFriendshipRequest(fromUserId: $fromUserId, toUserId: $toUserId) {
             id
         }
     }

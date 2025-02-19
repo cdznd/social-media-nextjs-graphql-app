@@ -7,6 +7,7 @@ import { List, Box, Modal, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FriendshipNotification from '../FriendshipNotification';
 import CommonNotification from '../CommonNotification';
+import { height } from '@mui/system';
 
 interface NotificationModalProps {
     open: boolean;
@@ -43,6 +44,8 @@ export default function NotificationModal(
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 width: 800,
+                maxHeight: '80%',
+                overflowY: 'scroll',
                 bgcolor: 'background.paper',
                 boxShadow: 24,
                 borderRadius: '1rem',

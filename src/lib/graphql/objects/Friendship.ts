@@ -5,8 +5,8 @@ export const Friendship = objectType({
     name: "Friendship",
     definition(t) {
         t.string("id");
-        t.nonNull.field("userA", { type: User });
-        t.nonNull.field("userB", { type: User });
+        t.field("userA", { type: User });
+        t.field("userB", { type: User });
         t.string("status")
     }
 })

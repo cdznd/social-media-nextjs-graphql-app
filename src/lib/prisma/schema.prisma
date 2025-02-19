@@ -165,10 +165,10 @@ model Notification {
   content    String
   userId     String
   user       User     @relation("UserNotifications", fields: [userId], references: [id])
-  actorId    String?
-  actor      User?    @relation("ActorNotifications", fields: [actorId], references: [id])
+  actorId    String
+  actor      User     @relation("ActorNotifications", fields: [actorId], references: [id])
   entityId   String?
-  entityType EntityType?
+  entityType EntityType
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

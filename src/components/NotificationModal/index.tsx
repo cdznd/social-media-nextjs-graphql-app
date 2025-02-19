@@ -7,7 +7,7 @@ import { List, Box, Modal, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FriendshipNotification from '../FriendshipNotification';
 import CommonNotification from '../CommonNotification';
-import { height } from '@mui/system';
+import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
 
 interface NotificationModalProps {
     open: boolean;
@@ -62,36 +62,47 @@ export default function NotificationModal(
                     </IconButton>
                 </Box>
                 {/* List of friends request */}
-                <Box sx={{ border: '1px solid #4B5563', p: '1rem', borderRadius: '1rem', background: '#1F2937' }}>
-                    <Typography variant="h6" sx={{ marginBottom: '.5rem' }}>
-                        Friend Requests
-                    </Typography>
-                    <List sx={{ p: 0 }}>
-                        {notifications.length > 0 ? (
-                            notifications.map((notification: any) => (
-                                <FriendshipNotification key={notification.id} notification={notification} />
-                            ))
-                        ) : (
-                            <Typography color="text.secondary" align="center" py={2}>
+                {
+                    notifications.length > 0 && (
+                        <Box sx={{ border: '1px solid #4B5563', p: '1rem', borderRadius: '1rem', background: '#1F2937' }}>
+                            <Typography variant="h6" sx={{ marginBottom: '.5rem' }}>
+                                Friend Requests
+                            </Typography>
+                            <List sx={{ p: 0 }}>
+                                {notifications.map((notification: any) => (
+                                    <FriendshipNotification key={notification.id} notification={notification} />
+                                ))}
+                            </List>
+                        </Box>
+                    )
+                }
+                {
+                    notifications.length > 0 && (
+                        <Box sx={{ border: '1px solid #4B5563', p: '1rem', borderRadius: '1rem', background: '#1F2937', marginTop: '1rem' }}>
+                            <List sx={{ p: 0 }}>
+                                {notifications.length > 0 ? (
+                                    notifications.map((notification: any) => (
+                                        <CommonNotification key={notification.id} notification={notification} />
+                                    ))
+                                ) : (
+                                    <Typography color="text.secondary" align="center" py={2}>
+                                        No notifications yet
+                                    </Typography>
+                                )}
+                            </List>
+                        </Box>
+                    )
+                }
+                {
+                    notifications.length === 0 && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Typography color="text.secondary" align="center" py={2} mr={1}>
                                 No notifications yet
                             </Typography>
-                        )}
-                    </List>
-                </Box>
-                {/* List of other notifications */}
-                <Box sx={{ border: '1px solid #4B5563', p: '1rem', borderRadius: '1rem', background: '#1F2937', marginTop: '1rem' }}>
-                    <List sx={{ p: 0 }}>
-                        {notifications.length > 0 ? (
-                            notifications.map((notification: any) => (
-                                <CommonNotification key={notification.id} notification={notification} />
-                            ))
-                        ) : (
-                            <Typography color="text.secondary" align="center" py={2}>
-                                No notifications yet
-                            </Typography>
-                        )}
-                    </List>
-                </Box>
+                            <NotificationsOffIcon />
+                        </Box>
+                    )
+                }
             </Box>
         </Modal>
     );

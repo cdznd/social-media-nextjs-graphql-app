@@ -185,19 +185,18 @@ const Mutation = mutationType({
                 return userService.createUser({ name, email, password, username, image })
             }
         })
-        t.field('createFriendship', {
+        t.field('createFriendshipRequest', {
             type: Friendship,
             args: {
                 fromUserId: nonNull(stringArg()),
                 toUserId: nonNull(stringArg()),
-                status: arg({ type: 'FriendshipStatus', default: "PENDING" })
             },
             resolve: async (_parent, args, context: Context) => {
                 const { fromUserId, toUserId, status } = args
                 const friendshipService = new FriendshipService(context)
                 const notificationService = new NotificationService(context)
                 // First create the friendship
-                const createdFriendship = await friendshipService.createFriendship({ fromUserId, toUserId, status })
+                const createdFriendship = await friendshipService.createFriendship({ fromUserId, toUserId })
                 // Create the notification with the friendship data
                 const createdNotification = await notificationService.createNotification({
                     type: 'FRIEND_REQUEST',
@@ -208,6 +207,23 @@ const Mutation = mutationType({
                     entityId: createdFriendship?.id
                 })
                 return createdFriendship
+            }
+        })
+        t.field('updateFriendshipStatus', {
+            type: Friendship,
+            args: {
+                friendshipId: nonNull(stringArg()),
+                status: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                // TODO: Fix typo errors
+                const { friendshipId, status } = args
+
+                console.log('friendshipId', friendshipId);
+                console.log('status', status);
+
+                const friendshipService = new FriendshipService(context)
+                return friendshipService.updateFriendshipStatus({ friendshipId, status })
             }
         })
         t.field('createPost', {
@@ -246,19 +262,6 @@ const Mutation = mutationType({
                 const { name } = args
                 const categoryService = new CategoryService(context)
                 return categoryService.createCategory(name)
-            }
-        })
-        t.field('updateFriendshipStatus', {
-            type: Friendship,
-            args: {
-                friendshipId: nonNull(stringArg()),
-                status: nonNull(stringArg())
-            },
-            resolve: async (_parent, args, context: Context) => {
-                // TODO: Fix typo errors
-                const { friendshipId, status } = args
-                const friendshipService = new FriendshipService(context)
-                return friendshipService.updateFriendshipStatus({ id: friendshipId, status })
             }
         })
         t.field('createNotification', {

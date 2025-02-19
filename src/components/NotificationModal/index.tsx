@@ -1,31 +1,12 @@
 'use client'
 
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import { List, ListItem, ListItemText, Typography, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { borderRadius } from '@mui/system';
-import { useQuery, useMutation } from '@apollo/client';
-
 import { useSession } from 'next-auth/react';
-
-import FriendshipNotification from '../FriendshipNotification';
-
+import { useQuery } from '@apollo/client';
 import { GET_USER_NOTIFICATIONS } from '@/lib/graphql/fragments/queries/notification';
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 800,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    borderRadius: '1rem',
-    pt: 2,
-    px: 4,
-    pb: 3,
-};
+import { List, Box, Modal, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import FriendshipNotification from '../FriendshipNotification';
+import CommonNotification from '../CommonNotification';
 
 interface NotificationModalProps {
     open: boolean;
@@ -44,18 +25,10 @@ export default function NotificationModal(
         skip: !session?.user?.id
     })
 
-    const userNotifications = data?.notifications ?? []
+    const notifications = data?.notifications ?? []
 
-    if(loading || error) {
+    if (loading || error) {
         return null;
-    }
-
-    const notifications = userNotifications
-
-    const acceptFriendship = (friendshipId: string) => {
-
-
-
     }
 
     return (
@@ -64,10 +37,21 @@ export default function NotificationModal(
             onClose={onClose}
             aria-labelledby="notifications-modal"
         >
-            <Box sx={style}>
+            <Box sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 800,
+                bgcolor: 'background.paper',
+                boxShadow: 24,
+                borderRadius: '1rem',
+                paddingY: '1.5rem',
+                paddingX: '2rem'
+            }}>
                 {/* Title */}
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                    <Typography variant="h6" component="h2">
+                    <Typography variant="h4">
                         Notifications
                     </Typography>
                     <IconButton onClick={onClose} size="small">
@@ -75,8 +59,8 @@ export default function NotificationModal(
                     </IconButton>
                 </Box>
                 {/* List of friends request */}
-                <Box sx={{ border: '1px solid gray', p: '1rem', borderRadius: '1rem', background: 'gray' }}>
-                    <Typography variant="h6" component="h6">
+                <Box sx={{ border: '1px solid #4B5563', p: '1rem', borderRadius: '1rem', background: '#1F2937' }}>
+                    <Typography variant="h6" sx={{ marginBottom: '.5rem' }}>
                         Friend Requests
                     </Typography>
                     <List sx={{ p: 0 }}>
@@ -91,63 +75,12 @@ export default function NotificationModal(
                         )}
                     </List>
                 </Box>
-                {/* <Box sx={{ marginTop: '1rem' }}>
+                {/* List of other notifications */}
+                <Box sx={{ border: '1px solid #4B5563', p: '1rem', borderRadius: '1rem', background: '#1F2937', marginTop: '1rem' }}>
                     <List sx={{ p: 0 }}>
                         {notifications.length > 0 ? (
                             notifications.map((notification: any) => (
-                                <ListItem
-                                    key={notification.id}
-                                    sx={{
-                                        border: '1px solid black',
-                                        borderColor: 'divider',
-                                    }}
-                                >
-                                    <ListItemText
-                                        primary={notification.title}
-                                        secondary={notification.description}
-                                    />
-                                    <h1 onClick={() => acceptFriendship(notification.entityId)}>Accept</h1>
-                                </ListItem>
-                            ))
-                        ) : (
-                            <Typography color="text.secondary" align="center" py={2}>
-                                No notifications yet
-                            </Typography>
-                        )}
-                                                {notifications.length > 0 ? (
-                            notifications.map((notification) => (
-                                <ListItem
-                                    key={notification.id}
-                                    sx={{
-                                        border: '1px solid black',
-                                        borderColor: 'divider',
-                                    }}
-                                >
-                                    <ListItemText
-                                        primary={notification.title}
-                                        secondary={notification.description}
-                                    />
-                                </ListItem>
-                            ))
-                        ) : (
-                            <Typography color="text.secondary" align="center" py={2}>
-                                No notifications yet
-                            </Typography>
-                        )}
-                                                {notifications.length > 0 ? (
-                            notifications.map((notification) => (
-                                <ListItem
-                                    key={notification.id}
-                                    sx={{
-                                        border: '1px solid black',
-                                        borderColor: 'divider',
-                                    }}
-                                >
-                                    <ListItemText
-                                        primary={notification.title}
-                                        secondary={notification.description}
-                                    />
-                                </ListItem>
+                                <CommonNotification key={notification.id} notification={notification} />
                             ))
                         ) : (
                             <Typography color="text.secondary" align="center" py={2}>
@@ -155,7 +88,7 @@ export default function NotificationModal(
                             </Typography>
                         )}
                     </List>
-                </Box> */}
+                </Box>
             </Box>
         </Modal>
     );

@@ -6,7 +6,13 @@ import { schema } from './schema'
 const server = new ApolloServer<Context>({
   schema,
   introspection: process.env.NODE_ENV !== 'production',
-  validationRules: [depthLimit(5)]
+  validationRules: [depthLimit(5)],
+  formatError: (err) => {
+    if (process.env.NODE_ENV === 'production') {
+      return new Error('Internal Server Error');
+    }
+    return err;
+  },
 });
 
 export default server

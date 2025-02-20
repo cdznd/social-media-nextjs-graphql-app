@@ -139,7 +139,7 @@ export default function PostForm({ categories }: PostFormProps) {
                 variables: { ...createPostData },
             });
             console.log('Post created successfully:', response.data.createPost);
-            router.push('/app')
+            router.push('/')
         } catch (err) {
             console.log(JSON.stringify(err))
             console.error('Error creating post:', err);

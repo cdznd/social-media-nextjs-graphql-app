@@ -42,7 +42,7 @@ const CredentialsSigninForm = () => {
       setLoginError(true)
       setLoginErrorMessage(result?.error)
     } else {
-      router.push('/app')
+      router.push('/')
     }
   };
 

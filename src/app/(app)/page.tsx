@@ -20,13 +20,21 @@ async function getPrivateFeedData(userId: string, searchString?: string, categor
     return { data, feedError: null };
   } catch (error) {
     console.error(error)
+    console.log('CHECKING GRAPHQL ERROR');
+    console.log(error);
     return { data: null, feedError: error };
   }
 }
 
 export default async function Home(
-  { searchParams: { search, category } }: SearchParamsProps
+  { searchParams }: SearchParamsProps
 ) {
+  const { search, category } = await searchParams
+
+  console.log('Inside paage?');
+  console.log('search', search);
+  console.log('category', category);
+
   const session = await auth()
   // TODO: better handle the feed Error here
   const { data, feedError } = await getPrivateFeedData(
@@ -34,6 +42,10 @@ export default async function Home(
     search,
     category
   );
+
+  console.log('checking data');
+  console.log(data);
+
   // TODO: Add a type for the feedPosts here, like feedPosts: type
   const feedPosts = data?.feedPosts ?? []
   return (

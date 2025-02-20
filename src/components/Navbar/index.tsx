@@ -58,10 +58,6 @@ export default function Navbar() {
     signOut({ redirect: false })
   }
 
-  const handleOpenMyProfile = () => {
-    router.push('app/my-profile')
-  }
-
   const navbarItems = [
     {
       label: 'Feed',
@@ -69,15 +65,15 @@ export default function Navbar() {
     },
     {
       label: 'Explore',
-      open: () => { router.push('/app/explore') }
+      open: () => { router.push('/explore') }
     },
     {
       label: 'Users',
-      open: () => { router.push('/app/users') }
+      open: () => { router.push('/users') }
     },
     {
       label: 'New Post',
-      open: () => { router.push('/app/new-post') }
+      open: () => { router.push('/new-post') }
     }
   ]
 
@@ -178,7 +174,7 @@ export default function Navbar() {
                         </Button>
                       </MenuItem>
                       <MenuItem>
-                        <Link href={`/app/my-profile`}>
+                        <Link href={`/my-profile`}>
                           <Button color="primary" variant="contained" size="small" fullWidth>
                             My Profile
                           </Button>

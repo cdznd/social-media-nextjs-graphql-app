@@ -128,9 +128,12 @@ export interface NexusGenObjects {
   Post: { // root type
     author?: NexusGenRootTypes['User'] | null; // User
     authorId?: string | null; // String
+    categories: NexusGenRootTypes['Category'][]; // [Category!]!
+    comments: NexusGenRootTypes['Comment'][]; // [Comment!]!
     content?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id?: string | null; // ID
+    likes?: NexusGenRootTypes['Like'][] | null; // [Like!]
     thumbnail?: string | null; // String
     title?: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -284,13 +287,13 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     exploreFeedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
-    feedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
     friendship: NexusGenRootTypes['Friendship'] | null; // Friendship
     likes: Array<NexusGenRootTypes['Like'] | null>; // [Like]!
     notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
+    privateFeedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -433,13 +436,13 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     categories: 'Category'
     exploreFeedPosts: 'Post'
-    feedPosts: 'Post'
     friends: 'Friendship'
     friendship: 'Friendship'
     likes: 'Like'
     notifications: 'Notification'
     post: 'Post'
     posts: 'Post'
+    privateFeedPosts: 'Post'
     user: 'User'
     users: 'User'
   }
@@ -528,12 +531,6 @@ export interface NexusGenArgTypes {
       orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
       searchString?: string | null; // String
     }
-    feedPosts: { // args
-      category?: string | null; // String
-      orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
-      searchString?: string | null; // String
-      userId: string; // String!
-    }
     friends: { // args
       userId: string; // String!
     }
@@ -546,6 +543,14 @@ export interface NexusGenArgTypes {
     }
     post: { // args
       postId: string; // String!
+    }
+    privateFeedPosts: { // args
+      category?: string | null; // String
+      orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
+      searchString?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      userId: string; // String!
     }
     user: { // args
       userId: string; // String!

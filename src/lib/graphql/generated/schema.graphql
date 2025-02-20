@@ -138,13 +138,13 @@ type Post {
 type Query {
   categories: [Category!]!
   exploreFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String): [Post!]!
-  feedPosts(category: String, orderBy: SortOrder = desc, searchString: String, userId: String!): [Post!]!
   friends(userId: String!): [Friendship!]!
   friendship(fromUserId: String!, toUserId: String!): Friendship
   likes: [Like]!
   notifications(userId: String!): [Notification!]!
   post(postId: String!): Post
   posts: [Post!]!
+  privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): [Post!]!
   user(userId: String!): User
   users: [User!]!
 }

@@ -2,8 +2,8 @@ import { objectType } from "nexus";
 
 import { Post } from "./Post";
 
-export const PrivateFeedResponse = objectType({
-    name: 'PrivateFeedResponse',
+export const DefaultFeedResponse = objectType({
+    name: 'DefaultFeedResponse',
     definition(t) {
         t.nonNull.list.nonNull.field('posts', { type: Post });
         t.nonNull.int('totalCount');

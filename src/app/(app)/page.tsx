@@ -20,8 +20,6 @@ async function getPrivateFeedData(userId: string, searchString?: string, categor
     return { data, feedError: null };
   } catch (error) {
     console.error(error)
-    console.log('CHECKING GRAPHQL ERROR');
-    console.log(error);
     return { data: null, feedError: error };
   }
 }

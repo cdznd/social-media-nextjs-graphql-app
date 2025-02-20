@@ -52,7 +52,7 @@ export default class PostService {
         options: FeedOptions,
         filters: FeedFilters,
     ) {
-        const { orderBy, skip, take } = options
+        const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
         const { searchString, category } = filters
         // Where clause matching search string AND category if it exists
         const where: PostWhereInput = {
@@ -69,6 +69,8 @@ export default class PostService {
                     : {}
             ]
         }
+        const totalCount = await this.context.prisma.post.count({ where })
+        const totalPages = Math.ceil(totalCount / take)
         const posts = await this.context.prisma.post.findMany({
             where,
             orderBy: { createdAt: orderBy },
@@ -81,7 +83,7 @@ export default class PostService {
                 categories: true,
             },
         })
-        return posts
+        return { posts, totalCount, totalPages }
     }
 
     // TODO: Implement unit tests

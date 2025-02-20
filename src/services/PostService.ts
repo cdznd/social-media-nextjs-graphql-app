@@ -1,21 +1,10 @@
 import { Context } from "@/lib/prisma/context"
-
-type CreatePostDTO = {
-    title: string
-    content: string
-    authorId: string
-    thumbnail?: string | null
-    categories: string[]
-}
-
-type FeedFilters = {
-    searchString?: string | null
-    category?: string | null
-}
-
-type FeedOptions = {
-    orderBy?: any
-}
+import {
+    FeedOptions,
+    FeedFilters,
+    PostWhereInput,
+    CreatePostDTO
+} from "@/types/post"
 
 export default class PostService {
     
@@ -58,25 +47,33 @@ export default class PostService {
         return result
     }
 
-    async getFeedByUserId(userId: string, filters?: FeedFilters, options?: FeedOptions) {
-        const { searchString, category } = filters || {}
-        const { orderBy } = options || {}
-        return this.context.prisma.post.findMany({
-            where: {
-                AND: [
-                    searchString
-                        ? {
-                            OR: [
-                                { title: { contains: searchString, mode: 'insensitive' } },
-                                { content: { contains: searchString, mode: 'insensitive' } }
-                            ]
-                        } : {},
-                    category
-                        ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
-                        : {}
-                ]
-            },
-            orderBy: { createdAt: orderBy as "asc" | "desc" },
+    async getFeedByUserId(
+        userId: string,
+        options: FeedOptions,
+        filters: FeedFilters,
+    ) {
+        const { orderBy, skip, take } = options
+        const { searchString, category } = filters
+        // Where clause matching search string AND category if it exists
+        const where: PostWhereInput = {
+            AND: [
+                searchString
+                    ? {
+                        OR: [
+                            { title: { contains: searchString, mode: 'insensitive' } },
+                            { content: { contains: searchString, mode: 'insensitive' } }
+                        ]
+                    } : {},
+                category
+                    ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
+                    : {}
+            ]
+        }
+        const posts = await this.context.prisma.post.findMany({
+            where,
+            orderBy: { createdAt: orderBy },
+            skip,
+            take,
             include: {
                 author: true,
                 likes: true,
@@ -84,28 +81,36 @@ export default class PostService {
                 categories: true,
             },
         })
+        return posts
     }
 
     // TODO: Implement unit tests
-    async getExploreFeed(filters?: FeedFilters, options?: FeedOptions) {
-        const { searchString, category } = filters || {}
-        const { orderBy } = options || {}
-        return this.context.prisma.post.findMany({
-            where: {
-                AND: [
-                    searchString
-                        ? {
-                            OR: [
-                                { title: { contains: searchString, mode: 'insensitive' } },
-                                { content: { contains: searchString, mode: 'insensitive' } }
-                            ]
-                        } : {},
-                    category
-                        ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
-                        : {}
-                ]
-            },
-            orderBy: { createdAt: orderBy as "asc" | "desc" },
+    async getPublicFeed(
+        options: FeedOptions,
+        filters: FeedFilters,
+    ) {
+        const { orderBy, skip, take } = options
+        const { searchString, category } = filters
+        // Where clause matching search string AND category if it exists
+        const where: PostWhereInput = {
+            AND: [
+                searchString
+                    ? {
+                        OR: [
+                            { title: { contains: searchString, mode: 'insensitive' } },
+                            { content: { contains: searchString, mode: 'insensitive' } }
+                        ]
+                    } : {},
+                category
+                    ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
+                    : {}
+            ]
+        }
+        const posts = await this.context.prisma.post.findMany({
+            where,
+            orderBy: { createdAt: orderBy },
+            skip,
+            take,
             include: {
                 author: true,
                 likes: true,
@@ -113,6 +118,7 @@ export default class PostService {
                 categories: true,
             },
         })
+        return posts
     }
 
 }

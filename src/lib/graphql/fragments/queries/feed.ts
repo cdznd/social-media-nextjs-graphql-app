@@ -11,11 +11,15 @@ export const GET_PRIVATE_FEED_POSTS = gql`
     $userId: String!,
     $searchString: String,
     $category: String,
+    $take: Int,
+    $skip: Int,
   ) {
-    feedPosts(
+    privateFeedPosts(
       userId: $userId,
       searchString: $searchString,
-      category: $category
+      category: $category,
+      take: $take,
+      skip: $skip,
     ) {
       id
       title

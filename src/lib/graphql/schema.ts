@@ -8,6 +8,7 @@ import {
     mutationType,
     list,
     booleanArg,
+    intArg,
 } from 'nexus'
 import path from 'path';
 import { Context } from '../prisma/context';
@@ -90,26 +91,30 @@ const Query = objectType({
                 return context.prisma.like.findMany({});
             },
         });
-        t.nonNull.list.nonNull.field('feedPosts', {
+        t.nonNull.list.nonNull.field('privateFeedPosts', {
             type: Post,
             args: {
                 userId: nonNull(stringArg()),
                 searchString: stringArg(),
                 category: stringArg(),
-                orderBy: arg({ type: SortOrder, default: 'desc' })
+                orderBy: arg({ type: SortOrder, default: 'desc' }),
+                skip: intArg(),
+                take: intArg(),
             },
             resolve: async (_parent, args, context: Context) => {
-                const { userId, searchString, category, orderBy = 'desc' } = args;
+                const { userId, searchString, category, orderBy, skip, take } = args;
                 const postService = new PostService(context)
                 return postService.getFeedByUserId(
                     userId,
                     {
-                        searchString,
-                        category
+                        orderBy: orderBy ?? 'desc',
+                        skip: skip ?? undefined,
+                        take: take ?? undefined
                     },
                     {
-                        orderBy
-                    }
+                        searchString: searchString ?? undefined,
+                        category: category ?? undefined
+                    },
                 )
             }
         })
@@ -331,7 +336,7 @@ export const schema = makeSchema({
         NotificationEntityType,
         DateTime,
         FriendshipStatus,
-        SortOrder
+        SortOrder,
     ],
     outputs: {
         typegen: path.join(process.cwd(), '/src/lib/graphql/generated/nexus-typegen.d.ts'),

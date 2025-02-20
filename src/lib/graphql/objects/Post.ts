@@ -14,18 +14,9 @@ export const Post = objectType({
         t.nullable.string("thumbnail");
         t.string("authorId");
         t.field("author", { type: User });
-        t.list.nonNull.field("likes", {
-            type: Like,
-            resolve: (_parent) => _parent.likes ?? []
-        });
-        t.nonNull.list.nonNull.field("comments", {
-            type: Comment,
-            resolve: (_parent) => _parent.comments ?? []
-        });
-        t.nonNull.list.nonNull.field("categories", {
-            type: Category,
-            resolve: (_parent) => _parent.categories ?? []
-        });
+        t.list.nonNull.field("likes", { type: Like });
+        t.nonNull.list.nonNull.field("comments", { type: Comment });
+        t.nonNull.list.nonNull.field("categories", { type: Category });
         t.nonNull.field("createdAt", { type: "DateTime" });
         t.nonNull.field("updatedAt", { type: "DateTime" });
     },

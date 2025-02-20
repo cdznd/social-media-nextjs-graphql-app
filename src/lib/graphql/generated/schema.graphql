@@ -55,6 +55,12 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type DefaultFeedResponse {
+  posts: [Post!]!
+  totalCount: Int!
+  totalPages: Int!
+}
+
 type FriendWithStatus {
   status: FriendshipStatus!
   user: User!
@@ -144,7 +150,7 @@ type Query {
   notifications(userId: String!): [Notification!]!
   post(postId: String!): Post
   posts: [Post!]!
-  privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): [Post!]!
+  privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
   user(userId: String!): User
   users: [User!]!
 }

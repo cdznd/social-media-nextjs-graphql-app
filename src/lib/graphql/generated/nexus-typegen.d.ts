@@ -91,6 +91,11 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
     userId?: string | null; // String
   }
+  DefaultFeedResponse: { // root type
+    posts: NexusGenRootTypes['Post'][]; // [Post!]!
+    totalCount: number; // Int!
+    totalPages: number; // Int!
+  }
   FriendWithStatus: { // root type
     status: NexusGenEnums['FriendshipStatus']; // FriendshipStatus!
     user: NexusGenRootTypes['User']; // User!
@@ -228,6 +233,11 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
     userId: string | null; // String
   }
+  DefaultFeedResponse: { // field return type
+    posts: NexusGenRootTypes['Post'][]; // [Post!]!
+    totalCount: number; // Int!
+    totalPages: number; // Int!
+  }
   FriendWithStatus: { // field return type
     status: NexusGenEnums['FriendshipStatus']; // FriendshipStatus!
     user: NexusGenRootTypes['User']; // User!
@@ -293,7 +303,7 @@ export interface NexusGenFieldTypes {
     notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
-    privateFeedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
+    privateFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -377,6 +387,11 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     userId: 'String'
   }
+  DefaultFeedResponse: { // field return type name
+    posts: 'Post'
+    totalCount: 'Int'
+    totalPages: 'Int'
+  }
   FriendWithStatus: { // field return type name
     status: 'FriendshipStatus'
     user: 'User'
@@ -442,7 +457,7 @@ export interface NexusGenFieldTypeNames {
     notifications: 'Notification'
     post: 'Post'
     posts: 'Post'
-    privateFeedPosts: 'Post'
+    privateFeedPosts: 'DefaultFeedResponse'
     user: 'User'
     users: 'User'
   }

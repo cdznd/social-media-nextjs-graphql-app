@@ -4,6 +4,7 @@ export type PostData = {
     content: string;
     thumbnail?: string | null,
     authorId: string;
+    visibility: string;
     author: {
         id: string;
         name: string;

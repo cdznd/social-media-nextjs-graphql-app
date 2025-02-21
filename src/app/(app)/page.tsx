@@ -14,7 +14,7 @@ async function getPrivateFeedData(
 ) {
   const apolloClient = createApolloClient();
   try {
-    const postsPerPage = 10
+    const postsPerPage = 10 // TODO: Update this posts per page config
     const { data } = await apolloClient.query({
       query: GET_PRIVATE_FEED_POSTS,
       variables: {
@@ -44,11 +44,9 @@ export default async function Home(
     search,
     category
   );
-
   const feedPosts = data?.privateFeedPosts.posts ?? []
   const totalPosts = data?.privateFeedPosts?.totalCount ?? 0
   const totalPages = data?.privateFeedPosts?.totalPages ?? 0
-
   return (
     <Container>
       <h1>Total posts: {totalPosts}</h1>

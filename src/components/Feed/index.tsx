@@ -6,7 +6,7 @@ import { FeedProps } from '@/types/feed';
 
 import FeedPagination from './FeedPagination';
 
-export default function Feed({ feedData, feedType }: FeedProps) {
+export default function Feed({ feedData, feedType, totalPages }: FeedProps) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FeedHeader />
@@ -17,7 +17,7 @@ export default function Feed({ feedData, feedType }: FeedProps) {
           }
         </Box>
       </Box>
-      <FeedPagination />
+      <FeedPagination totalPages={totalPages}/>
     </Box>
   );
 }

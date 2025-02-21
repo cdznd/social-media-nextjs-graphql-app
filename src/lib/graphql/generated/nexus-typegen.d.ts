@@ -35,6 +35,7 @@ export interface NexusGenEnums {
   FriendshipStatus: "ACCEPTED" | "PENDING" | "REJECTED"
   NotificationEntityType: "COMMENT" | "FRIENDSHIP" | "POST"
   NotificationType: "COMMENT" | "FRIEND_REQUEST" | "LIKE"
+  PostVisibilityType: "PRIVATE" | "PUBLIC"
   SortOrder: "asc" | "desc"
 }
 
@@ -142,6 +143,7 @@ export interface NexusGenObjects {
     thumbnail?: string | null; // String
     title?: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    visibility: NexusGenEnums['PostVisibilityType']; // PostVisibilityType!
   }
   Query: {};
   Session: { // root type
@@ -293,10 +295,11 @@ export interface NexusGenFieldTypes {
     thumbnail: string | null; // String
     title: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    visibility: NexusGenEnums['PostVisibilityType']; // PostVisibilityType!
   }
   Query: { // field return type
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
-    exploreFeedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
+    exploreFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
     friendship: NexusGenRootTypes['Friendship'] | null; // Friendship
     likes: Array<NexusGenRootTypes['Like'] | null>; // [Like]!
@@ -447,10 +450,11 @@ export interface NexusGenFieldTypeNames {
     thumbnail: 'String'
     title: 'String'
     updatedAt: 'DateTime'
+    visibility: 'PostVisibilityType'
   }
   Query: { // field return type name
     categories: 'Category'
-    exploreFeedPosts: 'Post'
+    exploreFeedPosts: 'DefaultFeedResponse'
     friends: 'Friendship'
     friendship: 'Friendship'
     likes: 'Like'
@@ -545,6 +549,8 @@ export interface NexusGenArgTypes {
       category?: string | null; // String
       orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
       searchString?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     friends: { // args
       userId: string; // String!

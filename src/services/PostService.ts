@@ -6,6 +6,8 @@ import {
     CreatePostDTO
 } from "@/types/post"
 
+import FriendshipService from "./FriendshipService"
+
 export default class PostService {
     
     constructor(
@@ -54,6 +56,11 @@ export default class PostService {
     ) {
         const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
         const { searchString, category } = filters
+        const friendshipService = new FriendshipService(this.context)
+        // Getting all friends of this userid
+        const allUserFriendships = await friendshipService.getFriendsByUserId(userId)
+        const allUserFriendsIDs = allUserFriendships.map(
+            friendship => friendship.userA.id === userId ? friendship.userB.id : friendship.userA.id)
         // Where clause matching search string AND category if it exists
         const where: PostWhereInput = {
             AND: [
@@ -67,7 +74,8 @@ export default class PostService {
                 category
                     ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
                     : {}
-            ]
+            ],
+            authorId: { in: allUserFriendsIDs } // Fetch only friend's posts
         }
         const totalCount = await this.context.prisma.post.count({ where })
         const totalPages = Math.ceil(totalCount / take)
@@ -91,7 +99,7 @@ export default class PostService {
         options: FeedOptions,
         filters: FeedFilters,
     ) {
-        const { orderBy, skip, take } = options
+        const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
         const { searchString, category } = filters
         // Where clause matching search string AND category if it exists
         const where: PostWhereInput = {
@@ -106,8 +114,11 @@ export default class PostService {
                 category
                     ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
                     : {}
-            ]
+            ],
+            visibility: 'PUBLIC'
         }
+        const totalCount = await this.context.prisma.post.count({ where })
+        const totalPages = Math.ceil(totalCount / take)
         const posts = await this.context.prisma.post.findMany({
             where,
             orderBy: { createdAt: orderBy },
@@ -120,7 +131,7 @@ export default class PostService {
                 categories: true,
             },
         })
-        return posts
+        return { posts, totalCount, totalPages }
     }
 
 }

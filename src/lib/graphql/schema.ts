@@ -23,7 +23,13 @@ import { Comment } from './objects/Comment';
 import { Notification } from './objects/Notification';
 import { DefaultFeedResponse } from './objects/Feed';
 // Enums
-import { SortOrder, FriendshipStatus, NotificationType, NotificationEntityType } from './enums/common';
+import {
+    SortOrder,
+    FriendshipStatus,
+    NotificationType,
+    NotificationEntityType,
+    PostVisibilityType
+} from './enums/common';
 // Services
 import UserService from '@/services/UserService';
 import FriendshipService from '@/services/FriendshipService';
@@ -124,27 +130,35 @@ const Query = objectType({
                 }
             }
         )
-        t.nonNull.list.nonNull.field('exploreFeedPosts', {
-            type: Post,
-            args: {
-                searchString: stringArg(),
-                category: stringArg(),
-                orderBy: arg({ type: SortOrder, default: 'desc' })
-            },
-            resolve: async (_parent, args, context: Context) => {
-                const { searchString, category, orderBy = 'desc' } = args;
-                const postService = new PostService(context)
-                return postService.getExploreFeed(
-                    {
-                        searchString,
-                        category
-                    },
-                    {
-                        orderBy
-                    }
-                )
+        t.nonNull.field(
+            'exploreFeedPosts',
+            {
+                type: DefaultFeedResponse,
+                args: {
+                    searchString: stringArg(),
+                    category: stringArg(),
+                    orderBy: arg({ type: SortOrder, default: 'desc' }),
+                    skip: intArg(),
+                    take: intArg(),
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { searchString, category, orderBy, skip, take } = args;
+                    const postService = new PostService(context)
+                    const { posts, totalCount, totalPages } = await postService.getPublicFeed(
+                        {
+                            orderBy: orderBy ?? 'desc',
+                            skip: skip ?? undefined,
+                            take: take ?? undefined
+                        },
+                        {
+                            searchString: searchString ?? undefined,
+                            category: category ?? undefined
+                        },
+                    )
+                    return { posts, totalCount, totalPages } 
+                }
             }
-        })
+        )
         t.nonNull.list.nonNull.field('categories', {
             type: Category,
             resolve: async (_parent, args, context: Context) => {
@@ -341,6 +355,7 @@ export const schema = makeSchema({
         Notification,
         NotificationType,
         NotificationEntityType,
+        PostVisibilityType,
         DateTime,
         FriendshipStatus,
         SortOrder,

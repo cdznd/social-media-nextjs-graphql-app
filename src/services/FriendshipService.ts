@@ -34,7 +34,8 @@ export default class FriendshipService {
                 OR: [
                     { userAId: userId },
                     { userBId: userId }
-                ]
+                ],
+                status: 'ACCEPTED'
             },
             include: {
                 userA: true,

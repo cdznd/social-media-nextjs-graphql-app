@@ -4,7 +4,7 @@ import { auth } from "@/lib/next-auth/auth";
 import { Container, Pagination } from "@mui/material";
 import Feed from "@/components/Feed";
 
-import { HomeSearchParamsProps } from "@/types/feed";
+import { SearchParamsProps } from "@/types/feed";
 
 async function getPrivateFeedData(
   userId: string,
@@ -14,7 +14,7 @@ async function getPrivateFeedData(
 ) {
   const apolloClient = createApolloClient();
   try {
-    const postsPerPage = 10
+    const postsPerPage = 10 // TODO: Update this posts per page config
     const { data } = await apolloClient.query({
       query: GET_PRIVATE_FEED_POSTS,
       variables: {
@@ -33,7 +33,7 @@ async function getPrivateFeedData(
 }
 
 export default async function Home(
-  { searchParams }: HomeSearchParamsProps
+  { searchParams }: SearchParamsProps
 ) {
   const { search, category, page = 1 } = await searchParams
   const session = await auth()
@@ -44,11 +44,9 @@ export default async function Home(
     search,
     category
   );
-
   const feedPosts = data?.privateFeedPosts.posts ?? []
   const totalPosts = data?.privateFeedPosts?.totalCount ?? 0
   const totalPages = data?.privateFeedPosts?.totalPages ?? 0
-
   return (
     <Container>
       <h1>Total posts: {totalPosts}</h1>

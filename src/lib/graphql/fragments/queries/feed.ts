@@ -1,10 +1,11 @@
 import gql from "graphql-tag";
 
-/*
-  There will be two types of feed, one is the Explorer feed, that is a kind of public posts, and where 
-  all users can see it. The other is user's feed, where we'll display only the user's friends posts that include the 
-  friend's public and private posts (we'll mark on the post wether it's private or public post)
-*/
+import {
+  POST_FIELDS,
+  POST_LIKES,
+  POST_AUTHOR,
+  POST_CATEGORIES
+} from "./post";
 
 export const GET_PRIVATE_FEED_POSTS = gql`
   query FeedPosts(
@@ -22,58 +23,46 @@ export const GET_PRIVATE_FEED_POSTS = gql`
       skip: $skip,
     ) {
       posts {
-        id
-        title
-        content
-        createdAt
-        thumbnail
-        likes {
-          id
-          userId
-        }
-        author {
-          id
-          name
-          image
-        }
-        categories {
-          id
-          name
-        }
+        ...PostFields
+        ...PostLikes
+        ...PostAuthor
+        ...PostCategories
       }
       totalCount
       totalPages
     }
   }
+  ${POST_FIELDS}
+  ${POST_LIKES}
+  ${POST_AUTHOR}
+  ${POST_CATEGORIES}
 `;
 
 export const GET_EXPLORE_FEED_POSTS = gql`
   query exploreFeedPosts(
     $searchString: String,
     $category: String,
+    $take: Int,
+    $skip: Int,
   ) {
     exploreFeedPosts(
       searchString: $searchString,
-      category: $category
+      category: $category,
+      take: $take,
+      skip: $skip,
     ) {
-      id
-      title
-      content
-      createdAt
-      thumbnail
-      likes {
-        id
-        userId
+      posts {
+        ...PostFields
+        ...PostLikes
+        ...PostAuthor
+        ...PostCategories
       }
-      author {
-        id
-        name
-        image
-      }
-      categories {
-        id
-        name
-      }
+      totalCount
+      totalPages
     }
   }
+  ${POST_FIELDS}
+  ${POST_LIKES}
+  ${POST_AUTHOR}
+  ${POST_CATEGORIES}
 `;

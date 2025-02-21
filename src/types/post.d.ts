@@ -4,6 +4,7 @@ export type PostData = {
     content: string;
     thumbnail?: string | null,
     authorId: string;
+    visibility: string;
     author: {
         id: string;
         name: string;
@@ -56,4 +57,6 @@ export type PostWhereInput = {
         }>;
         categories?: { some: { name: { equals: string; mode: 'insensitive' } } };
     }>;
+    authorId?: { in: Array<string> };
+    visibility?: 'PUBLIC' | 'PRIVATE';
 }

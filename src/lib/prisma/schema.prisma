@@ -104,6 +104,11 @@ model Friendship {
   status    FriendshipStatus  @default(PENDING)
 }
 
+enum PostVisibility {
+  PUBLIC
+  PRIVATE
+}
+
 model Post {
   id          String    @id @default(cuid())
   title       String
@@ -111,6 +116,7 @@ model Post {
   thumbnail   String?
   authorId    String
   author      User      @relation(fields: [authorId], references: [id]) // Many-to-one relationship with User
+  visibility  PostVisibility @default(PUBLIC)
   likes       Like[]    
   comments    Comment[]
   categories  Category[]

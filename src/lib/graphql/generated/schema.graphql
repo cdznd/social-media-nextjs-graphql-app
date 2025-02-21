@@ -139,11 +139,17 @@ type Post {
   thumbnail: String
   title: String
   updatedAt: DateTime!
+  visibility: PostVisibilityType!
+}
+
+enum PostVisibilityType {
+  PRIVATE
+  PUBLIC
 }
 
 type Query {
   categories: [Category!]!
-  exploreFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String): [Post!]!
+  exploreFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int): DefaultFeedResponse!
   friends(userId: String!): [Friendship!]!
   friendship(fromUserId: String!, toUserId: String!): Friendship
   likes: [Like]!

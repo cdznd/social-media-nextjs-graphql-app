@@ -1,9 +1,10 @@
 export type FeedProps = {
   feedData: any
   feedType: string
+  totalPages: number
 }
 
-export type HomeSearchParamsProps = {
+export type SearchParamsProps = {
     searchParams: {
       page?: number,
       search?: string,

@@ -27,6 +27,10 @@ import { PostData } from '@/types/post';
 
 import PostEngagement from './PostEngagement';
 
+import Link from 'next/link';
+
+import { brand } from '../common/themePrimitives';
+
 type PostCardProps = {
     postData: PostData,
     variants?: string[]
@@ -35,13 +39,9 @@ type PostCardProps = {
 export default function PostCard({ postData, variants = [] }: PostCardProps) {
 
     const author = postData?.author
-
     const createdAt = postData?.createdAt
     const creationDate = new Date(createdAt)
-
-
     const postVisibility = postData?.visibility
-
     const displayDate = `${creationDate.getDate()} ${months[creationDate.getMonth()]} ${creationDate.getFullYear()}`
 
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
@@ -101,23 +101,34 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                 <StyledPostCardInfo>
                     {
                         displayAuthor && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    gap: 1,
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <Avatar
-                                    alt={author.name}
-                                    src={author.image}
-                                    sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
-                                />
-                                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                                    {author.name}
-                                </Typography>
-                            </Box>
+                            <Link href={`/users/${author.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        gap: 1,
+                                        alignItems: 'center',
+                                        paddingY: '.3rem',
+                                        paddingX: '.5rem',
+                                        border: '1px solid',
+                                        borderColor: gray[700],
+                                        borderRadius: '1rem',
+                                        transition: '200ms',
+                                        '&:hover': {
+                                            background: brand[800]
+                                        },
+                                    }}
+                                >
+                                    <Avatar
+                                        alt={author.name}
+                                        src={author.image}
+                                        sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
+                                    />
+                                    <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                                        {author.name}
+                                    </Typography>
+                                </Box>
+                            </Link>
                         )
                     }
                     <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
@@ -128,7 +139,7 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                     <Box sx={{ mb: '1rem' }}>
                         <Chip
                             icon={postVisibility === 'PUBLIC' ? <PublicIcon /> : <LockIcon />}
-                            color={postVisibility === 'PUBLIC' ? 'success' : 'info' }
+                            color={postVisibility === 'PUBLIC' ? 'success' : 'info'}
                             variant='outlined'
                             label={postVisibility === 'PUBLIC' ? 'Public' : "Private"}
                             sx={{

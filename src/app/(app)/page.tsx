@@ -44,13 +44,18 @@ export default async function Home(
     search,
     category
   );
-  // TODO: Add a type for the feedPosts here, like feedPosts: type
-  const feedPosts = data?.privateFeedPosts ?? []
+
+  const feedPosts = data?.privateFeedPosts.posts ?? []
+  const totalPosts = data?.privateFeedPosts?.totalCount ?? 0
+  const totalPages = data?.privateFeedPosts?.totalPages ?? 0
+
   return (
     <Container>
+      <h1>Total posts: {totalPosts}</h1>
       <Feed
         feedData={feedPosts}
         feedType="private"
+        totalPages={totalPages}
       />
     </Container>
   );

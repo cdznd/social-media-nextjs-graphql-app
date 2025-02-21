@@ -19,3 +19,8 @@ export const NotificationEntityType = enumType({
     name: "NotificationEntityType",
     members: ["POST", "COMMENT", "FRIENDSHIP"]
 })
+
+export const PostVisibilityType = enumType({
+    name: "PostVisibilityType",
+    members: ["PUBLIC", "PRIVATE"]
+})

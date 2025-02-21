@@ -23,7 +23,13 @@ import { Comment } from './objects/Comment';
 import { Notification } from './objects/Notification';
 import { DefaultFeedResponse } from './objects/Feed';
 // Enums
-import { SortOrder, FriendshipStatus, NotificationType, NotificationEntityType } from './enums/common';
+import {
+    SortOrder,
+    FriendshipStatus,
+    NotificationType,
+    NotificationEntityType,
+    PostVisibilityType
+} from './enums/common';
 // Services
 import UserService from '@/services/UserService';
 import FriendshipService from '@/services/FriendshipService';
@@ -349,6 +355,7 @@ export const schema = makeSchema({
         Notification,
         NotificationType,
         NotificationEntityType,
+        PostVisibilityType,
         DateTime,
         FriendshipStatus,
         SortOrder,

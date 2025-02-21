@@ -35,6 +35,7 @@ export interface NexusGenEnums {
   FriendshipStatus: "ACCEPTED" | "PENDING" | "REJECTED"
   NotificationEntityType: "COMMENT" | "FRIENDSHIP" | "POST"
   NotificationType: "COMMENT" | "FRIEND_REQUEST" | "LIKE"
+  PostVisibilityType: "PRIVATE" | "PUBLIC"
   SortOrder: "asc" | "desc"
 }
 
@@ -142,6 +143,7 @@ export interface NexusGenObjects {
     thumbnail?: string | null; // String
     title?: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    visibility: NexusGenEnums['PostVisibilityType']; // PostVisibilityType!
   }
   Query: {};
   Session: { // root type
@@ -293,6 +295,7 @@ export interface NexusGenFieldTypes {
     thumbnail: string | null; // String
     title: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    visibility: NexusGenEnums['PostVisibilityType']; // PostVisibilityType!
   }
   Query: { // field return type
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
@@ -447,6 +450,7 @@ export interface NexusGenFieldTypeNames {
     thumbnail: 'String'
     title: 'String'
     updatedAt: 'DateTime'
+    visibility: 'PostVisibilityType'
   }
   Query: { // field return type name
     categories: 'Category'

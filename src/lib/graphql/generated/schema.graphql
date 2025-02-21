@@ -139,6 +139,12 @@ type Post {
   thumbnail: String
   title: String
   updatedAt: DateTime!
+  visibility: PostVisibilityType!
+}
+
+enum PostVisibilityType {
+  PRIVATE
+  PUBLIC
 }
 
 type Query {

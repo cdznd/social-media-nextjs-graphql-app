@@ -26,3 +26,34 @@ export type PostData = {
     createdAt: string;
     updatedAt: string;
 }
+
+type CreatePostDTO = {
+    title: string
+    content: string
+    authorId: string
+    thumbnail?: string | null
+    categories: string[]
+}
+
+type FeedSortByOrder = 'asc' | 'desc';
+
+export type FeedOptions = {
+    orderBy: FeedSortByOrder,
+    skip?: number,
+    take?: number
+}
+
+export type FeedFilters = {
+    searchString?: string
+    category?: string
+}
+
+export type PostWhereInput = {
+    AND?: Array<{
+        OR?: Array<{
+            title?: { contains: string; mode: 'insensitive' };
+            content?: { contains: string; mode: 'insensitive' };
+        }>;
+        categories?: { some: { name: { equals: string; mode: 'insensitive' } } };
+    }>;
+}

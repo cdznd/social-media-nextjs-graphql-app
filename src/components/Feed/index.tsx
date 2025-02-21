@@ -4,7 +4,9 @@ import FeedContent from '@/components/Feed/FeedContent';
 
 import { FeedProps } from '@/types/feed';
 
-export default async function Feed({ feedData, feedType }: FeedProps) {
+import FeedPagination from './FeedPagination';
+
+export default function Feed({ feedData, feedType, totalPages }: FeedProps) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FeedHeader />
@@ -15,7 +17,7 @@ export default async function Feed({ feedData, feedType }: FeedProps) {
           }
         </Box>
       </Box>
-      {/* <ErrorAlert message={`${feedError}`} /> */}
+      <FeedPagination totalPages={totalPages}/>
     </Box>
   );
 }

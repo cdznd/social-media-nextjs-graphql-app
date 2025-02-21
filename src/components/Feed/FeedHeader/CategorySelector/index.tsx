@@ -16,8 +16,10 @@ export default function CategorySelector({ categories = [] }: { categories: any 
         // TODO: Better understand this part here
         const params = new URLSearchParams(searchParams.toString());
         if (selectedCategory === category) {
+            params.delete("page");
             params.delete("category");
         } else {
+            params.delete("page");
             params.set("category", category);
         }
         router.push(`?${params.toString()}`, { scroll: false });

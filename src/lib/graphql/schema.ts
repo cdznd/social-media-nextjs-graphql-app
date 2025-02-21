@@ -8,6 +8,7 @@ import {
     mutationType,
     list,
     booleanArg,
+    intArg,
 } from 'nexus'
 import path from 'path';
 import { Context } from '../prisma/context';
@@ -20,6 +21,7 @@ import { Category } from './objects/Category';
 import { Like } from './objects/Like';
 import { Comment } from './objects/Comment';
 import { Notification } from './objects/Notification';
+import { DefaultFeedResponse } from './objects/Feed';
 // Enums
 import { SortOrder, FriendshipStatus, NotificationType, NotificationEntityType } from './enums/common';
 // Services
@@ -33,6 +35,7 @@ import NotificationService from '@/services/NotificationService';
 import { GraphQLDateTime } from "graphql-scalars";
 
 const DateTime = asNexusMethod(GraphQLDateTime, "DateTime");
+
 
 const Query = objectType({
     name: 'Query',
@@ -90,29 +93,37 @@ const Query = objectType({
                 return context.prisma.like.findMany({});
             },
         });
-        t.nonNull.list.nonNull.field('feedPosts', {
-            type: Post,
-            args: {
-                userId: nonNull(stringArg()),
-                searchString: stringArg(),
-                category: stringArg(),
-                orderBy: arg({ type: SortOrder, default: 'desc' })
-            },
-            resolve: async (_parent, args, context: Context) => {
-                const { userId, searchString, category, orderBy = 'desc' } = args;
-                const postService = new PostService(context)
-                return postService.getFeedByUserId(
-                    userId,
-                    {
-                        searchString,
-                        category
-                    },
-                    {
-                        orderBy
-                    }
-                )
+        t.nonNull.field(
+            'privateFeedPosts',
+            {
+                type: DefaultFeedResponse,
+                args: {
+                    userId: nonNull(stringArg()),
+                    searchString: stringArg(),
+                    category: stringArg(),
+                    orderBy: arg({ type: SortOrder, default: 'desc' }),
+                    skip: intArg(),
+                    take: intArg(),
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { userId, searchString, category, orderBy, skip, take } = args;
+                    const postService = new PostService(context)
+                    const { posts, totalCount, totalPages } = await postService.getFeedByUserId(
+                        userId,
+                        {
+                            orderBy: orderBy ?? 'desc',
+                            skip: skip ?? undefined,
+                            take: take ?? undefined
+                        },
+                        {
+                            searchString: searchString ?? undefined,
+                            category: category ?? undefined
+                        },
+                    )
+                    return { posts, totalCount, totalPages }
+                }
             }
-        })
+        )
         t.nonNull.list.nonNull.field('exploreFeedPosts', {
             type: Post,
             args: {
@@ -316,6 +327,7 @@ export const schema = makeSchema({
         Query,
         Mutation,
         User,
+        DefaultFeedResponse,
         FriendWithStatus,
         Account,
         Session,
@@ -331,7 +343,7 @@ export const schema = makeSchema({
         NotificationEntityType,
         DateTime,
         FriendshipStatus,
-        SortOrder
+        SortOrder,
     ],
     outputs: {
         typegen: path.join(process.cwd(), '/src/lib/graphql/generated/nexus-typegen.d.ts'),

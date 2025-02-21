@@ -48,6 +48,7 @@ async function main() {
     // Creating posts
     for (let i = 0; i < numberOfPosts; i++) {
         const randomUser = users[Math.floor(Math.random() * users.length)];
+        const visibility = Math.random() < 0.5 ? "PUBLIC" : "PRIVATE";
         const randomCategories = createdCategories
             .sort(() => Math.random() - 0.5)
             .slice(0, Math.floor(Math.random() * 3) + 1); // 1-3 categories per post
@@ -57,6 +58,7 @@ async function main() {
                 content: faker.lorem.paragraphs(),
                 thumbnail: faker.image.url(),
                 authorId: randomUser.id,
+                visibility: visibility,
                 categories: {
                     connect: randomCategories.map(cat => ({ id: cat.id }))
                 }

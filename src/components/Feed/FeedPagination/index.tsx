@@ -1,9 +1,10 @@
 'use client'
 
 import Pagination from '@mui/material/Pagination';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
-export default function FeedPagination() {
+// TODO: Fix the update of the pagination currentPage based on the page param
+export default function FeedPagination({ totalPages }: { totalPages: number }) {
     const router = useRouter();
     const setQueryParam = (key: string, value: string) => {
       const params = new URLSearchParams(window.location.search);
@@ -11,10 +12,15 @@ export default function FeedPagination() {
       router.push(`?${params.toString()}`, { scroll: false }); // Updates the URL without reloading
     };
     const handlePaginationChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
         setQueryParam('page', value.toString());
     };
     return (
-        <Pagination count={50} variant="outlined" onChange={handlePaginationChange} />
+        <Pagination count={totalPages} variant="outlined" onChange={handlePaginationChange} />
     )
 }
 

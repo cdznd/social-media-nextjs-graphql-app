@@ -18,6 +18,9 @@ import {
     StyledPostCardCategories
 } from './style'
 
+import PublicIcon from '@mui/icons-material/Public';
+import LockIcon from '@mui/icons-material/Lock';
+
 import months from '@/utils/months';
 
 import { PostData } from '@/types/post';
@@ -41,6 +44,8 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
         null,
     );
+
+    const postVisibility = postData?.visibility
 
     const handleFocus = (index: number) => {
         setFocusedCardIndex(index);
@@ -119,6 +124,17 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                     </Typography>
                 </StyledPostCardInfo>
                 <StyledPostCardContent>
+                    <Box sx={{ mb: '1rem' }}>
+                        <Chip
+                            icon={postVisibility === 'PUBLIC' ? <PublicIcon /> : <LockIcon />}
+                            color={postVisibility === 'PUBLIC' ? 'success' : 'info'}
+                            variant='outlined'
+                            label={postVisibility === 'PUBLIC' ? 'Public' : "Private"}
+                            sx={{
+                                p: 1
+                            }}
+                        />
+                    </Box>
                     <StyledTypography color="text.secondary" gutterBottom>
                         {postData.content}
                     </StyledTypography>

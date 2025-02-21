@@ -3,7 +3,7 @@ export type FeedProps = {
   feedType: string
 }
 
-export type HomeSearchParamsProps = {
+export type SearchParamsProps = {
     searchParams: {
       page?: number,
       search?: string,

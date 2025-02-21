@@ -24,7 +24,7 @@ async function getExploreFeedData(searchString?: string, category?: string) {
 }
 
 export default async function ExplorePage(
-    { searchParams: { search, category } }: SearchParamsProps
+    { searchParams: { search, category, page } }: SearchParamsProps
 ) {
     // TODO: better handle the feed Error here
     const { data, feedError } = await getExploreFeedData(

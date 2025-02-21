@@ -4,7 +4,7 @@ import { auth } from "@/lib/next-auth/auth";
 import { Container, Pagination } from "@mui/material";
 import Feed from "@/components/Feed";
 
-import { HomeSearchParamsProps } from "@/types/feed";
+import { SearchParamsProps } from "@/types/feed";
 
 async function getPrivateFeedData(
   userId: string,
@@ -33,7 +33,7 @@ async function getPrivateFeedData(
 }
 
 export default async function Home(
-  { searchParams }: HomeSearchParamsProps
+  { searchParams }: SearchParamsProps
 ) {
   const { search, category, page = 1 } = await searchParams
   const session = await auth()

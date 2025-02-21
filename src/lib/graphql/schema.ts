@@ -124,27 +124,35 @@ const Query = objectType({
                 }
             }
         )
-        t.nonNull.list.nonNull.field('exploreFeedPosts', {
-            type: Post,
-            args: {
-                searchString: stringArg(),
-                category: stringArg(),
-                orderBy: arg({ type: SortOrder, default: 'desc' })
-            },
-            resolve: async (_parent, args, context: Context) => {
-                const { searchString, category, orderBy = 'desc' } = args;
-                const postService = new PostService(context)
-                return postService.getExploreFeed(
-                    {
-                        searchString,
-                        category
-                    },
-                    {
-                        orderBy
-                    }
-                )
+        t.nonNull.field(
+            'exploreFeedPosts',
+            {
+                type: DefaultFeedResponse,
+                args: {
+                    searchString: stringArg(),
+                    category: stringArg(),
+                    orderBy: arg({ type: SortOrder, default: 'desc' }),
+                    skip: intArg(),
+                    take: intArg(),
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { searchString, category, orderBy, skip, take } = args;
+                    const postService = new PostService(context)
+                    const { posts, totalCount, totalPages } = await postService.getPublicFeed(
+                        {
+                            orderBy: orderBy ?? 'desc',
+                            skip: skip ?? undefined,
+                            take: take ?? undefined
+                        },
+                        {
+                            searchString: searchString ?? undefined,
+                            category: category ?? undefined
+                        },
+                    )
+                    return { posts, totalCount, totalPages } 
+                }
             }
-        })
+        )
         t.nonNull.list.nonNull.field('categories', {
             type: Category,
             resolve: async (_parent, args, context: Context) => {

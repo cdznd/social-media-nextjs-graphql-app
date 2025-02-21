@@ -296,7 +296,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
-    exploreFeedPosts: NexusGenRootTypes['Post'][]; // [Post!]!
+    exploreFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
     friendship: NexusGenRootTypes['Friendship'] | null; // Friendship
     likes: Array<NexusGenRootTypes['Like'] | null>; // [Like]!
@@ -450,7 +450,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     categories: 'Category'
-    exploreFeedPosts: 'Post'
+    exploreFeedPosts: 'DefaultFeedResponse'
     friends: 'Friendship'
     friendship: 'Friendship'
     likes: 'Like'
@@ -545,6 +545,8 @@ export interface NexusGenArgTypes {
       category?: string | null; // String
       orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
       searchString?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
     }
     friends: { // args
       userId: string; // String!

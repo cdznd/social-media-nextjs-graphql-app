@@ -6,38 +6,58 @@ import Feed from "@/components/Feed";
 
 import { SearchParamsProps } from "@/types/feed";
 
-async function getExploreFeedData(searchString?: string, category?: string) {
+// It's the same from private feed but without userId, now
+async function getExploreFeedData(
+    page: number,
+    searchString?: string,
+    category?: string,
+  ) {
     const apolloClient = createApolloClient();
     try {
-        const { data } = await apolloClient.query({
-            query: GET_EXPLORE_FEED_POSTS,
-            variables: {
-                searchString,
-                category
-            },
-        });
-        return { data, feedError: null };
+      const postsPerPage = 10 // TODO: Update this posts per page config
+      const { data } = await apolloClient.query({
+        query: GET_EXPLORE_FEED_POSTS,
+        variables: {
+          searchString,
+          category,
+          take: postsPerPage,
+          skip: (page - 1) * postsPerPage
+        },
+      });
+      return { data, feedError: null };
     } catch (error) {
-        console.error(error)
-        return { data: null, feedError: error };
+      console.error(error)
+      return { data: null, feedError: error };
     }
-}
+  }
 
 export default async function ExplorePage(
-    { searchParams: { search, category, page } }: SearchParamsProps
+    { searchParams: { search, category, page = 1 } }: SearchParamsProps
 ) {
     // TODO: better handle the feed Error here
     const { data, feedError } = await getExploreFeedData(
+        page,
         search,
         category
     );
+
+    console.log('data');
+    console.log(data?.exploreFeedPosts);
+
     // TODO: Add a type for the feedPosts here, like feedPosts: type
-    const feedPosts = data?.exploreFeedPosts ?? []
+    const { 
+      posts: feedPosts = [],
+      totalCount = 0,
+      totalPages = 1
+    } = data?.exploreFeedPosts
+
     return (
         <Container>
+            <h1>Number of posts {totalCount}</h1>
             <Feed
                 feedData={feedPosts}
-                feedType="public"    
+                feedType="public"
+                totalPages={totalPages}
             />
         </Container>
     )

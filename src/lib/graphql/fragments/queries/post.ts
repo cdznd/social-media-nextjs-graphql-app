@@ -8,6 +8,7 @@ export const POST_FIELDS = gql`
         content
         createdAt
         thumbnail
+        visibility
     }
 `
 

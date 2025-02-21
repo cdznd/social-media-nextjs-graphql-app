@@ -18,6 +18,13 @@ import {
     StyledPostCardCategories
 } from './style'
 
+import Link from 'next/link';
+
+import { brand } from '../common/themePrimitives';
+
+import PublicIcon from '@mui/icons-material/Public';
+import LockIcon from '@mui/icons-material/Lock';
+
 import months from '@/utils/months';
 
 import { PostData } from '@/types/post';
@@ -41,6 +48,8 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
     const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
         null,
     );
+
+    const postVisibility = postData?.visibility
 
     const handleFocus = (index: number) => {
         setFocusedCardIndex(index);
@@ -95,23 +104,34 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                 <StyledPostCardInfo>
                     {
                         displayAuthor && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    gap: 1,
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <Avatar
-                                    alt={author.name}
-                                    src={author.image}
-                                    sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
-                                />
-                                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                                    {author.name}
-                                </Typography>
-                            </Box>
+                            <Link href={`/users/${author.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        gap: 1,
+                                        alignItems: 'center',
+                                        paddingY: '.3rem',
+                                        paddingX: '.5rem',
+                                        border: '1px solid',
+                                        borderColor: gray[700],
+                                        borderRadius: '1rem',
+                                        transition: '200ms',
+                                        '&:hover': {
+                                            background: brand[800]
+                                        },
+                                    }}
+                                >
+                                    <Avatar
+                                        alt={author.name}
+                                        src={author.image}
+                                        sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
+                                    />
+                                    <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                                        {author.name}
+                                    </Typography>
+                                </Box>
+                            </Link>
                         )
                     }
                     <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
@@ -119,6 +139,17 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                     </Typography>
                 </StyledPostCardInfo>
                 <StyledPostCardContent>
+                    <Box sx={{ mb: '1rem' }}>
+                        <Chip
+                            icon={postVisibility === 'PUBLIC' ? <PublicIcon /> : <LockIcon />}
+                            color={postVisibility === 'PUBLIC' ? 'success' : 'info'}
+                            variant='outlined'
+                            label={postVisibility === 'PUBLIC' ? 'Public' : "Private"}
+                            sx={{
+                                p: 1
+                            }}
+                        />
+                    </Box>
                     <StyledTypography color="text.secondary" gutterBottom>
                         {postData.content}
                     </StyledTypography>

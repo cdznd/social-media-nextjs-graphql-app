@@ -10,11 +10,16 @@ import LockIcon from '@mui/icons-material/Lock';
 type UserProfileCardProps = {
   user: UserType;
   displayFriendshipButton: boolean,
-  isFriend?: boolean
+  isFriend?: boolean,
+  generalInfo: {
+    friends?: number,
+    privatePosts?: number,
+    publicPosts?: number
+  }
 }
 
 export default function UserProfileInfoCard(
-  { user, displayFriendshipButton, isFriend }: UserProfileCardProps) {
+  { user, displayFriendshipButton, isFriend, generalInfo }: UserProfileCardProps) {
   return (
     <Card sx={{ p: 3, textAlign: "center", mb: 4, display: "flex", justifyContent: "start", flex: 1 }}>
 
@@ -39,7 +44,7 @@ export default function UserProfileInfoCard(
             <Stack direction="row" alignItems="center" spacing={.5}>
               <PeopleIcon />
               <Typography variant="body2" color="text.secondary">
-                289
+                {generalInfo?.friends ?? 0}
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={.5}>

@@ -7,6 +7,8 @@ import UserProfileInfoCard from "@/components/UserProfileInfoCard"
 import { auth } from "@/lib/next-auth/auth"
 
 import Feed from "@/components/Feed"
+import { SearchParamsProps } from "@/types/feed"
+import { Friendship } from "@prisma/client"
 
 type UserPageParams = {
     params: {
@@ -58,15 +60,18 @@ async function getCurrentProfileFeed(
 }
 
 export default async function UserPage(
-    { params }: UserPageParams
+    { params, searchParams }: UserPageParams & SearchParamsProps,
 ) {
 
     const {
         userId,
+    } = await params
+
+    const {
         page = 1,
         search,
         category
-    } = await params
+    } = await searchParams
 
     const session = await auth()
     const loggedUserId = session?.user?.id!
@@ -76,7 +81,17 @@ export default async function UserPage(
     if (!currentUser) return <ErrorAlert message={'No User found'} />;
 
     // Get all friends from this currentUser
-    const currentProfileFriends = currentUser.friends;
+    const currentProfileFriends = currentUser?.friends ?? [];
+    const numberOfFriends = currentProfileFriends.reduce(
+        (acc: number, friendship: Friendship ) => {
+            if(friendship?.status === 'ACCEPTED') {
+                acc += 1
+            }
+            return acc
+        },
+        0
+    )
+    console.log('numberOfF', numberOfFriends);
     // Checks if the logged currentUser is friend of the currentUser
     const friendFriendship = currentProfileFriends.find((friend: any) => friend.user.id === loggedUserId)
     const isFriend = friendFriendship?.status === 'ACCEPTED'
@@ -96,6 +111,12 @@ export default async function UserPage(
         profileFeedPostsTotalPages = totalPages
     }
 
+    console.log('profileFeedPosts');
+    console.log(profileFeedPosts);
+
+    // Counting by post visibility
+
+    
     if (currentUser?.id === session?.user?.id) return <ErrorAlert message={'The user is the same of the logged one'} />;
 
     return (
@@ -104,6 +125,9 @@ export default async function UserPage(
                 user={currentUser}
                 displayFriendshipButton
                 isFriend={isFriend}
+                generalInfo={{
+                    friends: numberOfFriends
+                }}
             />
             {
                 isFriend && profileFeedPosts

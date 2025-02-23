@@ -27,10 +27,10 @@ type CreatePostDTO = {
     categories: String[]
 };
 
-import { CategoryData } from "@/types/category";
+import { CategoryType } from "@/types/category";
 
 type PostFormProps = {
-    categories: CategoryData[]
+    categories: CategoryType[]
 }
 
 export default function PostForm({ categories }: PostFormProps) {
@@ -126,7 +126,7 @@ export default function PostForm({ categories }: PostFormProps) {
             }
         }
 
-        const createPostData: CreatePostDTO = {
+        const createPostType: CreatePostDTO = {
             title: formData.get('title') as string,
             content: formData.get('content') as string,
             authorId: session?.user.id as string,
@@ -136,7 +136,7 @@ export default function PostForm({ categories }: PostFormProps) {
 
         try {
             const response = await createPost({
-                variables: { ...createPostData },
+                variables: { ...createPostType },
             });
             console.log('Post created successfully:', response.data.createPost);
             router.push('/')
@@ -223,7 +223,7 @@ export default function PostForm({ categories }: PostFormProps) {
             <FormControl>
                 <FormLabel id="category-selector-label">Select Categories</FormLabel>
                 <FormGroup row>
-                    {categories.map((category: CategoryData) => (
+                    {categories.map((category: CategoryType) => (
                         <FormControlLabel
                             key={category.id}
                             control={

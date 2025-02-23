@@ -1,29 +1,27 @@
 import Box from '@mui/material/Box';
+
 import FeedHeader from '@/components/Feed/FeedHeader';
 import FeedContent from '@/components/Feed/FeedContent';
+import FeedPagination from '@/components/Feed/FeedPagination';
 
 import { FeedProps } from '@/types/feed';
-
-import FeedPagination from './FeedPagination';
+import { PostType } from '@/types/post';
 
 export default function Feed(
-  { 
+  {
     feedData,
     feedType,
-    totalPages 
+    totalPages
   }: FeedProps
 ) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FeedHeader />
-      <Box sx={{ display: 'flex', gap: 4 }}>
-        <Box>
-          {
-            feedData.length > 0 ? (<FeedContent posts={feedData} />) : <h1>no posts found</h1>
-          }
-        </Box>
-      </Box>
-      <FeedPagination totalPages={totalPages}/>
+      {
+        feedData.length > 0 ? 
+          <FeedContent posts={feedData} /> : <h1>no posts found</h1>
+      }
+      <FeedPagination totalPages={totalPages} />
     </Box>
   );
 }

@@ -5,7 +5,12 @@ import FeedContent from '@/components/Feed/FeedContent';
 import FeedPagination from '@/components/Feed/FeedPagination';
 
 import { FeedProps } from '@/types/feed';
-import { PostType } from '@/types/post';
+import { Alert } from '@mui/material';
+
+import BedtimeIcon from '@mui/icons-material/Bedtime';
+
+import DefaultFeed from './FeedType/DefaultFeed';
+import GridFeed from './FeedType/GridFeed';
 
 export default function Feed(
   {
@@ -14,12 +19,27 @@ export default function Feed(
     totalPages
   }: FeedProps
 ) {
+
+  const hasPosts = feedData.length > 0
+
+  const FeedContentComponent = (() => {
+    switch(feedType) {
+      case 'grid':
+        return GridFeed
+      default:
+        return DefaultFeed
+    }
+  })()
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <FeedHeader />
       {
-        feedData.length > 0 ? 
-          <FeedContent posts={feedData} /> : <h1>no posts found</h1>
+        hasPosts ? 
+          <FeedContentComponent posts={feedData} />
+          : <Alert icon={<BedtimeIcon fontSize="inherit" />}>
+              No Posts found
+            </Alert>
       }
       <FeedPagination totalPages={totalPages} />
     </Box>

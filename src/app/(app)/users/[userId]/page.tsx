@@ -107,11 +107,11 @@ export default async function UserPage(
                 friendFriendship?.status === 'ACCEPTED' && profileFeedPosts
                     ? (
                         <>
-                            <h1>Total posts: {profileFeedPostsCount}</h1>
                             <Feed
                                 feedData={profileFeedPosts}
-                                feedType="private"
+                                feedType="grid"
                                 totalPages={profileFeedPostsTotalPages}
+                                numberOfPosts={profileFeedPostsCount}
                             />
                         </>
                     ) : <ErrorAlert message="Private account" />

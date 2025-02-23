@@ -4,18 +4,20 @@ import FeedHeader from '@/components/Feed/FeedHeader';
 import FeedPagination from '@/components/Feed/FeedPagination';
 
 import { FeedProps } from '@/types/feed';
-import { Alert } from '@mui/material';
+import { Alert, Typography } from '@mui/material';
 
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 
 import DefaultFeed from './FeedType/DefaultFeed';
 import GridFeed from './FeedType/GridFeed';
+import ExploreFeed from './FeedType/ExploreFeed';
 
 export default function Feed(
   {
     feedData,
     feedType,
-    totalPages
+    totalPages,
+    numberOfPosts
   }: FeedProps
 ) {
 
@@ -25,6 +27,8 @@ export default function Feed(
     switch(feedType) {
       case 'grid':
         return GridFeed
+      case 'explore':
+        return ExploreFeed
       default:
         return DefaultFeed
     }

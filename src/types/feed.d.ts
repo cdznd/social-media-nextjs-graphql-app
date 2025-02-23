@@ -4,6 +4,7 @@ export type FeedProps = {
   feedData: PostType[]
   feedType: string
   totalPages: number
+  numberOfPosts: number
 }
 
 export type FeedTypeProps = {
@@ -12,8 +13,8 @@ export type FeedTypeProps = {
 
 export type SearchParamsProps = {
     searchParams: {
-      page?: number,
-      search?: string,
+      page?: number
+      search?: string
       category?: string
     }
 }

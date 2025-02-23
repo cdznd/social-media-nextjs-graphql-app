@@ -56,8 +56,9 @@ export default async function ExplorePage(
             <h1>Number of posts {totalCount}</h1>
             <Feed
                 feedData={feedPosts}
-                feedType="public"
+                feedType="explore"
                 totalPages={totalPages}
+                numberOfPosts={totalCount}
             />
         </Container>
     )

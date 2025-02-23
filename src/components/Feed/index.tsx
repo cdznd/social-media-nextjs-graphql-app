@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 
 import FeedHeader from '@/components/Feed/FeedHeader';
-import FeedContent from '@/components/Feed/FeedContent';
 import FeedPagination from '@/components/Feed/FeedPagination';
 
 import { FeedProps } from '@/types/feed';

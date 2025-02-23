@@ -1,7 +1,7 @@
 import { Container } from "@mui/material"
 import ErrorAlert from "@/components/ErrorAlert"
 import createApolloClient from "@/lib/apollo-client/apolloClient"
-import { GET_USER_PROFILE } from "@/lib/graphql/fragments/queries/user"
+import { GET_USER_PROFILE } from "@/lib/graphql/fragments/queries/profile"
 import { GET_PRIVATE_PROFILE_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed"
 import UserProfileInfoCard from "@/components/UserProfileInfoCard"
 import { auth } from "@/lib/next-auth/auth"
@@ -79,11 +79,12 @@ export default async function UserPage(
     const currentProfileFriends = currentUser.friends;
     // Checks if the logged currentUser is friend of the currentUser
     const friendFriendship = currentProfileFriends.find((friend: any) => friend.user.id === loggedUserId)
+    const isFriend = friendFriendship?.status === 'ACCEPTED'
 
     let profileFeedPosts;
     let profileFeedPostsCount;
     let profileFeedPostsTotalPages;
-    if (friendFriendship?.status === 'ACCEPTED') {
+    if (isFriend) {
         const { data } = await getCurrentProfileFeed(userId, page, search, category)
         const { 
             posts: feedPosts = [],
@@ -102,9 +103,10 @@ export default async function UserPage(
             <UserProfileInfoCard
                 user={currentUser}
                 displayFriendshipButton
+                isFriend={isFriend}
             />
             {
-                friendFriendship?.status === 'ACCEPTED' && profileFeedPosts
+                isFriend && profileFeedPosts
                     ? (
                         <>
                             <Feed

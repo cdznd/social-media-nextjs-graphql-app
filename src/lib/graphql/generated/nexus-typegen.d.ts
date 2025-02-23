@@ -307,6 +307,7 @@ export interface NexusGenFieldTypes {
     post: NexusGenRootTypes['Post'] | null; // Post
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     privateFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
+    privateProfileFeed: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -462,6 +463,7 @@ export interface NexusGenFieldTypeNames {
     post: 'Post'
     posts: 'Post'
     privateFeedPosts: 'DefaultFeedResponse'
+    privateProfileFeed: 'DefaultFeedResponse'
     user: 'User'
     users: 'User'
   }
@@ -566,6 +568,14 @@ export interface NexusGenArgTypes {
       postId: string; // String!
     }
     privateFeedPosts: { // args
+      category?: string | null; // String
+      orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
+      searchString?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      userId: string; // String!
+    }
+    privateProfileFeed: { // args
       category?: string | null; // String
       orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
       searchString?: string | null; // String

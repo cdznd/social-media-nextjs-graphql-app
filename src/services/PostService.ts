@@ -134,4 +134,45 @@ export default class PostService {
         return { posts, totalCount, totalPages }
     }
 
+    // TODO: Implement unit tests
+    async getProfileFeed(
+        userId: string,
+        options: FeedOptions,
+        filters: FeedFilters,
+    ) {
+        const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
+        const { searchString, category } = filters
+        // Where clause matching search string AND category if it exists
+        const where: PostWhereInput = {
+            AND: [
+                searchString
+                    ? {
+                        OR: [
+                            { title: { contains: searchString, mode: 'insensitive' } },
+                            { content: { contains: searchString, mode: 'insensitive' } }
+                        ]
+                    } : {},
+                category
+                    ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
+                    : {}
+            ],
+            authorId: userId
+        }
+        const totalCount = await this.context.prisma.post.count({ where })
+        const totalPages = Math.ceil(totalCount / take)
+        const posts = await this.context.prisma.post.findMany({
+            where,
+            orderBy: { createdAt: orderBy },
+            skip,
+            take,
+            include: {
+                author: true,
+                likes: true,
+                comments: true,
+                categories: true,
+            },
+        })
+        return { posts, totalCount, totalPages }
+    }
+
 }

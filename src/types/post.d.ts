@@ -57,6 +57,6 @@ export type PostWhereInput = {
         }>;
         categories?: { some: { name: { equals: string; mode: 'insensitive' } } };
     }>;
-    authorId?: { in: Array<string> };
+    authorId?: { in: Array<string> } | string;
     visibility?: 'PUBLIC' | 'PRIVATE';
 }

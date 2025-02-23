@@ -159,6 +159,37 @@ const Query = objectType({
                 }
             }
         )
+        t.nonNull.field(
+            'privateProfileFeed',
+            {
+                type: DefaultFeedResponse,
+                args: {
+                    userId: nonNull(stringArg()),
+                    searchString: stringArg(),
+                    category: stringArg(),
+                    orderBy: arg({ type: SortOrder, default: 'desc' }),
+                    skip: intArg(),
+                    take: intArg(),
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { userId, searchString, category, orderBy, skip, take } = args;
+                    const postService = new PostService(context)
+                    const { posts, totalCount, totalPages } = await postService.getProfileFeed(
+                        userId,
+                        {
+                            orderBy: orderBy ?? 'desc',
+                            skip: skip ?? undefined,
+                            take: take ?? undefined
+                        },
+                        {
+                            searchString: searchString ?? undefined,
+                            category: category ?? undefined
+                        },
+                    )
+                    return { posts, totalCount, totalPages } 
+                }
+            }
+        )
         t.nonNull.list.nonNull.field('categories', {
             type: Category,
             resolve: async (_parent, args, context: Context) => {

@@ -11,6 +11,7 @@ type UserProfileCardProps = {
   user: UserType;
   displayFriendshipButton: boolean,
   isFriend?: boolean,
+  isCurrentUser?: boolean,
   generalInfo: {
     friends?: number,
     privatePosts?: number,
@@ -19,7 +20,7 @@ type UserProfileCardProps = {
 }
 
 export default function UserProfileInfoCard(
-  { user, displayFriendshipButton, isFriend, generalInfo }: UserProfileCardProps) {
+  { user, displayFriendshipButton, isFriend, isCurrentUser, generalInfo }: UserProfileCardProps) {
   return (
     <Card sx={{ p: 3, textAlign: "center", mb: 4, display: "flex", justifyContent: "start", flex: 1 }}>
 
@@ -30,7 +31,7 @@ export default function UserProfileInfoCard(
         <Stack direction="column" alignItems="start">
           <Typography variant="h5">{user.name}</Typography>
           {
-            isFriend && (<>
+            (isFriend || isCurrentUser) && (<>
               <Typography variant="body2" color="text.secondary">
                 {user.username}
               </Typography>

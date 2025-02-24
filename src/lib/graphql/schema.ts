@@ -377,6 +377,17 @@ const Mutation = mutationType({
                     read
                 })
             }
+        }),
+        t.field('updateNotificationReadStatus', {
+            type: Notification,
+            args: {
+                notificationId: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { notificationId } = args
+                const notificationService = new NotificationService(context)
+                return notificationService.updateNotificationReadStatus(notificationId)
+            }
         })
     }
 })

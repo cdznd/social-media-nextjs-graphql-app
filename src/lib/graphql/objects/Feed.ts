@@ -10,3 +10,11 @@ export const DefaultFeedResponse = objectType({
         t.nonNull.int('totalPages');
     },
 });
+
+export const InfoFeedResponse = objectType({
+    name: 'InfoFeedResponse',
+    definition(t) {
+        t.nonNull.int('privatePostsCount');
+        t.nonNull.int('publicPostsCount');
+    },
+})

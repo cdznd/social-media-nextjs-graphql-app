@@ -97,3 +97,12 @@ export const GET_PRIVATE_PROFILE_FEED_POSTS = gql`
   ${POST_AUTHOR}
   ${POST_CATEGORIES}
 `;
+
+export const GET_PRIVATE_PROFILE_FEED_INFO = gql`
+  query PrivateProfileFeedInfo($userId: String!) {
+    privateProfileFeedInfo(userId: $userId) {
+      privatePostsCount
+      publicPostsCount
+    }
+  }
+`;

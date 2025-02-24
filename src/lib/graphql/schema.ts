@@ -21,7 +21,7 @@ import { Category } from './objects/Category';
 import { Like } from './objects/Like';
 import { Comment } from './objects/Comment';
 import { Notification } from './objects/Notification';
-import { DefaultFeedResponse } from './objects/Feed';
+import { DefaultFeedResponse, InfoFeedResponse } from './objects/Feed';
 // Enums
 import {
     SortOrder,
@@ -187,6 +187,21 @@ const Query = objectType({
                         },
                     )
                     return { posts, totalCount, totalPages } 
+                }
+            }
+        )
+        t.nonNull.field(
+            'privateProfileFeedInfo',
+            {
+                type: InfoFeedResponse,
+                args: {
+                    userId: nonNull(stringArg()),
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { userId } = args;
+                    const postService = new PostService(context)
+                    const { privatePostsCount, publicPostsCount } = await postService.getProfileFeedInfo(userId)
+                    return { privatePostsCount, publicPostsCount }
                 }
             }
         )
@@ -373,6 +388,7 @@ export const schema = makeSchema({
         Mutation,
         User,
         DefaultFeedResponse,
+        InfoFeedResponse,
         FriendWithStatus,
         Account,
         Session,

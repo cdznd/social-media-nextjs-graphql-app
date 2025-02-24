@@ -3,7 +3,7 @@ import {
     FeedOptions,
     FeedFilters,
     PostWhereInput,
-    CreatePostDTO
+    CreatePostDTO,
 } from "@/types/post"
 
 import FriendshipService from "./FriendshipService"
@@ -173,6 +173,18 @@ export default class PostService {
             },
         })
         return { posts, totalCount, totalPages }
+    }
+
+    async getProfileFeedInfo(userId: string) {
+        const publicPostsCount = await this.context.prisma.post.count({ where: {
+            authorId: userId,
+            visibility: 'PUBLIC'
+        } })
+        const privatePostsCount = await this.context.prisma.post.count({ where: {
+            authorId: userId,
+            visibility: 'PRIVATE'
+        } })
+        return { publicPostsCount, privatePostsCount }
     }
 
 }

@@ -1,13 +1,15 @@
 'use client'
-
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@apollo/client';
-import { GET_USER_NOTIFICATIONS } from '@/lib/graphql/fragments/queries/notification';
-import { List, Box, Modal, Typography, IconButton } from '@mui/material';
+import { List, Box, Modal, Typography, IconButton, Stack } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
+import { GET_USER_NOTIFICATIONS } from '@/lib/graphql/fragments/queries/notification';
 import FriendshipNotification from '../FriendshipNotification';
 import CommonNotification from '../CommonNotification';
-import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
+import { NotificationType } from '@/types/notification';
+
+import { brand, gray } from '../common/themePrimitives';
 
 interface NotificationModalProps {
     open: boolean;
@@ -18,15 +20,31 @@ export default function NotificationModal(
     { open, onClose }: NotificationModalProps) {
 
     const { data: session } = useSession();
+    const loggedUserId = session?.user?.id
 
     const { data, loading, error } = useQuery(GET_USER_NOTIFICATIONS, {
         variables: {
-            userId: session?.user?.id
+            userId: loggedUserId
         },
-        skip: !session?.user?.id
+        skip: !loggedUserId
     })
 
-    const notifications = data?.notifications ?? []
+    const userNotifications = data?.notifications ?? []
+
+    const orderedNotifications = userNotifications.reduce((acc: {
+        friendshipNotifications: any[],
+        commonNotifications: any[]
+    }, current: NotificationType) => {
+        if(current.type === 'FRIEND_REQUEST') {
+            acc.friendshipNotifications?.push(current)
+        } else {
+            acc.commonNotifications?.push(current)
+        }
+        return acc
+    }, {
+        friendshipNotifications: [],
+        commonNotifications: []
+    })
 
     if (loading || error) {
         return null;
@@ -52,41 +70,54 @@ export default function NotificationModal(
                 paddingY: '1.5rem',
                 paddingX: '2rem'
             }}>
-                {/* Title */}
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="h4">
                         Notifications
                     </Typography>
                     <IconButton onClick={onClose} size="small">
                         <CloseIcon />
                     </IconButton>
-                </Box>
-                {/* List of friends request */}
+                </Stack>
+
                 {
-                    notifications.length > 0 && (
-                        <Box sx={{ border: '1px solid #4B5563', p: '1rem', borderRadius: '1rem', background: '#1F2937' }}>
-                            <Typography variant="h6" sx={{ marginBottom: '.5rem' }}>
+                    orderedNotifications.friendshipNotifications.length > 0 && (
+                        <Box sx={{ 
+                            border: '1px solid',
+                            borderColor: gray[600],
+                            p: 2,
+                            borderRadius: '1rem',
+                            background: '#1F2937'
+                        }}>
+                            <Typography variant="h6" sx={{ mb: 1 }}>
                                 Friend Requests
                             </Typography>
                             <List sx={{ p: 0 }}>
-                                {notifications.map((notification: any) => (
-                                    <FriendshipNotification key={notification.id} notification={notification} />
+                                {userNotifications.map((notification: NotificationType) => (
+                                    <FriendshipNotification 
+                                        key={notification.id}
+                                        notification={notification} />
                                 ))}
                             </List>
                         </Box>
                     )
                 }
                 {
-                    notifications.length > 0 && (
-                        <Box sx={{ border: '1px solid #4B5563', p: '1rem', borderRadius: '1rem', background: '#1F2937', marginTop: '1rem' }}>
+                    orderedNotifications.commonNotifications.length > 0 && (
+                        <Box sx={{ 
+                            border: '1px solid',
+                            borderColor: gray[600],
+                            p: 2,
+                            borderRadius: '1rem',
+                            background: '#1F2937'
+                        }}>
                             <List sx={{ p: 0 }}>
-                                {notifications.length > 0 ? (
-                                    notifications.map((notification: any) => (
+                                {orderedNotifications.commonNotifications.length > 0 ? (
+                                    orderedNotifications.commonNotifications.map((notification: any) => (
                                         <CommonNotification key={notification.id} notification={notification} />
                                     ))
                                 ) : (
                                     <Typography color="text.secondary" align="center" py={2}>
-                                        No notifications yet
+                                        No userNotifications yet
                                     </Typography>
                                 )}
                             </List>
@@ -94,7 +125,7 @@ export default function NotificationModal(
                     )
                 }
                 {
-                    notifications.length === 0 && (
+                    orderedNotifications.commonNotifications.length === 0 && (
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Typography color="text.secondary" align="center" py={2} mr={1}>
                                 No notifications yet

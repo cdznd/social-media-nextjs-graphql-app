@@ -50,13 +50,13 @@ export default function UserProfileInfoCard(
             <Stack direction="row" alignItems="center" spacing={.5}>
               <PublicIcon />
               <Typography variant="body2" color="text.secondary">
-                289
+                {generalInfo.privatePosts ?? 0}
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={.5}>
               <LockIcon />
               <Typography variant="body2" color="text.secondary">
-                289
+                {generalInfo.publicPosts ?? 0}
               </Typography>
             </Stack>
           </Stack>

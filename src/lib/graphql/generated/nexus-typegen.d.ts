@@ -107,6 +107,10 @@ export interface NexusGenObjects {
     userA?: NexusGenRootTypes['User'] | null; // User
     userB?: NexusGenRootTypes['User'] | null; // User
   }
+  InfoFeedResponse: { // root type
+    privatePostsCount: number; // Int!
+    publicPostsCount: number; // Int!
+  }
   Like: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id?: string | null; // ID
@@ -250,6 +254,10 @@ export interface NexusGenFieldTypes {
     userA: NexusGenRootTypes['User'] | null; // User
     userB: NexusGenRootTypes['User'] | null; // User
   }
+  InfoFeedResponse: { // field return type
+    privatePostsCount: number; // Int!
+    publicPostsCount: number; // Int!
+  }
   Like: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string | null; // ID
@@ -308,6 +316,7 @@ export interface NexusGenFieldTypes {
     posts: NexusGenRootTypes['Post'][]; // [Post!]!
     privateFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeed: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
+    privateProfileFeedInfo: NexusGenRootTypes['InfoFeedResponse']; // InfoFeedResponse!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -406,6 +415,10 @@ export interface NexusGenFieldTypeNames {
     userA: 'User'
     userB: 'User'
   }
+  InfoFeedResponse: { // field return type name
+    privatePostsCount: 'Int'
+    publicPostsCount: 'Int'
+  }
   Like: { // field return type name
     createdAt: 'DateTime'
     id: 'ID'
@@ -464,6 +477,7 @@ export interface NexusGenFieldTypeNames {
     posts: 'Post'
     privateFeedPosts: 'DefaultFeedResponse'
     privateProfileFeed: 'DefaultFeedResponse'
+    privateProfileFeedInfo: 'InfoFeedResponse'
     user: 'User'
     users: 'User'
   }
@@ -581,6 +595,9 @@ export interface NexusGenArgTypes {
       searchString?: string | null; // String
       skip?: number | null; // Int
       take?: number | null; // Int
+      userId: string; // String!
+    }
+    privateProfileFeedInfo: { // args
       userId: string; // String!
     }
     user: { // args

@@ -79,6 +79,11 @@ enum FriendshipStatus {
   REJECTED
 }
 
+type InfoFeedResponse {
+  privatePostsCount: Int!
+  publicPostsCount: Int!
+}
+
 type Like {
   createdAt: DateTime!
   id: ID
@@ -158,6 +163,7 @@ type Query {
   posts: [Post!]!
   privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
   privateProfileFeed(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
+  privateProfileFeedInfo(userId: String!): InfoFeedResponse!
   user(userId: String!): User
   users: [User!]!
 }

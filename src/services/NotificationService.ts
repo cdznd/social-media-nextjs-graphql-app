@@ -34,7 +34,8 @@ export default class NotificationService {
     async getNotifications(userId: string) {
         return this.context.prisma.notification.findMany({
             where: {
-                userId
+                userId,
+                read: false
             },
             include: {
                 user: true,
@@ -63,6 +64,17 @@ export default class NotificationService {
         return this.context.prisma.notification.delete({
             where: {
                 id: currentFRNotification.id
+            }
+        })
+    }
+
+    async updateNotificationReadStatus(notificationId: string) {
+        return this.context.prisma.notification.update({
+            where: {
+                id: notificationId
+            },
+            data: {
+                read: true
             }
         })
     }

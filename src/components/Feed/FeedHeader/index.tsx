@@ -3,7 +3,6 @@ import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_CATEGORIES } from "@/lib/graphql/fragments/queries/category";
 import Search from "./Search";
 import CategorySelector from "./CategorySelector";
-
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
 
@@ -22,6 +21,7 @@ async function getCategoriesData() {
 
 export default async function FeedHeader() {
     const { data } = await getCategoriesData();
+    const categories = data?.categories ?? []
     return (
         <Box>
             <Box
@@ -43,8 +43,12 @@ export default async function FeedHeader() {
                         overflow: "auto",
                     }}
                 >
-                    <CategorySelector
-                        categories={data.categories} />
+                    {
+                        categories.length > 0 && (
+                            <CategorySelector
+                                categories={categories} />
+                        )
+                    }
                 </Box>
                 <Box
                     sx={{
@@ -60,7 +64,7 @@ export default async function FeedHeader() {
             </Box>
             <Box
                 sx={{
-                    // display: "flex",
+                    display: "flex",
                     flexDirection: { xs: "column-reverse", md: "row" },
                     width: "100%",
                     justifyContent: "space-between",
@@ -68,7 +72,6 @@ export default async function FeedHeader() {
                     gap: 4,
                     overflow: "auto",
                     marginTop: '1rem',
-                    display: 'none'
                 }}
             >
                 <Typography variant="body2">Number of posts: 56</Typography>

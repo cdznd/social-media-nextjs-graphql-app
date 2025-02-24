@@ -1,21 +1,31 @@
 import gql from "graphql-tag";
+import { USER_FIELDS } from "./user";
 
-export const GET_USER_NOTIFICATIONS = gql`
-    query getUserNotifications($userId: String!) {
-        notifications(userId: $userId) {
+const NOTIFICATION_FIELDS = gql`
+    fragment NotificationFields on Notification {
             id
             type
             content
             userId
             actorId
             actor {
-                id
-                name
-                username
-                image
+                ...UserFields
             }
             entityId
             entityType
+            read
+            createdAt
+            updatedAt
+    }
+    ${USER_FIELDS}
+`
+
+// Queries
+export const GET_USER_NOTIFICATIONS = gql`
+    query getUserNotifications($userId: String!) {
+        notifications(userId: $userId) {
+            ...NotificationFields
         }
     }
+    ${NOTIFICATION_FIELDS}
 `

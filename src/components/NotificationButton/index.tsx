@@ -18,7 +18,7 @@ export default function NotificationButton() {
     const { data: session } = useSession();
     const loggedUserId = session?.user?.id
 
-    const { data, loading, error } = useQuery(GET_USER_NOTIFICATIONS, {
+    const { data } = useQuery(GET_USER_NOTIFICATIONS, {
         variables: {
             userId: loggedUserId
         },
@@ -26,7 +26,6 @@ export default function NotificationButton() {
     })
 
     const userNotifications = data?.notifications ?? []
-
     const hasNotifications = userNotifications.length > 0
 
     return (

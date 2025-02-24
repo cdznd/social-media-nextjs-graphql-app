@@ -2,7 +2,10 @@ import { Container } from "@mui/material"
 import ErrorAlert from "@/components/ErrorAlert"
 import createApolloClient from "@/lib/apollo-client/apolloClient"
 import { GET_USER_PROFILE } from "@/lib/graphql/fragments/queries/profile"
-import { GET_PRIVATE_PROFILE_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed"
+import {
+    GET_PRIVATE_PROFILE_FEED_POSTS,
+    GET_PRIVATE_PROFILE_FEED_INFO
+} from "@/lib/graphql/fragments/queries/feed"
 import UserProfileInfoCard from "@/components/UserProfileInfoCard"
 import { auth } from "@/lib/next-auth/auth"
 
@@ -59,6 +62,24 @@ async function getCurrentProfileFeed(
     }
 }
 
+async function getCurrentProfileFeedInfo(
+    userId: string
+) {
+    const apolloClient = createApolloClient()
+    try {
+        const { data } = await apolloClient.query({
+            query: GET_PRIVATE_PROFILE_FEED_INFO,
+            variables: {
+                userId
+            }
+        })
+        return { data, feedError: null }
+    } catch (error) {
+        console.log(JSON.stringify(error, null, 2))
+        return { data: null, feedError: error }
+    }
+}
+
 export default async function UserPage(
     { params, searchParams }: UserPageParams & SearchParamsProps,
 ) {
@@ -77,7 +98,10 @@ export default async function UserPage(
     const loggedUserId = session?.user?.id!
 
     const { data: { user: currentUser } } = await getCurrentProfileData(userId);
-    // const user = data?.user
+    const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(userId);
+    const { privatePostsCount, publicPostsCount } = privateProfileFeedInfo || {}
+    const totalPosts = privatePostsCount + publicPostsCount
+
     if (!currentUser) return <ErrorAlert message={'No User found'} />;
 
     // Get all friends from this currentUser
@@ -118,7 +142,7 @@ export default async function UserPage(
 
     
     if (currentUser?.id === session?.user?.id) return <ErrorAlert message={'The user is the same of the logged one'} />;
-
+    
     return (
         <Container>
             <UserProfileInfoCard
@@ -126,7 +150,9 @@ export default async function UserPage(
                 displayFriendshipButton
                 isFriend={isFriend}
                 generalInfo={{
-                    friends: numberOfFriends
+                    friends: numberOfFriends,
+                    privatePosts: privatePostsCount,
+                    publicPosts: publicPostsCount
                 }}
             />
             {
@@ -137,7 +163,7 @@ export default async function UserPage(
                                 feedData={profileFeedPosts}
                                 feedType="grid"
                                 totalPages={profileFeedPostsTotalPages}
-                                numberOfPosts={profileFeedPostsCount}
+                                numberOfPosts={totalPosts}
                             />
                         </>
                     ) : <ErrorAlert message="Private account" />

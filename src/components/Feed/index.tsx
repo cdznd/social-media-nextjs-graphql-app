@@ -36,7 +36,7 @@ export default function Feed(
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <FeedHeader />
+      <FeedHeader numberOfPosts={numberOfPosts} />
       {
         hasPosts ? 
           <FeedContentComponent posts={feedData} />

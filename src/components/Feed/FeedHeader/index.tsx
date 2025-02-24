@@ -19,7 +19,7 @@ async function getCategoriesData() {
     }
 }
 
-export default async function FeedHeader() {
+export default async function FeedHeader({ numberOfPosts }: { numberOfPosts: number }) {
     const { data } = await getCategoriesData();
     const categories = data?.categories ?? []
     return (
@@ -74,7 +74,7 @@ export default async function FeedHeader() {
                     marginTop: '1rem',
                 }}
             >
-                <Typography variant="body2">Number of posts: 56</Typography>
+                <Typography variant="body2">Number of posts: {numberOfPosts}</Typography>
                 <Box>
                     <Button>
                         <Chip

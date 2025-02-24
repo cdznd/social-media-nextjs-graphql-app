@@ -1,10 +1,10 @@
 import { Card, Typography, Box, Alert } from "@mui/material";
 import PostCard from "@/components/PostCard";
-import { PostData } from "@/types/post";
+import { PostType } from "@/types/post";
 
 type PostListCardProps = {
     title: String,
-    posts: PostData[],
+    posts: PostType[],
 }
 
 export default function PostListCard({ title, posts }: PostListCardProps) {

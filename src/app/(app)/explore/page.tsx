@@ -41,10 +41,6 @@ export default async function ExplorePage(
         category
     );
 
-    console.log('data');
-    console.log(data?.exploreFeedPosts);
-
-    // TODO: Add a type for the feedPosts here, like feedPosts: type
     const { 
       posts: feedPosts = [],
       totalCount = 0,
@@ -53,11 +49,11 @@ export default async function ExplorePage(
 
     return (
         <Container>
-            <h1>Number of posts {totalCount}</h1>
             <Feed
                 feedData={feedPosts}
-                feedType="public"
+                feedType="explore"
                 totalPages={totalPages}
+                numberOfPosts={totalCount}
             />
         </Container>
     )

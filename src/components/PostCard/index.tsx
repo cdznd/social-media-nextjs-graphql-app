@@ -27,12 +27,12 @@ import LockIcon from '@mui/icons-material/Lock';
 
 import months from '@/utils/months';
 
-import { PostData } from '@/types/post';
+import { PostType } from '@/types/post';
 
 import PostEngagement from './PostEngagement';
 
 type PostCardProps = {
-    postData: PostData,
+    postData: PostType,
     variants?: string[]
 }
 

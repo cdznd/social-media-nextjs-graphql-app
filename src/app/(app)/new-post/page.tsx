@@ -1,7 +1,7 @@
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_CATEGORIES } from "@/lib/graphql/fragments/queries/category";
 import { Container, Card } from "@mui/material";
-import { CategoryData } from "@/types/category";
+import { CategoryType } from "@/types/category";
 import PostForm from "@/components/PostForm";
 
 async function getCategoriesData() {
@@ -19,7 +19,7 @@ async function getCategoriesData() {
 
 export default async function NewPostPage() {
     const { data } = await getCategoriesData()
-    const categories: CategoryData[] = data?.categories
+    const categories: CategoryType[] = data?.categories
     return (
         <Container>
             <h1>New Post</h1>

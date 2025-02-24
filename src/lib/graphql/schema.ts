@@ -21,7 +21,7 @@ import { Category } from './objects/Category';
 import { Like } from './objects/Like';
 import { Comment } from './objects/Comment';
 import { Notification } from './objects/Notification';
-import { DefaultFeedResponse } from './objects/Feed';
+import { DefaultFeedResponse, InfoFeedResponse } from './objects/Feed';
 // Enums
 import {
     SortOrder,
@@ -156,6 +156,52 @@ const Query = objectType({
                         },
                     )
                     return { posts, totalCount, totalPages } 
+                }
+            }
+        )
+        t.nonNull.field(
+            'privateProfileFeed',
+            {
+                type: DefaultFeedResponse,
+                args: {
+                    userId: nonNull(stringArg()),
+                    searchString: stringArg(),
+                    category: stringArg(),
+                    orderBy: arg({ type: SortOrder, default: 'desc' }),
+                    skip: intArg(),
+                    take: intArg(),
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { userId, searchString, category, orderBy, skip, take } = args;
+                    const postService = new PostService(context)
+                    const { posts, totalCount, totalPages } = await postService.getProfileFeed(
+                        userId,
+                        {
+                            orderBy: orderBy ?? 'desc',
+                            skip: skip ?? undefined,
+                            take: take ?? undefined
+                        },
+                        {
+                            searchString: searchString ?? undefined,
+                            category: category ?? undefined
+                        },
+                    )
+                    return { posts, totalCount, totalPages } 
+                }
+            }
+        )
+        t.nonNull.field(
+            'privateProfileFeedInfo',
+            {
+                type: InfoFeedResponse,
+                args: {
+                    userId: nonNull(stringArg()),
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { userId } = args;
+                    const postService = new PostService(context)
+                    const { privatePostsCount, publicPostsCount } = await postService.getProfileFeedInfo(userId)
+                    return { privatePostsCount, publicPostsCount }
                 }
             }
         )
@@ -342,6 +388,7 @@ export const schema = makeSchema({
         Mutation,
         User,
         DefaultFeedResponse,
+        InfoFeedResponse,
         FriendWithStatus,
         Account,
         Session,

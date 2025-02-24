@@ -5,7 +5,7 @@ export const Notification = objectType({
     name: 'Notification',
     definition(t) {
         t.nonNull.id('id');
-        t.nonNull.string('type');
+        t.nonNull.string('type'); // TODO: Update to an enum
         t.nonNull.string('content');
         t.nonNull.string('userId');
         t.nonNull.field('user', { type: User });

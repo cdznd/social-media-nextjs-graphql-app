@@ -1,32 +1,21 @@
-export type PostData = {
+import { CategoryType } from "./category";
+import { LikeType } from "./like";
+import { CommentType } from "./comment";
+
+export type PostType = {
     id: string;
     title: string;
     content: string;
-    thumbnail?: string | null,
+    thumbnail?: string | null;
     authorId: string;
-    visibility: string;
-    author: {
-        id: string;
-        name: string;
-        image: string;
-    }
-    likes: {
-        id: string;
-        userId: string
-        postId: string;
-    }[];
-    comments: {
-        id: string;
-        content: string;
-        authorId: string;
-    }[];
-    categories: {
-        id: string;
-        name: string;
-    }[];
+    author: UserType;
+    visibility: "PUBLIC" | "PRIVATE";
+    likes: LikeType[];
+    comments: CommentType[];
+    categories: CategoryType[];
     createdAt: string;
     updatedAt: string;
-}
+};
 
 type CreatePostDTO = {
     title: string
@@ -57,6 +46,6 @@ export type PostWhereInput = {
         }>;
         categories?: { some: { name: { equals: string; mode: 'insensitive' } } };
     }>;
-    authorId?: { in: Array<string> };
+    authorId?: { in: Array<string> } | string;
     visibility?: 'PUBLIC' | 'PRIVATE';
 }

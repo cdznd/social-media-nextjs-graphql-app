@@ -1,7 +1,7 @@
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_PRIVATE_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed";
 import { auth } from "@/lib/next-auth/auth";
-import { Container, Pagination } from "@mui/material";
+import { Container } from "@mui/material";
 import Feed from "@/components/Feed";
 
 import { SearchParamsProps } from "@/types/feed";
@@ -49,11 +49,11 @@ export default async function Home(
   const totalPages = data?.privateFeedPosts?.totalPages ?? 0
   return (
     <Container>
-      <h1>Total posts: {totalPosts}</h1>
       <Feed
         feedData={feedPosts}
         feedType="private"
         totalPages={totalPages}
+        numberOfPosts={totalPosts}
       />
     </Container>
   );

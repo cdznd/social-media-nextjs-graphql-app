@@ -1,7 +1,8 @@
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_MY_USER_PROFILE } from "@/lib/graphql/fragments/queries/user";
+import { GET_PRIVATE_PROFILE_FEED_INFO } from "@/lib/graphql/fragments/queries/feed";
 import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileInfoCard from "@/components/UserProfileInfoCard";
 import ErrorAlert from "@/components/ErrorAlert";
@@ -22,9 +23,31 @@ async function getCurrentProfileData(userId: string) {
     }
 }
 
+async function getCurrentProfileFeedInfo(
+    userId: string
+) {
+    const apolloClient = createApolloClient()
+    try {
+        const { data } = await apolloClient.query({
+            query: GET_PRIVATE_PROFILE_FEED_INFO,
+            variables: {
+                userId
+            }
+        })
+        return { data, feedError: null }
+    } catch (error) {
+        console.log(JSON.stringify(error, null, 2))
+        return { data: null, feedError: error }
+    }
+}
+
 export default async function MyProfilePage() {
     const session = await auth()
     const { data } = await getCurrentProfileData(session?.user?.id!)
+    const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(session?.user?.id!);
+    const { privatePostsCount, publicPostsCount } = privateProfileFeedInfo || {}
+    const totalPosts = privatePostsCount + publicPostsCount
+
     const user = data?.user
     if (!user) {
         return <ErrorAlert message={'No User found'} />
@@ -33,16 +56,20 @@ export default async function MyProfilePage() {
     const userLikedPosts = user?.likes ?? []
     const userFriends = user?.friends ?? []
 
-    console.log('userFriends');
-    console.log(userFriends);
-
     return (
         <Container>
 
-            <h1>My Profile</h1>
+            <Typography variant="h3" sx={{ marginBottom: '1rem' }}>My Profile</Typography>
 
             <UserProfileInfoCard
                 user={user}
+                isCurrentUser={true}
+                displayFriendshipButton={false}
+                generalInfo={{
+                    friends: userFriends.length,
+                    privatePosts: privatePostsCount,
+                    publicPosts: publicPostsCount
+                }}
             />
 
             <ProfileFriendList userFriends={userFriends} />

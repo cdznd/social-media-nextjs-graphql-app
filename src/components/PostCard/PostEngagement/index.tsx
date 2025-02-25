@@ -14,11 +14,13 @@ import {
     StyledPostEngagementAction
 } from "./style";
 import { brand } from '../../common/themePrimitives';
+import { LikeType } from "@/types/like";
+import { CommentType } from "@/types/comment";
 
 type PostEngagementProps = {
     postId: string,
-    likes: any[],
-    comments: any[]
+    likes: LikeType[],
+    comments: CommentType[]
 }
 
 export default function PostEngagement({ postId, likes, comments }: PostEngagementProps) {

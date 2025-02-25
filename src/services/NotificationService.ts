@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { Context } from "@/lib/prisma/context";
 
 type createNotificationDTO = {
-    type: "LIKE" | "COMMENT" | "FRIEND_REQUEST" | undefined | null, // TODO: Remove undefined and null
+    type: "LIKE" | "COMMENT" | "FRIEND_REQUEST" | "FRIEND_REQUEST_RESPONSE" | undefined | null, // TODO: Remove undefined and null
     content: string,
     userId: string,
     actorId: string,
@@ -34,7 +34,21 @@ export default class NotificationService {
     async getNotifications(userId: string) {
         return this.context.prisma.notification.findMany({
             where: {
-                userId
+                userId,
+                read: false
+            },
+            include: {
+                user: true,
+                actor: true
+            }
+        })
+    }
+
+    async getReadNotifications(userId: string) {
+        return this.context.prisma.notification.findMany({
+            where: {
+                userId,
+                read: true
             },
             include: {
                 user: true,
@@ -43,26 +57,37 @@ export default class NotificationService {
         })
     }
     
-    async deleteNotification(userId: string, notificationId: string) {
+    async deleteNotification(notificationId: string) {
         return this.context.prisma.notification.delete({
             where: {
                 id: notificationId,
-                userId
             }
         })
     }
 
-    async deleteFriendRequestNotification(entityId: string) {
-        const currentFRNotification = await this.context.prisma.notification.findFirst({
+    // Deleted any friend_request or friend_request_response notification if exists
+    async deleteFriendshipNotification(entityId: string) {
+        const currentFriendshipNotification = await this.context.prisma.notification.findFirst({
             where: {
                 entityType: 'FRIENDSHIP',
                 entityId
             }
         })
-        if (!currentFRNotification) return
+        if (!currentFriendshipNotification) return
         return this.context.prisma.notification.delete({
             where: {
-                id: currentFRNotification.id
+                id: currentFriendshipNotification.id
+            }
+        })
+    }
+
+    async updateNotificationReadStatus(notificationId: string) {
+        return this.context.prisma.notification.update({
+            where: {
+                id: notificationId
+            },
+            data: {
+                read: true
             }
         })
     }

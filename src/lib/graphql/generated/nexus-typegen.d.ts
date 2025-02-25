@@ -34,7 +34,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   FriendshipStatus: "ACCEPTED" | "PENDING" | "REJECTED"
   NotificationEntityType: "COMMENT" | "FRIENDSHIP" | "POST"
-  NotificationType: "COMMENT" | "FRIEND_REQUEST" | "LIKE"
+  NotificationType: "COMMENT" | "FRIEND_REQUEST" | "FRIEND_REQUEST_RESPONSE" | "LIKE"
   PostVisibilityType: "PRIVATE" | "PUBLIC"
   SortOrder: "asc" | "desc"
 }
@@ -130,7 +130,7 @@ export interface NexusGenObjects {
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     read: boolean; // Boolean!
-    type: string; // String!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     user: NexusGenRootTypes['User']; // User!
     userId: string; // String!
@@ -273,8 +273,10 @@ export interface NexusGenFieldTypes {
     createPost: NexusGenRootTypes['Post'] | null; // Post
     createUser: NexusGenRootTypes['User'] | null; // User
     deleteFriendship: NexusGenRootTypes['Friendship'] | null; // Friendship
+    deleteNotification: NexusGenRootTypes['Notification'] | null; // Notification
     triggerLike: NexusGenRootTypes['Like'] | null; // Like
     updateFriendshipStatus: NexusGenRootTypes['Friendship'] | null; // Friendship
+    updateNotificationReadStatus: NexusGenRootTypes['Notification'] | null; // Notification
   }
   Notification: { // field return type
     actor: NexusGenRootTypes['User']; // User!
@@ -286,7 +288,7 @@ export interface NexusGenFieldTypes {
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     read: boolean; // Boolean!
-    type: string; // String!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     user: NexusGenRootTypes['User']; // User!
     userId: string; // String!
@@ -317,6 +319,7 @@ export interface NexusGenFieldTypes {
     privateFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeed: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeedInfo: NexusGenRootTypes['InfoFeedResponse']; // InfoFeedResponse!
+    readNotifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -434,8 +437,10 @@ export interface NexusGenFieldTypeNames {
     createPost: 'Post'
     createUser: 'User'
     deleteFriendship: 'Friendship'
+    deleteNotification: 'Notification'
     triggerLike: 'Like'
     updateFriendshipStatus: 'Friendship'
+    updateNotificationReadStatus: 'Notification'
   }
   Notification: { // field return type name
     actor: 'User'
@@ -447,7 +452,7 @@ export interface NexusGenFieldTypeNames {
     expiresAt: 'DateTime'
     id: 'ID'
     read: 'Boolean'
-    type: 'String'
+    type: 'NotificationType'
     updatedAt: 'DateTime'
     user: 'User'
     userId: 'String'
@@ -478,6 +483,7 @@ export interface NexusGenFieldTypeNames {
     privateFeedPosts: 'DefaultFeedResponse'
     privateProfileFeed: 'DefaultFeedResponse'
     privateProfileFeedInfo: 'InfoFeedResponse'
+    readNotifications: 'Notification'
     user: 'User'
     users: 'User'
   }
@@ -551,6 +557,9 @@ export interface NexusGenArgTypes {
     deleteFriendship: { // args
       friendshipId: string; // String!
     }
+    deleteNotification: { // args
+      notificationId: string; // String!
+    }
     triggerLike: { // args
       postId: string; // String!
       userId: string; // String!
@@ -558,6 +567,9 @@ export interface NexusGenArgTypes {
     updateFriendshipStatus: { // args
       friendshipId: string; // String!
       status: string; // String!
+    }
+    updateNotificationReadStatus: { // args
+      notificationId: string; // String!
     }
   }
   Query: {
@@ -598,6 +610,9 @@ export interface NexusGenArgTypes {
       userId: string; // String!
     }
     privateProfileFeedInfo: { // args
+      userId: string; // String!
+    }
+    readNotifications: { // args
       userId: string; // String!
     }
     user: { // args

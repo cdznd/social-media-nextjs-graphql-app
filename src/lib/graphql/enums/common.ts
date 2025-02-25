@@ -12,7 +12,7 @@ export const FriendshipStatus = enumType({
 
 export const NotificationType = enumType({
     name: "NotificationType",
-    members: ["LIKE", "COMMENT", "FRIEND_REQUEST"]
+    members: ["LIKE", "COMMENT", "FRIEND_REQUEST", "FRIEND_REQUEST_RESPONSE"]
 })
 
 export const NotificationEntityType = enumType({

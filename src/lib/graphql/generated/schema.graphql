@@ -100,8 +100,10 @@ type Mutation {
   createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
   createUser(email: String!, image: String, name: String!, password: String!, username: String!): User
   deleteFriendship(friendshipId: String!): Friendship
+  deleteNotification(notificationId: String!): Notification
   triggerLike(postId: String!, userId: String!): Like
   updateFriendshipStatus(friendshipId: String!, status: String!): Friendship
+  updateNotificationReadStatus(notificationId: String!): Notification
 }
 
 type Notification {
@@ -114,7 +116,7 @@ type Notification {
   expiresAt: DateTime!
   id: ID!
   read: Boolean!
-  type: String!
+  type: NotificationType!
   updatedAt: DateTime!
   user: User!
   userId: String!
@@ -129,6 +131,7 @@ enum NotificationEntityType {
 enum NotificationType {
   COMMENT
   FRIEND_REQUEST
+  FRIEND_REQUEST_RESPONSE
   LIKE
 }
 
@@ -164,6 +167,7 @@ type Query {
   privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
   privateProfileFeed(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
   privateProfileFeedInfo(userId: String!): InfoFeedResponse!
+  readNotifications(userId: String!): [Notification!]!
   user(userId: String!): User
   users: [User!]!
 }

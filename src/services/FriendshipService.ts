@@ -69,6 +69,18 @@ export default class FriendshipService {
         })
     }
 
+    async getFriendshipById(friendshipId: string) {
+        return this.context.prisma.friendship.findUnique({
+            where: {
+                id: friendshipId
+            },
+            include: {
+                userA: true,
+                userB: true
+            }
+        })
+    }
+
     async updateFriendshipStatus(
         { friendshipId, status }: { friendshipId: string, status?: "PENDING" | "ACCEPTED" | "REJECTED" }
     ) {

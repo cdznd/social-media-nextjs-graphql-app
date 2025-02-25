@@ -1,25 +1,58 @@
 'use client'
 
 import { useMutation } from "@apollo/client"
-import { Box, Button, ListItem, Typography, Avatar } from "@mui/material"
+import Link from "next/link"
+import { Button, ListItem, Typography, Avatar, Stack } from "@mui/material"
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { GET_USER_NOTIFICATIONS } from "@/lib/graphql/fragments/queries/notification"
 import { UPDATE_FRIENDSHIP_STATUS_MUTATION } from "@/lib/graphql/fragments/mutations/friendship"
+import { UPDATE_NOTIFICATION_READ_STATUS_MUTATION } from "@/lib/graphql/fragments/mutations/notification"
+import { NotificationType } from "@/types/notification"
+import { UserType } from "@/types/user"
+import { gray, brand } from "../common/themePrimitives"
 
-export default function FriendshipNotification({ notification }: any) {
+type FriendshipNotificationProps = {
+    notification: NotificationType
+}
 
+export default function FriendshipNotification({ notification }: FriendshipNotificationProps) {
     // Checking if it's a friend_request notification
+    // Notification of type FRIEND_REQUEST have an entityId from the friendship model
     if (notification.type !== 'FRIEND_REQUEST') return null
-
     // The person who sent the friend request
-    const actor = notification?.actor
+    const actor: UserType = notification?.actor
+    const userId: string = notification.userId
 
-    const [updateFriendshipStatus, { loading, error }] = useMutation(UPDATE_FRIENDSHIP_STATUS_MUTATION)
+    // Using updateFriendshipStatus mutation
+    const [updateFriendshipStatus] = useMutation(
+        UPDATE_FRIENDSHIP_STATUS_MUTATION
+    )
+
+    const [updateNotificationReadStatus] = useMutation(
+        UPDATE_NOTIFICATION_READ_STATUS_MUTATION,
+        {
+            refetchQueries: [ // After update the notification re-fetch
+                {
+                    query: GET_USER_NOTIFICATIONS,
+                    variables: { userId }
+                }
+            ]
+        }
+    )
 
     const handleAcceptFriendship = async () => {
         try {
-            await updateFriendshipStatus({
+            await updateFriendshipStatus({ // OBS, every update on friendship status, creates a notification on the backend
                 variables: {
-                    friendshipId: notification.entityId,
+                    friendshipId: notification.entityId, // EntityId from the notification
                     status: 'ACCEPTED'
+                }
+            })
+            // Updating current notification to not display it anymore
+            await updateNotificationReadStatus({
+                variables: {
+                    notificationId: notification.id
                 }
             })
         } catch (error) {
@@ -32,7 +65,12 @@ export default function FriendshipNotification({ notification }: any) {
             await updateFriendshipStatus({
                 variables: {
                     friendshipId: notification.entityId,
-                    status: 'DECLINED'
+                    status: 'REJECTED'
+                }
+            })
+            await updateNotificationReadStatus({
+                variables: {
+                    notificationId: notification.id
                 }
             })
         } catch (error) {
@@ -43,40 +81,61 @@ export default function FriendshipNotification({ notification }: any) {
     return (
         <ListItem
             sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                border: '1px solid black',
-                borderColor: 'divider',
+                border: '1px solid',
+                borderColor: gray[600],
                 borderRadius: '1rem',
-                marginBottom: '1rem'
+                mb: 2
             }}
         >
-            <Box sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 1,
-            }}>
+            <Stack
+                direction="row"
+                alignItems="center"
+                spacing={2}
+                sx={{
+                    width: 1
+                }}    
+            >
                 <Avatar
                     alt={actor.name || 'User'}
                     src={actor?.image}
                     onClick={() => { }}
                     sx={{
-                        cursor: 'pointer',
                         height: '80px',
                         width: '80px'
                     }}
                 />
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant="h6">{actor.name}</Typography>
-                    <Typography>Sent you a friend request</Typography>
-                </Box>
-            </Box>
-            <Box sx={{ display: 'flex' }}>
-                <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={handleAcceptFriendship}>Accept</Button>
-                <Button variant="contained" color="error" onClick={handleDeclineFriendship}>Decline</Button>
-            </Box>
+                <Stack direction="column" justifyContent="center">
+                    <Link href={`/users/${actor.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Typography variant="h6" sx={{
+                            transition: '100ms',
+                            '&:hover': {
+                                color: brand[300]
+                            }
+                        }}>{actor.name}</Typography>
+                    </Link>
+                    <Typography variant="body2">Sent you a friend request</Typography>
+                </Stack>
+            </Stack>
+            <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
+                <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleAcceptFriendship}
+                    endIcon={<CheckIcon sx={{ ml: 0 }}/>}
+                    sx={{ width: '80px', p:1, '& .MuiButton-icon': { ml: 0 } }}
+                >
+                    Accept
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDeclineFriendship}
+                    endIcon={<CloseIcon />}
+                    sx={{ width: '80px', p:1, '& .MuiButton-icon': { ml: 0 } }}
+                >
+                    Decline
+                </Button>
+            </Stack>
         </ListItem>
     )
 }

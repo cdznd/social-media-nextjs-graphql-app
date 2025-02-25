@@ -1,4 +1,4 @@
-import { Card, Typography, Box, Alert } from "@mui/material";
+import { Card, Typography, Box, Alert, Grid } from "@mui/material";
 import PostCard from "@/components/PostCard";
 import { PostType } from "@/types/post";
 import { Stack } from "@mui/system";
@@ -9,14 +9,6 @@ type PostListCardProps = {
 }
 
 export default function PostListCard({ title, posts }: PostListCardProps) {
-
-    const renderPosts =
-        posts.map((post, key) => {
-            return <PostCard
-                key={post.id}
-                postData={post}
-                variants={['no-author']} />
-        })
 
     const emptyPostList = posts.length === 0
 
@@ -30,7 +22,7 @@ export default function PostListCard({ title, posts }: PostListCardProps) {
                 p: 3,
                 mb: 4,
                 boxShadow: 3,
-                borderRadius: 2
+                borderRadius: 2,
             }}
         >
             <Stack
@@ -42,21 +34,33 @@ export default function PostListCard({ title, posts }: PostListCardProps) {
                     {title}
                 </Typography>
             </Stack>
-            {
-                emptyPostList ?
-                    <Alert severity="info">No liked posts to display</Alert> :
-                    (
-                        <Box
-                            sx={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(4, 1fr)",
-                                gap: 2,
-                            }}
-                        >
-                            {renderPosts}
-                        </Box>
-                    )
-            }
+            <Box
+                sx={{
+                    maxHeight: '800px',
+                    overflowY: 'scroll'
+                }}
+            >
+                {
+                    emptyPostList ?
+                        <Alert severity="info">No liked posts to display</Alert> :
+                        (
+                            <Grid container spacing={3}>
+                                {
+                                    posts.map(
+                                        (post: PostType) => (
+                                            <Grid item xs={12} sm={6} md={4} lg={3} key={post.id}>
+                                                <PostCard
+                                                    key={post.id}
+                                                    postData={post}
+                                                    variants={['min-info']} />
+                                            </Grid>
+                                        )
+                                    )
+                                }
+                            </Grid>
+                        )
+                }
+            </Box>
         </Card>
     );
 };

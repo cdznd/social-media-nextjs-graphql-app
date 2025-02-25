@@ -1,7 +1,7 @@
 import { Container, Typography } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { GET_MY_USER_PROFILE } from "@/fragments/queries/user";
+import { GET_MY_USER_PROFILE } from "@/fragments/queries/profile";
 import { GET_PRIVATE_PROFILE_FEED_INFO } from "@/fragments/queries/feed";
 import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileInfoCard from "@/components/UserProfileInfoCard";
@@ -53,14 +53,13 @@ export default async function MyProfilePage() {
         return <ErrorAlert message={'No User found'} />
     }
     const userPosts = user?.posts ?? []
-    const userLikedPosts = user?.likes ?? []
+    const userLikedPosts = user?.likes ? user?.likes.map((like: any) => like.post) : []
+
     const userFriends = user?.friends ?? []
 
     return (
         <Container>
-
             <Typography variant="h3" sx={{ marginBottom: '1rem' }}>My Profile</Typography>
-
             <UserProfileInfoCard
                 user={user}
                 isCurrentUser={true}
@@ -71,17 +70,14 @@ export default async function MyProfilePage() {
                     publicPosts: publicPostsCount
                 }}
             />
-
-            <ProfileFriendList userFriends={userFriends} />
-
+            <ProfileFriendList 
+                userFriends={userFriends} />
             <PostListCard
                 title={'My Posts'}
-                posts={userPosts}
-            />
+                posts={userPosts} />
             <PostListCard
                 title={'Liked Posts'}
-                posts={userLikedPosts}
-            />
+                posts={userLikedPosts} />
         </Container>
     );
 }

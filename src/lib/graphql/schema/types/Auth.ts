@@ -34,6 +34,9 @@ export const User = objectType({
                             { userAId: parent.id as string },
                             { userBId: parent.id as string }
                         ],
+                        status: {
+                            not: "REJECTED"
+                        }
                     },
                     include: { userA: true, userB: true }
                 });

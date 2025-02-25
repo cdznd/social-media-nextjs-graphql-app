@@ -3,6 +3,7 @@ import UserProfileCard from "@/components/UserProfileCard";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_ALL_USERS } from "@/fragments/queries/user";
 import { auth } from "@/lib/next-auth/auth";
+import { UserType } from "@/types/user";
 
 async function getAllUsers() {
     const apolloClient = createApolloClient()
@@ -30,7 +31,7 @@ export default async function usersPage() {
             <Card>
                 <Typography variant="h3" sx={{ textAlign: "center" }}>All Users</Typography>
                 <Grid container spacing={3} sx={{ py: 4 }}>
-                    {allUsers.map((user: any) => (
+                    {allUsers.map((user: UserType) => (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={user.id}>
                             <UserProfileCard user={user} />
                         </Grid>

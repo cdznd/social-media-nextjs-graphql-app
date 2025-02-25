@@ -4,7 +4,7 @@ import { User } from "./Auth";
 import { Like } from "./Like";
 import { Comment } from "./Comment";
 import { Category } from "./Category";
-import { PostVisibilityType } from "../enums/common";
+import { PostVisibilityType } from "../enums/Post";
 
 export const Post = objectType({
     name: "Post",

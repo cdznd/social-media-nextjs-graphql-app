@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_MY_USER_PROFILE } from "@/lib/graphql/fragments/queries/user";
@@ -59,7 +59,7 @@ export default async function MyProfilePage() {
     return (
         <Container>
 
-            <h1>My Profile</h1>
+            <Typography variant="h3" sx={{ marginBottom: '1rem' }}>My Profile</Typography>
 
             <UserProfileInfoCard
                 user={user}

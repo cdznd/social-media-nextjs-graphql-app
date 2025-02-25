@@ -22,6 +22,7 @@ export const StyledPostCard = styled(Card)(({ theme }) => ({
         outlineColor: 'hsla(210, 98%, 48%, 0.5)',
         outlineOffset: '2px',
     },
+    minHeight: '400px'
 }));
 
 export const StyledPostCardInfo = styled(Box)(({ theme }) => ({
@@ -32,7 +33,7 @@ export const StyledPostCardInfo = styled(Box)(({ theme }) => ({
     padding: '1rem',
     paddingTop: '.5rem',
     paddingBottom: '.5rem',
-    background: (theme.vars || theme).palette.background.paper
+    background: (theme.vars || theme).palette.background.paper,
 }))
 
 export const StyledPostCardContent = styled(CardContent)({

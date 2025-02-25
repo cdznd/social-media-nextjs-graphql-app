@@ -53,6 +53,7 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                         key={category?.name}
                         variant="filled"
                         label={category?.name}
+                        size='medium'
                     />
                 )
             }) : null
@@ -133,10 +134,16 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                         }}
                     />
                 </Stack>
+                {
+                    !minInfo ? <Typography variant='h6'>{postData.title}</Typography>
+                    : <Typography variant='body2' sx={{ fontWeight: 'bold', textAlign: 'start', mb: 1 }}>{postData.title}</Typography>
+                }
                 <StyledTypography color="text.secondary" gutterBottom>
                     {postData.content}
                 </StyledTypography>
             </StyledPostCardContent>
+            
+            <Box sx={{ flexGrow: 1 }}></Box>
 
             {
                 !minInfo && (

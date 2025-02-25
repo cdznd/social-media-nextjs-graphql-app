@@ -35,12 +35,16 @@ export default class UserService {
             include: {
                 posts: {
                     include: {
-                        author: true // TODO: Why including author again? if the userId is the author
+                        likes: true
                     }
                 },
                 likes: {
                     include: {
-                        post: true
+                        post: {
+                            include: {
+                                likes: true
+                            }
+                        }
                     }
                 },
                 notificationsSent: true,

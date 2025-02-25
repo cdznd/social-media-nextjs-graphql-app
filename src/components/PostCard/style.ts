@@ -12,7 +12,6 @@ export const StyledPostCard = styled(Card)(({ theme }) => ({
     gap: '8px',
     padding: 0,
     height: '100%',
-    marginBottom: '2rem',
     backgroundColor: (theme.vars || theme).palette.background.paper,
     '&:hover': {
         backgroundColor: 'transparent',
@@ -38,8 +37,7 @@ export const StyledPostCardInfo = styled(Box)(({ theme }) => ({
 
 export const StyledPostCardContent = styled(CardContent)({
     padding: '1rem',
-    paddingTop: '1rem',
-    flexGrow: 1,
+    paddingTop: 2,
     '&:last-child': {
         paddingBottom: 16,
     },
@@ -51,6 +49,7 @@ export const StyledTypography = styled(Typography)({
     WebkitLineClamp: 3,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    textAlign: 'start'
 });
 
 export const StyledPostCardCategories = styled(Stack)({

@@ -600,6 +600,7 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take?: number | null; // Int
       userId: string; // String!
+      visibility?: string | null; // String
     }
     privateProfileFeed: { // args
       category?: string | null; // String
@@ -608,6 +609,7 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take?: number | null; // Int
       userId: string; // String!
+      visibility?: string | null; // String
     }
     privateProfileFeedInfo: { // args
       userId: string; // String!

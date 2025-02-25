@@ -6,3 +6,8 @@ export type FriendshipType = {
     userA: UserType
     userB: UserType
 }
+
+export type FriendWithStatus = {
+    user: UserType,
+    status: 'ACCEPTED' | 'REJECTED' | 'PENDING'
+}

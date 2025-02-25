@@ -25,12 +25,13 @@ export const FeedQueries = extendType({
                     userId: nonNull(stringArg()),
                     searchString: stringArg(),
                     category: stringArg(),
+                    visibility: stringArg(),
                     orderBy: arg({ type: SortOrder, default: 'desc' }),
                     skip: intArg(),
                     take: intArg(),
                 },
                 resolve: async (_parent, args, context: Context) => {
-                    const { userId, searchString, category, orderBy, skip, take } = args;
+                    const { userId, searchString, category, visibility, orderBy, skip, take } = args;
                     const postService = new PostService(context)
                     const { posts, totalCount, totalPages } = await postService.getFeedByUserId(
                         userId,
@@ -41,7 +42,8 @@ export const FeedQueries = extendType({
                         },
                         {
                             searchString: searchString ?? undefined,
-                            category: category ?? undefined
+                            category: category ?? undefined,
+                            visibility: visibility ?? undefined
                         },
                     )
                     return { posts, totalCount, totalPages }
@@ -85,12 +87,13 @@ export const FeedQueries = extendType({
                     userId: nonNull(stringArg()),
                     searchString: stringArg(),
                     category: stringArg(),
+                    visibility: stringArg(),
                     orderBy: arg({ type: SortOrder, default: 'desc' }),
                     skip: intArg(),
                     take: intArg(),
                 },
                 resolve: async (_parent, args, context: Context) => {
-                    const { userId, searchString, category, orderBy, skip, take } = args;
+                    const { userId, searchString, category, visibility, orderBy, skip, take } = args;
                     const postService = new PostService(context)
                     const { posts, totalCount, totalPages } = await postService.getProfileFeed(
                         userId,
@@ -101,7 +104,8 @@ export const FeedQueries = extendType({
                         },
                         {
                             searchString: searchString ?? undefined,
-                            category: category ?? undefined
+                            category: category ?? undefined,
+                            visibility: visibility ?? undefined
                         },
                     )
                     return { posts, totalCount, totalPages }

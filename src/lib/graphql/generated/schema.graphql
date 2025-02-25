@@ -164,8 +164,8 @@ type Query {
   notifications(userId: String!): [Notification!]!
   post(postId: String!): Post
   posts: [Post!]!
-  privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
-  privateProfileFeed(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
+  privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!, visibility: String): DefaultFeedResponse!
+  privateProfileFeed(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!, visibility: String): DefaultFeedResponse!
   privateProfileFeedInfo(userId: String!): InfoFeedResponse!
   readNotifications(userId: String!): [Notification!]!
   user(userId: String!): User

@@ -12,6 +12,7 @@ export const GET_PRIVATE_FEED_POSTS = gql`
     $userId: String!,
     $searchString: String,
     $category: String,
+    $visibility: String,
     $take: Int,
     $skip: Int,
   ) {
@@ -19,6 +20,7 @@ export const GET_PRIVATE_FEED_POSTS = gql`
       userId: $userId,
       searchString: $searchString,
       category: $category,
+      visibility: $visibility,
       take: $take,
       skip: $skip,
     ) {
@@ -72,6 +74,7 @@ export const GET_PRIVATE_PROFILE_FEED_POSTS = gql`
     $userId: String!,
     $searchString: String,
     $category: String,
+    $visibility: String,
     $take: Int,
     $skip: Int,
   ) {
@@ -79,6 +82,7 @@ export const GET_PRIVATE_PROFILE_FEED_POSTS = gql`
       userId: $userId,
       searchString: $searchString,
       category: $category,
+      visibility: $visibility,
       take: $take,
       skip: $skip,
     ) {

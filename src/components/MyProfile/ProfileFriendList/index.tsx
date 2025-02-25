@@ -1,12 +1,7 @@
 import UserProfileCard from "@/components/UserProfileCard";
-import { Box, Card, Typography, Alert, Stack } from "@mui/material"
+import { Box, Card, Typography, Alert, Stack, Grid } from "@mui/material"
 
 export default function ProfileFriendList({ userFriends }: { userFriends: any }) {
-
-    const renderUserFriends = userFriends.map((friend: any) => {
-        const userFriend = friend.user
-        return <UserProfileCard user={userFriend} />
-    });
 
     const emptyFriendList = userFriends.length === 0
 
@@ -30,18 +25,33 @@ export default function ProfileFriendList({ userFriends }: { userFriends: any })
                     Friends
                 </Typography>
             </Stack>
-            <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
-                spacing={1}
-                sx={{ width: 1, p: 1 }}>
+            <Box
+                sx={{
+                    maxHeight: '800px',
+                    overflowY: 'scroll'
+                }}
+            >
                 {
-                    emptyFriendList ? (
-                        <Alert severity="info" sx={{ width: 1 }}>Sorry, you have no friends yet</Alert>
-                    ) : renderUserFriends
+                    emptyFriendList ?
+                        <Alert severity="info">Sorry, you have no friends yet</Alert> :
+                        (
+                            <Grid container spacing={3}>
+                                {
+                                    userFriends.map(
+                                        (friend: any) => {
+                                            const userFriend = friend.user
+                                            return (
+                                                <Grid item xs={12} sm={6} md={4} lg={3} key={post.id}>
+                                                    <UserProfileCard user={userFriend} />
+                                                </Grid>
+                                            )
+                                        }
+                                    )
+                                }
+                            </Grid>
+                        )
                 }
-            </Stack>
+            </Box>
         </Card>
     );
 }

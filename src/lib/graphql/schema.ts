@@ -342,7 +342,7 @@ const Mutation = mutationType({
                 const { friendshipId } = args
                 const friendshipService = new FriendshipService(context)
                 const notificationService = new NotificationService(context)
-                await notificationService.deleteFriendRequestNotification(friendshipId)
+                await notificationService.deleteFriendshipNotification(friendshipId)
                 return friendshipService.deleteFriendship(friendshipId)
             }
         })

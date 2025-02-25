@@ -65,17 +65,18 @@ export default class NotificationService {
         })
     }
 
-    async deleteFriendRequestNotification(entityId: string) {
-        const currentFRNotification = await this.context.prisma.notification.findFirst({
+    // Deleted any friend_request or friend_request_response notification if exists
+    async deleteFriendshipNotification(entityId: string) {
+        const currentFriendshipNotification = await this.context.prisma.notification.findFirst({
             where: {
                 entityType: 'FRIENDSHIP',
                 entityId
             }
         })
-        if (!currentFRNotification) return
+        if (!currentFriendshipNotification) return
         return this.context.prisma.notification.delete({
             where: {
-                id: currentFRNotification.id
+                id: currentFriendshipNotification.id
             }
         })
     }

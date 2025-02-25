@@ -273,6 +273,7 @@ export interface NexusGenFieldTypes {
     createPost: NexusGenRootTypes['Post'] | null; // Post
     createUser: NexusGenRootTypes['User'] | null; // User
     deleteFriendship: NexusGenRootTypes['Friendship'] | null; // Friendship
+    deleteNotification: NexusGenRootTypes['Notification'] | null; // Notification
     triggerLike: NexusGenRootTypes['Like'] | null; // Like
     updateFriendshipStatus: NexusGenRootTypes['Friendship'] | null; // Friendship
     updateNotificationReadStatus: NexusGenRootTypes['Notification'] | null; // Notification
@@ -436,6 +437,7 @@ export interface NexusGenFieldTypeNames {
     createPost: 'Post'
     createUser: 'User'
     deleteFriendship: 'Friendship'
+    deleteNotification: 'Notification'
     triggerLike: 'Like'
     updateFriendshipStatus: 'Friendship'
     updateNotificationReadStatus: 'Notification'
@@ -554,6 +556,9 @@ export interface NexusGenArgTypes {
     }
     deleteFriendship: { // args
       friendshipId: string; // String!
+    }
+    deleteNotification: { // args
+      notificationId: string; // String!
     }
     triggerLike: { // args
       postId: string; // String!

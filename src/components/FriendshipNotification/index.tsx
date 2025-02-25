@@ -81,22 +81,25 @@ export default function FriendshipNotification({ notification }: FriendshipNotif
     return (
         <ListItem
             sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
                 border: '1px solid',
-                borderColor: gray[700],
+                borderColor: gray[600],
                 borderRadius: '1rem',
                 mb: 2
             }}
         >
-            <Stack direction="row" alignItems="center" spacing={2}>
+            <Stack
+                direction="row"
+                alignItems="center"
+                spacing={2}
+                sx={{
+                    width: 1
+                }}    
+            >
                 <Avatar
                     alt={actor.name || 'User'}
                     src={actor?.image}
                     onClick={() => { }}
                     sx={{
-                        cursor: 'pointer',
                         height: '80px',
                         width: '80px'
                     }}
@@ -119,6 +122,7 @@ export default function FriendshipNotification({ notification }: FriendshipNotif
                     color="success"
                     onClick={handleAcceptFriendship}
                     endIcon={<CheckIcon />}
+                    sx={{ width: '80px', p:1 }}
                 >
                     Accept
                 </Button>
@@ -126,7 +130,8 @@ export default function FriendshipNotification({ notification }: FriendshipNotif
                     variant="contained"
                     color="error"
                     onClick={handleDeclineFriendship}
-                    endIcon={<CloseIcon />}    
+                    endIcon={<CloseIcon />}
+                    sx={{ width: '80px', p: 1 }}
                 >
                     Decline
                 </Button>

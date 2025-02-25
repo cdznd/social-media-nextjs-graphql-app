@@ -57,11 +57,10 @@ export default class NotificationService {
         })
     }
     
-    async deleteNotification(userId: string, notificationId: string) {
+    async deleteNotification(notificationId: string) {
         return this.context.prisma.notification.delete({
             where: {
                 id: notificationId,
-                userId
             }
         })
     }

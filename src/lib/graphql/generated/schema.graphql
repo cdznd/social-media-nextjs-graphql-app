@@ -100,6 +100,7 @@ type Mutation {
   createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
   createUser(email: String!, image: String, name: String!, password: String!, username: String!): User
   deleteFriendship(friendshipId: String!): Friendship
+  deleteNotification(notificationId: String!): Notification
   triggerLike(postId: String!, userId: String!): Like
   updateFriendshipStatus(friendshipId: String!, status: String!): Friendship
   updateNotificationReadStatus(notificationId: String!): Notification

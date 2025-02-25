@@ -73,7 +73,7 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                 (postData?.thumbnail) && (
                     <CardMedia
                         component="img"
-                        alt="green iguana"
+                        alt={postData?.title ?? 'thumbnail image'}
                         image={postData?.thumbnail ?? ''}
                         sx={{
                             aspectRatio: '16 / 9',

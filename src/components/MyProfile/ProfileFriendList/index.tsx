@@ -1,10 +1,9 @@
 import UserProfileCard from "@/components/UserProfileCard";
+import { FriendWithStatus } from "@/types/friendship";
 import { Box, Card, Typography, Alert, Stack, Grid } from "@mui/material"
 
 export default function ProfileFriendList({ userFriends }: { userFriends: any }) {
-
     const emptyFriendList = userFriends.length === 0
-
     return (
         <Card sx={{
             display: "flex",
@@ -38,10 +37,10 @@ export default function ProfileFriendList({ userFriends }: { userFriends: any })
                             <Grid container spacing={3}>
                                 {
                                     userFriends.map(
-                                        (friend: any) => {
+                                        (friend: FriendWithStatus) => {
                                             const userFriend = friend.user
                                             return (
-                                                <Grid item xs={12} sm={6} md={4} lg={3} key={post.id}>
+                                                <Grid item xs={12} sm={6} md={4} lg={3} key={userFriend.id}>
                                                     <UserProfileCard user={userFriend} />
                                                 </Grid>
                                             )

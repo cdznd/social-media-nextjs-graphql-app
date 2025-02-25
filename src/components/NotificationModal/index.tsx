@@ -1,15 +1,18 @@
 'use client'
+import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@apollo/client';
-import { List, Box, Modal, Typography, IconButton, Stack } from '@mui/material';
+import { List, Box, Modal, Typography, IconButton, Stack, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import GroupIcon from '@mui/icons-material/Group';
 import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
 import { GET_USER_NOTIFICATIONS } from '@/lib/graphql/fragments/queries/notification';
 import FriendshipNotification from '../FriendshipNotification';
 import CommonNotification from '../CommonNotification';
 import { NotificationType } from '@/types/notification';
-
 import { brand, gray } from '../common/themePrimitives';
+import ReadNotificationModal from './ReadNotificationsModal';
+import RestoreIcon from '@mui/icons-material/Restore';
 
 interface NotificationModalProps {
     open: boolean;
@@ -21,6 +24,11 @@ export default function NotificationModal(
 
     const { data: session } = useSession();
     const loggedUserId = session?.user?.id
+
+    const [nestedOpen, setNestedOpen] = useState(false);
+
+    const handleNestedOpen = () => setNestedOpen(true);
+    const handleNestedClose = () => setNestedOpen(false);
 
     const { data, loading, error } = useQuery(GET_USER_NOTIFICATIONS, {
         variables: {
@@ -35,7 +43,7 @@ export default function NotificationModal(
         friendshipNotifications: any[],
         commonNotifications: any[]
     }, current: NotificationType) => {
-        if(current.type === 'FRIEND_REQUEST') {
+        if (current.type === 'FRIEND_REQUEST') {
             acc.friendshipNotifications?.push(current)
         } else {
             acc.commonNotifications?.push(current)
@@ -81,19 +89,29 @@ export default function NotificationModal(
 
                 {
                     orderedNotifications.friendshipNotifications.length > 0 && (
-                        <Box sx={{ 
+                        <Box sx={{
                             border: '1px solid',
                             borderColor: gray[600],
-                            p: 2,
                             borderRadius: '1rem',
-                            background: '#1F2937'
+                            p: 2,
+                            background: '#1F2937',
+                            mb: 2
                         }}>
-                            <Typography variant="h6" sx={{ mb: 1 }}>
-                                Friend Requests
-                            </Typography>
+                            <Stack
+                                direction="row"
+                                justifyContent="start"
+                                alignItems="center"
+                                spacing={1}
+                                sx={{ mb: 1 }}
+                            >
+                                <GroupIcon />
+                                <Typography variant="h6">
+                                    Friend Requests
+                                </Typography>
+                            </Stack>
                             <List sx={{ p: 0 }}>
                                 {userNotifications.map((notification: NotificationType) => (
-                                    <FriendshipNotification 
+                                    <FriendshipNotification
                                         key={notification.id}
                                         notification={notification} />
                                 ))}
@@ -103,12 +121,13 @@ export default function NotificationModal(
                 }
                 {
                     orderedNotifications.commonNotifications.length > 0 && (
-                        <Box sx={{ 
+                        <Box sx={{
                             border: '1px solid',
                             borderColor: gray[600],
-                            p: 2,
                             borderRadius: '1rem',
-                            background: '#1F2937'
+                            p: 2,
+                            background: '#1F2937',
+                            mb: 2
                         }}>
                             <List sx={{ p: 0 }}>
                                 {orderedNotifications.commonNotifications.length > 0 ? (
@@ -134,6 +153,12 @@ export default function NotificationModal(
                         </Box>
                     )
                 }
+                <Button 
+                    onClick={handleNestedOpen}
+                    endIcon={<RestoreIcon />}
+                    variant='contained'
+                >Old notifications</Button>
+                <ReadNotificationModal open={nestedOpen} onClose={handleNestedClose} />
             </Box>
         </Modal>
     );

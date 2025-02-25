@@ -3,7 +3,10 @@
 import { useState } from "react"
 import { Button, Box, IconButton, Menu, MenuItem } from "@mui/material"
 import { useMutation, useQuery } from "@apollo/client"
-import { CREATE_FRIENDSHIP_REQUEST_MUTATION, DELETE_FRIENDSHIP_MUTATION } from "@/lib/graphql/fragments/mutations/friendship"
+import {
+    CREATE_FRIENDSHIP_REQUEST_MUTATION,
+    DELETE_FRIENDSHIP_MUTATION
+} from "@/lib/graphql/fragments/mutations/friendship"
 import { useSession } from "next-auth/react"
 import { GET_FRIENDSHIP } from "@/lib/graphql/fragments/queries/friendship"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -13,11 +16,11 @@ export default function FriendshipTriggerButton(
 ) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-    
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -41,14 +44,18 @@ export default function FriendshipTriggerButton(
     const displayOptionToActor
         = friendshipUserActorId === loggedUser?.id
 
-    const [triggerFriendship, { loading: mutationLoading }] = useMutation(CREATE_FRIENDSHIP_REQUEST_MUTATION, {
-        refetchQueries: [
-            {
-                query: GET_FRIENDSHIP,
-                variables: { fromUserId: loggedUser?.id, toUserId }
-            }
-        ]
-    })
+    // Using the createFriendshipRequest mutation
+    const [triggerFriendship, { loading: mutationLoading }] = useMutation(
+        CREATE_FRIENDSHIP_REQUEST_MUTATION,
+        {
+            refetchQueries: [
+                {
+                    query: GET_FRIENDSHIP,
+                    variables: { fromUserId: loggedUser?.id, toUserId }
+                }
+            ]
+        }
+    )
 
     const [deleteFriendship] = useMutation(DELETE_FRIENDSHIP_MUTATION, {
         refetchQueries: [

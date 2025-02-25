@@ -18,17 +18,21 @@ type FriendshipNotificationProps = {
 
 export default function FriendshipNotification({ notification }: FriendshipNotificationProps) {
     // Checking if it's a friend_request notification
+    // Notification of type FRIEND_REQUEST have an entityId from the friendship model
     if (notification.type !== 'FRIEND_REQUEST') return null
     // The person who sent the friend request
     const actor: UserType = notification?.actor
     const userId: string = notification.userId
 
-    const [updateFriendshipStatus] = useMutation(UPDATE_FRIENDSHIP_STATUS_MUTATION)
+    // Using updateFriendshipStatus mutation
+    const [updateFriendshipStatus] = useMutation(
+        UPDATE_FRIENDSHIP_STATUS_MUTATION
+    )
 
     const [updateNotificationReadStatus] = useMutation(
         UPDATE_NOTIFICATION_READ_STATUS_MUTATION,
         {
-            refetchQueries: [
+            refetchQueries: [ // After update the notification re-fetch
                 {
                     query: GET_USER_NOTIFICATIONS,
                     variables: { userId }
@@ -39,12 +43,13 @@ export default function FriendshipNotification({ notification }: FriendshipNotif
 
     const handleAcceptFriendship = async () => {
         try {
-            await updateFriendshipStatus({
+            await updateFriendshipStatus({ // OBS, every update on friendship status, creates a notification on the backend
                 variables: {
-                    friendshipId: notification.entityId,
+                    friendshipId: notification.entityId, // EntityId from the notification
                     status: 'ACCEPTED'
                 }
             })
+            // Updating current notification to not display it anymore
             await updateNotificationReadStatus({
                 variables: {
                     notificationId: notification.id
@@ -60,7 +65,12 @@ export default function FriendshipNotification({ notification }: FriendshipNotif
             await updateFriendshipStatus({
                 variables: {
                     friendshipId: notification.entityId,
-                    status: 'DECLINED'
+                    status: 'REJECTED'
+                }
+            })
+            await updateNotificationReadStatus({
+                variables: {
+                    notificationId: notification.id
                 }
             })
         } catch (error) {

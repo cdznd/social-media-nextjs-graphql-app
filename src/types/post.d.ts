@@ -36,6 +36,7 @@ export type FeedOptions = {
 export type FeedFilters = {
     searchString?: string
     category?: string
+    visibility?: string
 }
 
 export type PostWhereInput = {

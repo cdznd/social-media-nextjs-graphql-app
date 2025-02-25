@@ -1,10 +1,11 @@
-import { Box, Typography, Button, Chip } from "@mui/material";
+import { Box, Typography, Stack, Chip } from "@mui/material";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_CATEGORIES } from "@/fragments/queries/category";
 import Search from "./Search";
 import CategorySelector from "./CategorySelector";
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
+import VisibilityFilter from "./VisibilityFilter";
 
 async function getCategoriesData() {
     const apolloClient = createApolloClient();
@@ -19,9 +20,15 @@ async function getCategoriesData() {
     }
 }
 
-export default async function FeedHeader({ numberOfPosts }: { numberOfPosts: number }) {
+type FeedHeaderProps = {
+    numberOfPosts: number,
+    feedType: string
+}
+
+export default async function FeedHeader({ numberOfPosts, feedType }: FeedHeaderProps) {
     const { data } = await getCategoriesData();
     const categories = data?.categories ?? []
+    const isNotExploreFeed = feedType !== 'explore'
     return (
         <Box>
             <Box
@@ -62,6 +69,7 @@ export default async function FeedHeader({ numberOfPosts }: { numberOfPosts: num
                     <Search />
                 </Box>
             </Box>
+
             <Box
                 sx={{
                     display: "flex",
@@ -74,37 +82,12 @@ export default async function FeedHeader({ numberOfPosts }: { numberOfPosts: num
                     marginTop: '1rem',
                 }}
             >
-                <Typography variant="body2">Number of posts: {numberOfPosts}</Typography>
-                <Box>
-                    <Button>
-                        <Chip
-                            label={'All'}
-                        />
-                    </Button>
-                    <Button>
-                        <Chip
-                            icon={<PublicIcon />}
-                            color={'success'}
-                            variant='outlined'
-                            label={'Public'}
-                            sx={{
-                                p: 1
-                            }}
-                        />
-                    </Button>
-                    <Button>
-                        <Chip
-                            icon={<LockIcon />}
-                            color={'info'}
-                            variant='outlined'
-                            label={"Private"}
-                            sx={{
-                                p: 1
-                            }}
-                        />
-                    </Button>
-                </Box>
+                <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '12px' }}>Number of posts: {numberOfPosts}</Typography>
+                {
+                    isNotExploreFeed && <VisibilityFilter />
+                }
             </Box>
+
         </Box>
     );
 }

@@ -16,9 +16,6 @@ import { Friendship } from "@prisma/client"
 type UserPageParams = {
     params: {
         userId: string,
-        page?: number,
-        search?: string,
-        category?: string
     }
 }
 
@@ -40,7 +37,8 @@ async function getCurrentProfileFeed(
     userId: string,
     page: number,
     searchString?: string,
-    category?: string
+    category?: string,
+    visibility?: string
 ) {
     const apolloClient = createApolloClient()
     try {
@@ -51,6 +49,7 @@ async function getCurrentProfileFeed(
                 userId,
                 searchString,
                 category,
+                visibility,
                 take: postsPerPage,
                 skip: (page - 1) * postsPerPage
             },
@@ -91,7 +90,8 @@ export default async function UserPage(
     const {
         page = 1,
         search,
-        category
+        category,
+        visibility
     } = await searchParams
 
     const session = await auth()
@@ -124,7 +124,7 @@ export default async function UserPage(
     let profileFeedPostsCount;
     let profileFeedPostsTotalPages;
     if (isFriend) {
-        const { data } = await getCurrentProfileFeed(userId, page, search, category)
+        const { data } = await getCurrentProfileFeed(userId, page, search, category, visibility?.toUpperCase())
         const { 
             posts: feedPosts = [],
             totalCount = 0,
@@ -163,7 +163,7 @@ export default async function UserPage(
                                 feedData={profileFeedPosts}
                                 feedType="grid"
                                 totalPages={profileFeedPostsTotalPages}
-                                numberOfPosts={totalPosts}
+                                numberOfPosts={profileFeedPostsCount}
                             />
                         </>
                     ) : <ErrorAlert message="Private account" />

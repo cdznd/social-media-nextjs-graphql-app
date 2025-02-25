@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { TRIGGER_POST_LIKE_MUTATION } from "@/lib/graphql/fragments/mutations/mutations";
+import { TRIGGER_POST_LIKE_MUTATION } from "@/fragments/mutations/mutations";
 import { Box } from "@mui/material"
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';

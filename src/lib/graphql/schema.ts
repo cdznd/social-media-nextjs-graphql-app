@@ -14,14 +14,14 @@ import path from 'path';
 import { Context } from '../prisma/context';
 
 // ObjectTypes
-import { User, Account, Session, VerificationToken, Authenticator, FriendWithStatus } from './objects/Auth'
-import { Friendship } from './objects/Friendship';
-import { Post } from './objects/Post';
-import { Category } from './objects/Category';
-import { Like } from './objects/Like';
-import { Comment } from './objects/Comment';
-import { Notification } from './objects/Notification';
-import { DefaultFeedResponse, InfoFeedResponse } from './objects/Feed';
+import { User, Account, Session, VerificationToken, Authenticator, FriendWithStatus } from './schema/objects/Auth'
+import { Friendship } from './schema/objects/Friendship';
+import { Post } from './schema/objects/Post';
+import { Category } from './schema/objects/Category';
+import { Like } from './schema/objects/Like';
+import { Comment } from './schema/objects/Comment';
+import { Notification } from './schema/objects/Notification';
+import { DefaultFeedResponse, InfoFeedResponse } from './schema/objects/Feed';
 // Enums
 import {
     SortOrder,
@@ -29,7 +29,7 @@ import {
     NotificationType,
     NotificationEntityType,
     PostVisibilityType
-} from './enums/common';
+} from './schema/enums/common';
 // Services
 import UserService from '@/services/UserService';
 import FriendshipService from '@/services/FriendshipService';

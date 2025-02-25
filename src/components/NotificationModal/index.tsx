@@ -16,7 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import GroupIcon from '@mui/icons-material/Group';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { gray } from '../common/themePrimitives';
-import { GET_USER_NOTIFICATIONS } from '@/lib/graphql/fragments/queries/notification';
+import { GET_USER_NOTIFICATIONS } from '@/fragments/queries/notification';
 import FriendshipNotification from '../FriendshipNotification';
 import CommonNotification from '../CommonNotification';
 import ReadNotificationModal from './ReadNotificationsModal';

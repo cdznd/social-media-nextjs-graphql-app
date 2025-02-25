@@ -1,5 +1,5 @@
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { GET_EXPLORE_FEED_POSTS } from "@/lib/graphql/fragments/queries/feed";
+import { GET_EXPLORE_FEED_POSTS } from "@/fragments/queries/feed";
 import { auth } from "@/lib/next-auth/auth";
 import { Container } from "@mui/material";
 import Feed from "@/components/Feed";

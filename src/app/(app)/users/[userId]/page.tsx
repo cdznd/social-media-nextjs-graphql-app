@@ -1,11 +1,11 @@
 import { Container } from "@mui/material"
 import ErrorAlert from "@/components/ErrorAlert"
 import createApolloClient from "@/lib/apollo-client/apolloClient"
-import { GET_USER_PROFILE } from "@/lib/graphql/fragments/queries/profile"
+import { GET_USER_PROFILE } from "@/fragments/queries/profile"
 import {
     GET_PRIVATE_PROFILE_FEED_POSTS,
     GET_PRIVATE_PROFILE_FEED_INFO
-} from "@/lib/graphql/fragments/queries/feed"
+} from "@/fragments/queries/feed"
 import UserProfileInfoCard from "@/components/UserProfileInfoCard"
 import { auth } from "@/lib/next-auth/auth"
 

@@ -1,7 +1,7 @@
 import { Card, Container, Grid, Typography } from "@mui/material";
 import UserProfileCard from "@/components/UserProfileCard";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { GET_ALL_USERS } from "@/lib/graphql/fragments/queries/user";
+import { GET_ALL_USERS } from "@/fragments/queries/user";
 import { auth } from "@/lib/next-auth/auth";
 
 async function getAllUsers() {

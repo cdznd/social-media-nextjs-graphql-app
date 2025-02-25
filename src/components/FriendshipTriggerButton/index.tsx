@@ -6,9 +6,9 @@ import { useMutation, useQuery } from "@apollo/client"
 import {
     CREATE_FRIENDSHIP_REQUEST_MUTATION,
     DELETE_FRIENDSHIP_MUTATION
-} from "@/lib/graphql/fragments/mutations/friendship"
+} from "@/fragments/mutations/friendship"
 import { useSession } from "next-auth/react"
-import { GET_FRIENDSHIP } from "@/lib/graphql/fragments/queries/friendship"
+import { GET_FRIENDSHIP } from "@/fragments/queries/friendship"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function FriendshipTriggerButton(

@@ -121,8 +121,8 @@ export default function FriendshipNotification({ notification }: FriendshipNotif
                     variant="contained"
                     color="success"
                     onClick={handleAcceptFriendship}
-                    endIcon={<CheckIcon />}
-                    sx={{ width: '80px', p:1 }}
+                    endIcon={<CheckIcon sx={{ ml: 0 }}/>}
+                    sx={{ width: '80px', p:1, '& .MuiButton-icon': { ml: 0 } }}
                 >
                     Accept
                 </Button>
@@ -131,7 +131,7 @@ export default function FriendshipNotification({ notification }: FriendshipNotif
                     color="error"
                     onClick={handleDeclineFriendship}
                     endIcon={<CloseIcon />}
-                    sx={{ width: '80px', p: 1 }}
+                    sx={{ width: '80px', p:1, '& .MuiButton-icon': { ml: 0 } }}
                 >
                     Decline
                 </Button>

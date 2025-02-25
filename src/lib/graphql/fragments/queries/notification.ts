@@ -29,3 +29,12 @@ export const GET_USER_NOTIFICATIONS = gql`
     }
     ${NOTIFICATION_FIELDS}
 `
+
+export const GET_READ_USER_NOTIFICATIONS = gql`
+    query getReadUserNotifications($userId: String!) {
+        readNotifications(userId: $userId) {
+            ...NotificationFields
+        }
+    }
+    ${NOTIFICATION_FIELDS}
+`

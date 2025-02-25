@@ -2,7 +2,7 @@ import { UserType } from "./user";
 
 export type NotificationType = {
     id: string;
-    type: FRIEND_REQUEST | LIKE | COMMENT;
+    type: FRIEND_REQUEST | FRIEND_REQUEST_RESPONSE | LIKE | COMMENT;
     content: string;
     userId: string;
     actorId: string;

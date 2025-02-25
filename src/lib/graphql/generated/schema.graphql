@@ -115,7 +115,7 @@ type Notification {
   expiresAt: DateTime!
   id: ID!
   read: Boolean!
-  type: String!
+  type: NotificationType!
   updatedAt: DateTime!
   user: User!
   userId: String!
@@ -130,6 +130,7 @@ enum NotificationEntityType {
 enum NotificationType {
   COMMENT
   FRIEND_REQUEST
+  FRIEND_REQUEST_RESPONSE
   LIKE
 }
 
@@ -165,6 +166,7 @@ type Query {
   privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
   privateProfileFeed(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!): DefaultFeedResponse!
   privateProfileFeedInfo(userId: String!): InfoFeedResponse!
+  readNotifications(userId: String!): [Notification!]!
   user(userId: String!): User
   users: [User!]!
 }

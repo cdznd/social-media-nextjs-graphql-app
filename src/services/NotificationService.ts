@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { Context } from "@/lib/prisma/context";
 
 type createNotificationDTO = {
-    type: "LIKE" | "COMMENT" | "FRIEND_REQUEST" | undefined | null, // TODO: Remove undefined and null
+    type: "LIKE" | "COMMENT" | "FRIEND_REQUEST" | "FRIEND_REQUEST_RESPONSE" | undefined | null, // TODO: Remove undefined and null
     content: string,
     userId: string,
     actorId: string,
@@ -36,6 +36,19 @@ export default class NotificationService {
             where: {
                 userId,
                 read: false
+            },
+            include: {
+                user: true,
+                actor: true
+            }
+        })
+    }
+
+    async getReadNotifications(userId: string) {
+        return this.context.prisma.notification.findMany({
+            where: {
+                userId,
+                read: true
             },
             include: {
                 user: true,

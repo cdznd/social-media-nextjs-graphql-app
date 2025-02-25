@@ -34,7 +34,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   FriendshipStatus: "ACCEPTED" | "PENDING" | "REJECTED"
   NotificationEntityType: "COMMENT" | "FRIENDSHIP" | "POST"
-  NotificationType: "COMMENT" | "FRIEND_REQUEST" | "LIKE"
+  NotificationType: "COMMENT" | "FRIEND_REQUEST" | "FRIEND_REQUEST_RESPONSE" | "LIKE"
   PostVisibilityType: "PRIVATE" | "PUBLIC"
   SortOrder: "asc" | "desc"
 }
@@ -130,7 +130,7 @@ export interface NexusGenObjects {
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     read: boolean; // Boolean!
-    type: string; // String!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     user: NexusGenRootTypes['User']; // User!
     userId: string; // String!
@@ -287,7 +287,7 @@ export interface NexusGenFieldTypes {
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     read: boolean; // Boolean!
-    type: string; // String!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     user: NexusGenRootTypes['User']; // User!
     userId: string; // String!
@@ -318,6 +318,7 @@ export interface NexusGenFieldTypes {
     privateFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeed: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeedInfo: NexusGenRootTypes['InfoFeedResponse']; // InfoFeedResponse!
+    readNotifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     user: NexusGenRootTypes['User'] | null; // User
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
@@ -449,7 +450,7 @@ export interface NexusGenFieldTypeNames {
     expiresAt: 'DateTime'
     id: 'ID'
     read: 'Boolean'
-    type: 'String'
+    type: 'NotificationType'
     updatedAt: 'DateTime'
     user: 'User'
     userId: 'String'
@@ -480,6 +481,7 @@ export interface NexusGenFieldTypeNames {
     privateFeedPosts: 'DefaultFeedResponse'
     privateProfileFeed: 'DefaultFeedResponse'
     privateProfileFeedInfo: 'InfoFeedResponse'
+    readNotifications: 'Notification'
     user: 'User'
     users: 'User'
   }
@@ -603,6 +605,9 @@ export interface NexusGenArgTypes {
       userId: string; // String!
     }
     privateProfileFeedInfo: { // args
+      userId: string; // String!
+    }
+    readNotifications: { // args
       userId: string; // String!
     }
     user: { // args

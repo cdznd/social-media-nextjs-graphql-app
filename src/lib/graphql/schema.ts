@@ -155,7 +155,7 @@ const Query = objectType({
                             category: category ?? undefined
                         },
                     )
-                    return { posts, totalCount, totalPages } 
+                    return { posts, totalCount, totalPages }
                 }
             }
         )
@@ -186,7 +186,7 @@ const Query = objectType({
                             category: category ?? undefined
                         },
                     )
-                    return { posts, totalCount, totalPages } 
+                    return { posts, totalCount, totalPages }
                 }
             }
         )
@@ -235,6 +235,17 @@ const Query = objectType({
                 const notificationService = new NotificationService(context)
                 return notificationService.getNotifications(userId)
             }
+        }),
+        t.nonNull.list.nonNull.field('readNotifications', {
+            type: Notification,
+            args: {
+                userId: nonNull(stringArg())
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { userId } = args
+                const notificationService = new NotificationService(context)
+                return notificationService.getReadNotifications(userId)
+            }
         })
     }
 })
@@ -256,52 +267,72 @@ const Mutation = mutationType({
                 return userService.createUser({ name, email, password, username, image })
             }
         })
-        t.field('createFriendshipRequest', {
-            type: Friendship,
-            args: {
-                fromUserId: nonNull(stringArg()),
-                toUserId: nonNull(stringArg()),
-            },
-            resolve: async (_parent, args, context: Context) => {
-                const { fromUserId, toUserId } = args
-
-                console.log('inside create');
-                console.log('fromUserId', fromUserId);
-                console.log('toUserId', toUserId);
-
-                const friendshipService = new FriendshipService(context)
-                const notificationService = new NotificationService(context)
-                // First create the friendship
-                const createdFriendship = await friendshipService.createFriendship({ fromUserId, toUserId })
-                // Create the notification with the friendship data
-                await notificationService.createNotification({
-                    type: 'FRIEND_REQUEST',
-                    content: 'someone has sent you a friend request!',
-                    userId: toUserId,
-                    actorId: fromUserId,
-                    entityType: 'FRIENDSHIP',
-                    entityId: createdFriendship?.id
-                })
-                return createdFriendship
+        t.field(
+            'createFriendshipRequest',
+            {
+                type: Friendship,
+                args: {
+                    fromUserId: nonNull(stringArg()),
+                    toUserId: nonNull(stringArg()),
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { fromUserId, toUserId } = args
+                    const friendshipService = new FriendshipService(context)
+                    const notificationService = new NotificationService(context)
+                    // First create the friendship
+                    const createdFriendship = await friendshipService.createFriendship({ fromUserId, toUserId })
+                    // Create the notification with the friendship data
+                    await notificationService.createNotification({
+                        type: 'FRIEND_REQUEST',
+                        content: 'someone has sent you a friend request!',
+                        userId: toUserId,
+                        actorId: fromUserId,
+                        entityType: 'FRIENDSHIP',
+                        entityId: createdFriendship?.id
+                    })
+                    return createdFriendship
+                }
             }
-        })
-        t.field('updateFriendshipStatus', {
-            type: Friendship,
-            args: {
-                friendshipId: nonNull(stringArg()),
-                status: nonNull(stringArg())
-            },
-            resolve: async (_parent, args, context: Context) => {
-                // TODO: Fix typo errors
-                const { friendshipId, status } = args
-
-                console.log('friendshipId', friendshipId);
-                console.log('status', status);
-
-                const friendshipService = new FriendshipService(context)
-                return friendshipService.updateFriendshipStatus({ friendshipId, status })
+        )
+        t.field(
+            'updateFriendshipStatus',
+            {
+                type: Friendship,
+                args: {
+                    friendshipId: nonNull(stringArg()),
+                    status: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { friendshipId, status = 'PENDING' } = args
+                    // Create friendship services
+                    const friendshipService = new FriendshipService(context)
+                    // Get exiting notification to update
+                    const existingFriendship = await friendshipService.getFriendshipById(friendshipId)
+                    // If don't exist throw an error
+                    if (!existingFriendship) {
+                        throw new Error('Friendship not found')
+                    }
+                    // Update the existing friendship to REJECTED or ACCEPTED
+                    const updateFriendshipStatusResult
+                        = await friendshipService.updateFriendshipStatus({ friendshipId, status })
+                    // Creating notification
+                    const notificationService = new NotificationService(context)
+                    const notificationContent = status === 'ACCEPTED'
+                        ? "Friendship accepted, check your new friend's posts"
+                        : "Friendship rejected"
+                    // The user A is who sent the request, so it's always user B accepting the request
+                    await notificationService.createNotification({
+                        type: 'FRIEND_REQUEST_RESPONSE',
+                        content: notificationContent,
+                        userId: existingFriendship.userA.id, // Sending the accept request to the sender
+                        actorId: existingFriendship.userB.id, // The user that accepted the request
+                        entityType: 'FRIENDSHIP',
+                        entityId: existingFriendship.id
+                    })
+                    return updateFriendshipStatusResult
+                }
             }
-        })
+        )
         t.field('deleteFriendship', {
             type: Friendship,
             args: {
@@ -356,7 +387,7 @@ const Mutation = mutationType({
         t.field('createNotification', {
             type: Notification,
             args: {
-                type: nonNull(arg({ type: 'NotificationType' })),
+                type: nonNull(arg({ type: NotificationType })),
                 content: nonNull(stringArg()),
                 userId: nonNull(stringArg()),
                 actorId: nonNull(stringArg()),
@@ -378,17 +409,17 @@ const Mutation = mutationType({
                 })
             }
         }),
-        t.field('updateNotificationReadStatus', {
-            type: Notification,
-            args: {
-                notificationId: nonNull(stringArg())
-            },
-            resolve: async (_parent, args, context: Context) => {
-                const { notificationId } = args
-                const notificationService = new NotificationService(context)
-                return notificationService.updateNotificationReadStatus(notificationId)
-            }
-        })
+            t.field('updateNotificationReadStatus', {
+                type: Notification,
+                args: {
+                    notificationId: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { notificationId } = args
+                    const notificationService = new NotificationService(context)
+                    return notificationService.updateNotificationReadStatus(notificationId)
+                }
+            })
     }
 })
 

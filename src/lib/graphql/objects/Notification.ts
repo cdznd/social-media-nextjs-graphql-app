@@ -1,11 +1,12 @@
 import { objectType } from "nexus"
 import { User } from "./Auth"
+import { NotificationType } from "../enums/common";
 
 export const Notification = objectType({
     name: 'Notification',
     definition(t) {
         t.nonNull.id('id');
-        t.nonNull.string('type'); // TODO: Update to an enum
+        t.nonNull.field('type', { type: NotificationType });
         t.nonNull.string('content');
         t.nonNull.string('userId');
         t.nonNull.field('user', { type: User });

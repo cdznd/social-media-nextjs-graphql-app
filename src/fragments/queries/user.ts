@@ -33,60 +33,23 @@ export const USER_POSTS = gql`
     ${POST_FIELDS}
 `
 
+export const USER_LIKES = gql`
+    fragment UserLikes on User {
+        likes {
+            post {
+                ...PostFields
+            }
+        }
+    }
+    ${POST_FIELDS}
+`
+
 // Queries
 export const GET_ALL_USERS = gql`
     query GetAllUsers {
         users {
-            id
-            name
-            email
-            image
+            ...UserFields
         }
     }
-`
-
-export const GET_MY_USER_PROFILE = gql`
-    query GetUserProfile(
-        $userId: String!
-    ) {
-        user(userId: $userId) {
-            email
-            name
-            image
-            friends {
-                user {
-                    id
-                    name
-                    email
-                }
-                status
-            }
-            posts {
-                id
-                title
-                thumbnail
-                authorId
-                createdAt
-                updatedAt
-                author {
-                    id
-                    name
-                }
-            }
-            likes {
-                post {
-                    id
-                    title
-                    thumbnail
-                    authorId
-                    createdAt
-                    updatedAt
-                    author {
-                        id
-                        name
-                    }
-                }
-            }
-        }
-    }
+    ${USER_FIELDS}
 `

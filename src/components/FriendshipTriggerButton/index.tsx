@@ -103,6 +103,14 @@ export default function FriendshipTriggerButton(
                     disabled: true,
                     showOptions: true
                 }
+            case 'REJECTED':
+                return {
+                    variant: 'outlined' as const,
+                    color: 'primary' as const,
+                    text: 'Rejected',
+                    disabled: true,
+                    showOptions: true
+                }
             default:
                 return {
                     variant: 'contained' as const,

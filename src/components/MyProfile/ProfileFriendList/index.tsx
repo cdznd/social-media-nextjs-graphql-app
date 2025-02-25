@@ -1,5 +1,5 @@
 import UserProfileCard from "@/components/UserProfileCard";
-import { Box, Card, CardContent, Avatar, Typography } from "@mui/material"
+import { Box, Card, Typography, Alert, Stack } from "@mui/material"
 
 export default function ProfileFriendList({ userFriends }: { userFriends: any }) {
 
@@ -8,37 +8,40 @@ export default function ProfileFriendList({ userFriends }: { userFriends: any })
         return <UserProfileCard user={userFriend} />
     });
 
+    const emptyFriendList = userFriends.length === 0
+
     return (
         <Card sx={{
-            p: 3,
-            textAlign: "center",
-            mb: 4,
             display: "flex",
             flexDirection: "column",
             alignItems: "stretch",
+            textAlign: "center",
+            p: 3,
+            mb: 4,
             boxShadow: 3,
             borderRadius: 2
         }}>
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 2
-                }}
+            <Stack
+                direction="row"
+                justifyContent="start"
+                alignItems="center"
             >
-                <Typography variant="h5" fontWeight={600}>
+                <Typography variant="h5">
                     Friends
                 </Typography>
-            </Box>
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'start',
-                gap: 2
-            }}>
-                {renderUserFriends}
-            </Box>
+            </Stack>
+            <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                spacing={1}
+                sx={{ width: 1, p: 1 }}>
+                {
+                    emptyFriendList ? (
+                        <Alert severity="info" sx={{ width: 1 }}>Sorry, you have no friends yet</Alert>
+                    ) : renderUserFriends
+                }
+            </Stack>
         </Card>
     );
 }

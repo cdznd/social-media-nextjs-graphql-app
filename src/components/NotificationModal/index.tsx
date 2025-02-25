@@ -72,7 +72,9 @@ export default function NotificationModal(
         commonNotifications: []
     })
 
-    const emptyNotifications = orderedNotifications.commonNotifications.length === 0
+    const emptyNotifications =
+        orderedNotifications.commonNotifications.length === 0 &&
+        orderedNotifications.friendshipNotifications.length === 0
 
     return (
         <Modal
@@ -162,7 +164,7 @@ export default function NotificationModal(
                                     </Box>
                                 )
                             }
-                            { emptyNotifications && <EmptyNotifications /> }
+                            {emptyNotifications && <EmptyNotifications /> }
                             <Button
                                 onClick={handleNestedOpen}
                                 endIcon={<RestoreIcon />}

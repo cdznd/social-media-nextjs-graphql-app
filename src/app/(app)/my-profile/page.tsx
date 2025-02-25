@@ -1,8 +1,8 @@
 import { Container, Typography } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { GET_MY_USER_PROFILE } from "@/lib/graphql/fragments/queries/user";
-import { GET_PRIVATE_PROFILE_FEED_INFO } from "@/lib/graphql/fragments/queries/feed";
+import { GET_MY_USER_PROFILE } from "@/fragments/queries/user";
+import { GET_PRIVATE_PROFILE_FEED_INFO } from "@/fragments/queries/feed";
 import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileInfoCard from "@/components/UserProfileInfoCard";
 import ErrorAlert from "@/components/ErrorAlert";

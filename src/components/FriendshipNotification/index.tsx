@@ -5,9 +5,9 @@ import Link from "next/link"
 import { Button, ListItem, Typography, Avatar, Stack } from "@mui/material"
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { GET_USER_NOTIFICATIONS } from "@/lib/graphql/fragments/queries/notification"
-import { UPDATE_FRIENDSHIP_STATUS_MUTATION } from "@/lib/graphql/fragments/mutations/friendship"
-import { UPDATE_NOTIFICATION_READ_STATUS_MUTATION } from "@/lib/graphql/fragments/mutations/notification"
+import { GET_USER_NOTIFICATIONS } from "@/fragments/queries/notification"
+import { UPDATE_FRIENDSHIP_STATUS_MUTATION } from "@/fragments/mutations/friendship"
+import { UPDATE_NOTIFICATION_READ_STATUS_MUTATION } from "@/fragments/mutations/notification"
 import { NotificationType } from "@/types/notification"
 import { UserType } from "@/types/user"
 import { gray, brand } from "../common/themePrimitives"

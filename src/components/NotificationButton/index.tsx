@@ -6,7 +6,7 @@ import { IconButton } from "@mui/material"
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import NotificationModal from "../NotificationModal";
-import { GET_USER_NOTIFICATIONS } from "@/lib/graphql/fragments/queries/notification";
+import { GET_USER_NOTIFICATIONS } from "@/fragments/queries/notification";
 import { brand } from "../common/themePrimitives";
 
 export default function NotificationButton() {

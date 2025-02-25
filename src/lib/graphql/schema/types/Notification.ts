@@ -1,6 +1,6 @@
 import { objectType } from "nexus"
 import { User } from "./Auth"
-import { NotificationType } from "../enums/common";
+import { NotificationType } from "../enums"
 
 export const Notification = objectType({
     name: 'Notification',

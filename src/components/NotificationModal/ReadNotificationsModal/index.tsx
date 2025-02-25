@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { gray } from '../../common/themePrimitives';
-import { GET_READ_USER_NOTIFICATIONS } from '@/lib/graphql/fragments/queries/notification';
+import { GET_READ_USER_NOTIFICATIONS } from '@/fragments/queries/notification';
 import EmptyNotifications from '../EmptyNotifications';
 import CommonNotification from '../../CommonNotification';
 import { NotificationType } from '@/types/notification';

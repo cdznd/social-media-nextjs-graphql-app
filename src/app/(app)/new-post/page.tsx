@@ -1,5 +1,5 @@
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { GET_CATEGORIES } from "@/lib/graphql/fragments/queries/category";
+import { GET_CATEGORIES } from "@/fragments/queries/category";
 import { Container, Card } from "@mui/material";
 import { CategoryType } from "@/types/category";
 import PostForm from "@/components/PostForm";

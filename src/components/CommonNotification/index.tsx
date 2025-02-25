@@ -4,12 +4,12 @@ import { Button, ListItem, Typography, Avatar, Stack, IconButton } from "@mui/ma
 import DeleteIcon from '@mui/icons-material/Delete';
 import Link from "next/link"
 import { useMutation } from "@apollo/client"
-import { GET_READ_USER_NOTIFICATIONS } from "@/lib/graphql/fragments/queries/notification"; 
+import { GET_READ_USER_NOTIFICATIONS } from "@/fragments/queries/notification"; 
 import { 
     UPDATE_NOTIFICATION_READ_STATUS_MUTATION,
     DELETE_NOTIFICATION_MUTATION
-} from "@/lib/graphql/fragments/mutations/notification"
-import { GET_USER_NOTIFICATIONS } from "@/lib/graphql/fragments/queries/notification"
+} from "@/fragments/mutations/notification"
+import { GET_USER_NOTIFICATIONS } from "@/fragments/queries/notification"
 import { brand, gray } from "../common/themePrimitives"
 import { NotificationType } from "@/types/notification"
 

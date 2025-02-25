@@ -1,6 +1,6 @@
 import { Box, Typography, Button, Chip } from "@mui/material";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { GET_CATEGORIES } from "@/lib/graphql/fragments/queries/category";
+import { GET_CATEGORIES } from "@/fragments/queries/category";
 import Search from "./Search";
 import CategorySelector from "./CategorySelector";
 import PublicIcon from '@mui/icons-material/Public';

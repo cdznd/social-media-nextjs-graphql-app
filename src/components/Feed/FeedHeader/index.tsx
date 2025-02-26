@@ -1,7 +1,7 @@
 import { Box, Typography, Stack, Chip } from "@mui/material";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_CATEGORIES } from "@/fragments/queries/category";
-import Search from "./Search";
+import GeneralSearch from "../../GeneralSearch";
 import CategorySelector from "./CategorySelector";
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
@@ -66,7 +66,7 @@ export default async function FeedHeader({ numberOfPosts, feedType }: FeedHeader
                         overflow: "auto",
                     }}
                 >
-                    <Search />
+                    <GeneralSearch />
                 </Box>
             </Box>
 

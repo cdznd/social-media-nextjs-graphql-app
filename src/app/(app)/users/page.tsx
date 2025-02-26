@@ -1,4 +1,4 @@
-import { Alert, Card, Container, Grid, Typography, Box } from "@mui/material";
+import { Alert, Card, Container, Grid, Typography, Box, Stack } from "@mui/material";
 import UserProfileCard from "@/components/UserProfileCard";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_ALL_USERS } from "@/fragments/queries/user";
@@ -7,14 +7,16 @@ import { UserType } from "@/types/user";
 import { SearchParamsProps } from "@/types/feed";
 import { ApolloError } from "@apollo/client";
 import PaginationComponent from "@/components/PaginationComponent";
+import GeneralSearch from "@/components/GeneralSearch";
 
-async function getAllUsers(page: number) {
+async function getAllUsers(page: number, searchString?: string) {
     const apolloClient = createApolloClient()
     try {
         const usersPerPage = 10
         const { data } = await apolloClient.query({
             query: GET_ALL_USERS,
             variables: {
+                searchString: searchString,
                 take: usersPerPage,
                 skip: (page - 1) * usersPerPage
             }
@@ -29,9 +31,9 @@ async function getAllUsers(page: number) {
 export default async function usersPage(
     { searchParams }: SearchParamsProps
 ) {
-    const { page = 1 } = await searchParams
+    const { search, page = 1 } = await searchParams
     const session = await auth()
-    const { data } = await getAllUsers(page)
+    const { data } = await getAllUsers(page, search)
     const {
         users = [],
         totalCount: totalUsers = 0,
@@ -45,8 +47,11 @@ export default async function usersPage(
     const emptyListOfUsers = allUsers.length === 0
     return (
         <Container>
-            <Card>
-                <Typography variant="h3" sx={{ textAlign: "center" }}>All Users</Typography>
+            <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                <Typography variant="h4" sx={{ textAlign: "center" }}>All Users</Typography>
+                <GeneralSearch />
+            </Stack>
+            <Box>
                 {
                     emptyListOfUsers ?
                         <Box sx={{ mt: 2 }}><Alert severity="info">No users available</Alert></Box> :
@@ -63,7 +68,7 @@ export default async function usersPage(
                         )
                 }
                 <PaginationComponent totalPages={totalUsersPages} />
-            </Card>
+            </Box>
         </Container>
     )
 }

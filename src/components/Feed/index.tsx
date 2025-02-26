@@ -1,6 +1,6 @@
 import { Alert, Box } from '@mui/material';
 import FeedHeader from '@/components/Feed/FeedHeader';
-import FeedPagination from '@/components/Feed/FeedPagination';
+import PaginationComponent from '@/components/PaginationComponent';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import DefaultFeed from './FeedType/DefaultFeed';
 import GridFeed from './FeedType/GridFeed';
@@ -36,7 +36,8 @@ export default function Feed(
               No Posts found
             </Alert>
       }
-      <FeedPagination totalPages={totalPages} />
+      <PaginationComponent
+        totalPages={totalPages} />
     </Box>
   );
 }

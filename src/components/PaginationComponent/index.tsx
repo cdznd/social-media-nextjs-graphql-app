@@ -1,10 +1,10 @@
 'use client'
 
 import Pagination from '@mui/material/Pagination';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 // TODO: Fix the update of the pagination currentPage based on the page param
-export default function FeedPagination({ totalPages }: { totalPages: number }) {
+export default function PaginationComponent({ totalPages }: { totalPages: number }) {
     const router = useRouter();
     const setQueryParam = (key: string, value: string) => {
       const params = new URLSearchParams(window.location.search);

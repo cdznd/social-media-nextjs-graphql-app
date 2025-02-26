@@ -11,6 +11,7 @@ async function getPrivateFeedData(
   page: number,
   searchString?: string,
   category?: string,
+  visibility?: string
 ) {
   const apolloClient = createApolloClient();
   try {
@@ -21,6 +22,7 @@ async function getPrivateFeedData(
         userId,
         searchString,
         category,
+        visibility,
         take: postsPerPage,
         skip: (page - 1) * postsPerPage
       },
@@ -35,14 +37,15 @@ async function getPrivateFeedData(
 export default async function Home(
   { searchParams }: SearchParamsProps
 ) {
-  const { search, category, page = 1 } = await searchParams
+  const { search, category, page = 1, visibility } = await searchParams
   const session = await auth()
   // TODO: better handle the feed Error here
   const { data, feedError } = await getPrivateFeedData(
     session?.user?.id!,
     page,
     search,
-    category
+    category,
+    visibility?.toUpperCase()
   );
   const feedPosts = data?.privateFeedPosts.posts ?? []
   const totalPosts = data?.privateFeedPosts?.totalCount ?? 0

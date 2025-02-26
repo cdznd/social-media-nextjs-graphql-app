@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { POST_FIELDS } from "./post";
+import { POST_FIELDS, POST_LIKES } from "./post";
 
 // Fragments
 export const USER_FIELDS = gql`
@@ -28,9 +28,11 @@ export const USER_POSTS = gql`
     fragment UserPosts on User {
         posts {
             ...PostFields
+            ...PostLikes
         }
     }
     ${POST_FIELDS}
+    ${POST_LIKES}
 `
 
 export const USER_LIKES = gql`
@@ -38,16 +40,31 @@ export const USER_LIKES = gql`
         likes {
             post {
                 ...PostFields
+                ...PostLikes
             }
         }
     }
     ${POST_FIELDS}
+    ${POST_LIKES}
 `
 
 // Queries
 export const GET_ALL_USERS = gql`
-    query GetAllUsers {
-        users {
+    query GetAllUsers($searchString: String, $take: Int, $skip: Int) {
+        allUsers(searchString: $searchString, take: $take, skip: $skip) {
+            users {
+                ...UserFields
+            }
+            totalCount
+            totalPages
+        }
+    }
+    ${USER_FIELDS}
+`
+
+export const GET_USER_BY_ID = gql`
+    query GetUserById($userId: String!) {
+        user(userId: $userId) {
             ...UserFields
         }
     }

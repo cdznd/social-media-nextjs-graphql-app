@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { FormControl, OutlinedInput, InputAdornment, IconButton } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
-export default function Search() {
+export default function GeneralSearch() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [query, setQuery] = useState(searchParams.get("search") || "");

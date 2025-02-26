@@ -1,12 +1,11 @@
 "use client"
-import { useState } from 'react';
-
 import {
     Chip,
     Box,
     CardMedia,
     Avatar,
-    Typography
+    Typography,
+    Stack
 } from '@mui/material';
 import { gray } from '../common/themePrimitives';
 
@@ -39,25 +38,11 @@ type PostCardProps = {
 export default function PostCard({ postData, variants = [] }: PostCardProps) {
 
     const author = postData?.author
-
     const createdAt = postData?.createdAt
     const creationDate = new Date(createdAt)
-
     const displayDate = `${creationDate.getDate()} ${months[creationDate.getMonth()]} ${creationDate.getFullYear()}`
 
-    const [focusedCardIndex, setFocusedCardIndex] = useState<number | null>(
-        null,
-    );
-
     const postVisibility = postData?.visibility
-
-    const handleFocus = (index: number) => {
-        setFocusedCardIndex(index);
-    };
-
-    const handleBlur = () => {
-        setFocusedCardIndex(null);
-    };
 
     // TODO: Add a click to send to the category filter feed
     const renderCategories =
@@ -68,12 +53,13 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                         key={category?.name}
                         variant="filled"
                         label={category?.name}
+                        size='medium'
                     />
                 )
             }) : null
 
-    const displayAuthor = !variants.includes('no-author')
-    const displayImage = !variants.includes('no-media')
+    // min-info variation does not include image, engagement, or categories
+    const minInfo = variants.includes('min-info')
 
     const postLikes = postData?.likes ?? []
     const postComments = postData?.comments ?? []
@@ -81,16 +67,13 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
     return (
         <StyledPostCard
             variant="outlined"
-            onFocus={() => handleFocus(0)}
-            onBlur={handleBlur}
             tabIndex={0}
-            className={focusedCardIndex === 0 ? 'Mui-focused' : ''}
         >
             {
-                displayImage && postData?.thumbnail && (
+                (postData?.thumbnail) && (
                     <CardMedia
                         component="img"
-                        alt="green iguana"
+                        alt={postData?.title ?? 'thumbnail image'}
                         image={postData?.thumbnail ?? ''}
                         sx={{
                             aspectRatio: '16 / 9',
@@ -100,71 +83,81 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                     />
                 )
             }
-            <Box>
-                <StyledPostCardInfo>
-                    {
-                        displayAuthor && (
-                            <Link href={`/users/${author.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        gap: 1,
-                                        alignItems: 'center',
-                                        paddingY: '.3rem',
-                                        paddingX: '.5rem',
-                                        border: '1px solid',
-                                        borderColor: gray[700],
-                                        borderRadius: '1rem',
-                                        transition: '200ms',
-                                        '&:hover': {
-                                            background: brand[800]
-                                        },
-                                    }}
-                                >
-                                    <Avatar
-                                        alt={author.name}
-                                        src={author.image}
-                                        sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
-                                    />
-                                    <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                                        {author.name}
-                                    </Typography>
-                                </Box>
-                            </Link>
-                        )
-                    }
-                    <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                        {displayDate}
-                    </Typography>
-                </StyledPostCardInfo>
-                <StyledPostCardContent>
-                    <Box sx={{ mb: '1rem' }}>
-                        <Chip
-                            icon={postVisibility === 'PUBLIC' ? <PublicIcon /> : <LockIcon />}
-                            color={postVisibility === 'PUBLIC' ? 'success' : 'info'}
-                            variant='outlined'
-                            label={postVisibility === 'PUBLIC' ? 'Public' : "Private"}
-                            sx={{
-                                p: 1
-                            }}
-                        />
-                    </Box>
-                    <StyledTypography color="text.secondary" gutterBottom>
-                        {postData.content}
-                    </StyledTypography>
-                </StyledPostCardContent>
-                <StyledPostCardCategories direction="row" spacing={2}>
-                    {renderCategories}
-                </StyledPostCardCategories>
 
-                <PostEngagement
-                    postId={postData?.id}
-                    likes={postLikes}
-                    comments={postComments}
-                />
+            <StyledPostCardInfo>
+                {
+                    !minInfo && (
+                        <Link href={`/users/${author.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    gap: 1,
+                                    alignItems: 'center',
+                                    paddingY: '.3rem',
+                                    paddingX: '.5rem',
+                                    border: '1px solid',
+                                    borderColor: gray[700],
+                                    borderRadius: '1rem',
+                                    transition: '200ms',
+                                    '&:hover': {
+                                        background: brand[800]
+                                    },
+                                }}
+                            >
+                                <Avatar
+                                    alt={author.name}
+                                    src={author.image}
+                                    sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
+                                />
+                                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                                    {author.name}
+                                </Typography>
+                            </Box>
+                        </Link>
+                    )
+                }
+                <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                    {displayDate}
+                </Typography>
+            </StyledPostCardInfo>
 
-            </Box>
+            <StyledPostCardContent>
+                <Stack direction="row" sx={{ mb: 2 }}>
+                    <Chip
+                        icon={postVisibility === 'PUBLIC' ? <PublicIcon /> : <LockIcon />}
+                        color={postVisibility === 'PUBLIC' ? 'success' : 'info'}
+                        variant='outlined'
+                        label={postVisibility === 'PUBLIC' ? 'Public' : "Private"}
+                        sx={{
+                            p: 1
+                        }}
+                    />
+                </Stack>
+                {
+                    !minInfo ? <Typography variant='h6'>{postData.title}</Typography>
+                    : <Typography variant='body2' sx={{ fontWeight: 'bold', textAlign: 'start', mb: 1 }}>{postData.title}</Typography>
+                }
+                <StyledTypography color="text.secondary" gutterBottom>
+                    {postData.content}
+                </StyledTypography>
+            </StyledPostCardContent>
+            
+            <Box sx={{ flexGrow: 1 }}></Box>
+
+            {
+                !minInfo && (
+                    <StyledPostCardCategories direction="row" spacing={2}>
+                        {renderCategories}
+                    </StyledPostCardCategories>
+                )
+            }
+
+            <PostEngagement
+                postId={postData?.id}
+                likes={postLikes}
+                comments={postComments}
+            />
         </StyledPostCard>
     );
 

@@ -16,5 +16,6 @@ export type SearchParamsProps = {
       page?: number
       search?: string
       category?: string
+      visibility?: string
     }
 }

@@ -1,4 +1,5 @@
 import { Context } from "@/lib/prisma/context"
+import { UserOptions, UserFilters } from "@/types/user"
 import { hash } from "bcrypt"
 
 type createUserDTO = {
@@ -13,7 +14,7 @@ export default class UserService {
 
     constructor(
         private context: Context
-    ) {}
+    ) { }
 
     async createUser({ name, email, password, username, image }: createUserDTO) {
         return this.context.prisma.user.create({
@@ -35,34 +36,45 @@ export default class UserService {
             include: {
                 posts: {
                     include: {
-                        author: true // TODO: Why including author again? if the userId is the author
+                        likes: true
                     }
                 },
                 likes: {
                     include: {
-                        post: true
+                        post: {
+                            include: {
+                                likes: true
+                            }
+                        }
                     }
                 },
                 notificationsSent: true,
                 notificationsReceived: true
             }
         })
-        if(!result) {
+        if (!result) {
             throw new Error('User not found')
         }
         return result
     }
 
-    async getUsers() {
-        const result = this.context.prisma.user.findMany({
+    async getUsers(options: UserOptions, filters: UserFilters) {
+        const { take = 10, skip } = options
+        const { searchString } = filters
+        const where: any = searchString ? {
+            name: { contains: searchString, mode: 'insensitive' }
+        } : {}
+        const totalCount = await this.context.prisma.user.count({ where })
+        const totalPages = Math.ceil(totalCount / take)
+        const users = await this.context.prisma.user.findMany({
+            where,
             include: {
                 accounts: true
-            }
+            },
+            take,
+            skip,
         })
-        if(!result) {
-            throw new Error('Users not found')
-        }
-        return result
+        return { users, totalCount, totalPages }
     }
 
 }

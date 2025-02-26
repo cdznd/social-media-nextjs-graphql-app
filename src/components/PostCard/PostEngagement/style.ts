@@ -6,7 +6,7 @@ export const StyledPostEngagementContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     borderTop: '1px solid',
     borderColor: gray[700],
-    padding: '.5rem'
+    padding: '.5rem',
 }))
 
 export const StyledPostEngagementItem = styled(Box)(({ theme }) => ({

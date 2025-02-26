@@ -21,6 +21,9 @@ import { StyledToolbar } from './style';
 import { SitemarkIcon } from '../common/CustomIcons';
 import ColorModeIconDropdown from '../ColorModeIconDropdown';
 import NotificationButton from '../NotificationButton';
+import { useQuery } from '@apollo/client';
+import { GET_USER_PROFILE } from '@/fragments/queries/profile';
+import { GET_USER_BY_ID } from '@/fragments/queries/user';
 
 export default function Navbar() {
 
@@ -40,7 +43,16 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
-  const userLogged = session?.user
+  const sessionUserLogged = session?.user
+
+  const { data } = useQuery(GET_USER_BY_ID, {
+    variables: {
+      userId: sessionUserLogged?.id
+    },
+    skip: !sessionUserLogged?.id
+  })
+
+  const userLogged = data?.user
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);

@@ -35,7 +35,7 @@ export default function ExploreFeed({ posts }: FeedTypeProps) {
         return acc;
     }, [])
     return (
-        <Grid container spacing={3} sx={{ py: 4 }}>
+        <Grid container spacing={3} sx={{ py: 4, pt: 0 }}>
             {renderPosts}
         </Grid>
     );

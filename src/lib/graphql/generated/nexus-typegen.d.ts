@@ -97,6 +97,11 @@ export interface NexusGenObjects {
     totalCount: number; // Int!
     totalPages: number; // Int!
   }
+  DefaultUserListResponse: { // root type
+    totalCount: number; // Int!
+    totalPages: number; // Int!
+    users: NexusGenRootTypes['User'][]; // [User!]!
+  }
   FriendWithStatus: { // root type
     status: NexusGenEnums['FriendshipStatus']; // FriendshipStatus!
     user: NexusGenRootTypes['User']; // User!
@@ -244,6 +249,11 @@ export interface NexusGenFieldTypes {
     totalCount: number; // Int!
     totalPages: number; // Int!
   }
+  DefaultUserListResponse: { // field return type
+    totalCount: number; // Int!
+    totalPages: number; // Int!
+    users: NexusGenRootTypes['User'][]; // [User!]!
+  }
   FriendWithStatus: { // field return type
     status: NexusGenEnums['FriendshipStatus']; // FriendshipStatus!
     user: NexusGenRootTypes['User']; // User!
@@ -308,6 +318,7 @@ export interface NexusGenFieldTypes {
     visibility: NexusGenEnums['PostVisibilityType']; // PostVisibilityType!
   }
   Query: { // field return type
+    allUsers: NexusGenRootTypes['DefaultUserListResponse']; // DefaultUserListResponse!
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     exploreFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     friends: NexusGenRootTypes['Friendship'][]; // [Friendship!]!
@@ -321,7 +332,6 @@ export interface NexusGenFieldTypes {
     privateProfileFeedInfo: NexusGenRootTypes['InfoFeedResponse']; // InfoFeedResponse!
     readNotifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     user: NexusGenRootTypes['User'] | null; // User
-    users: NexusGenRootTypes['User'][]; // [User!]!
   }
   Session: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -408,6 +418,11 @@ export interface NexusGenFieldTypeNames {
     totalCount: 'Int'
     totalPages: 'Int'
   }
+  DefaultUserListResponse: { // field return type name
+    totalCount: 'Int'
+    totalPages: 'Int'
+    users: 'User'
+  }
   FriendWithStatus: { // field return type name
     status: 'FriendshipStatus'
     user: 'User'
@@ -472,6 +487,7 @@ export interface NexusGenFieldTypeNames {
     visibility: 'PostVisibilityType'
   }
   Query: { // field return type name
+    allUsers: 'DefaultUserListResponse'
     categories: 'Category'
     exploreFeedPosts: 'DefaultFeedResponse'
     friends: 'Friendship'
@@ -485,7 +501,6 @@ export interface NexusGenFieldTypeNames {
     privateProfileFeedInfo: 'InfoFeedResponse'
     readNotifications: 'Notification'
     user: 'User'
-    users: 'User'
   }
   Session: { // field return type name
     createdAt: 'DateTime'
@@ -573,6 +588,11 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    allUsers: { // args
+      searchString?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
     exploreFeedPosts: { // args
       category?: string | null; // String
       orderBy: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -600,6 +620,7 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take?: number | null; // Int
       userId: string; // String!
+      visibility?: string | null; // String
     }
     privateProfileFeed: { // args
       category?: string | null; // String
@@ -608,6 +629,7 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take?: number | null; // Int
       userId: string; // String!
+      visibility?: string | null; // String
     }
     privateProfileFeedInfo: { // args
       userId: string; // String!

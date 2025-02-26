@@ -55,7 +55,7 @@ export default class PostService {
         filters: FeedFilters,
     ) {
         const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
-        const { searchString, category } = filters
+        const { searchString, category, visibility } = filters
         const friendshipService = new FriendshipService(this.context)
         // Getting all friends of this userid
         const allUserFriendships = await friendshipService.getFriendsByUserId(userId)
@@ -75,7 +75,8 @@ export default class PostService {
                     ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
                     : {}
             ],
-            authorId: { in: allUserFriendsIDs } // Fetch only friend's posts
+            authorId: { in: allUserFriendsIDs }, // Fetch only friend's posts
+            visibility: visibility === "PUBLIC" || visibility === "PRIVATE" ? visibility : undefined
         }
         const totalCount = await this.context.prisma.post.count({ where })
         const totalPages = Math.ceil(totalCount / take)
@@ -141,7 +142,7 @@ export default class PostService {
         filters: FeedFilters,
     ) {
         const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
-        const { searchString, category } = filters
+        const { searchString, category, visibility } = filters
         // Where clause matching search string AND category if it exists
         const where: PostWhereInput = {
             AND: [
@@ -156,7 +157,8 @@ export default class PostService {
                     ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
                     : {}
             ],
-            authorId: userId
+            authorId: userId,
+            visibility: visibility === "PUBLIC" || visibility === "PRIVATE" ? visibility : undefined
         }
         const totalCount = await this.context.prisma.post.count({ where })
         const totalPages = Math.ceil(totalCount / take)

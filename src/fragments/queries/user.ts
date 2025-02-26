@@ -61,3 +61,12 @@ export const GET_ALL_USERS = gql`
     }
     ${USER_FIELDS}
 `
+
+export const GET_USER_BY_ID = gql`
+    query GetUserById($userId: String!) {
+        user(userId: $userId) {
+            ...UserFields
+        }
+    }
+    ${USER_FIELDS}
+`

@@ -50,9 +50,13 @@ export const USER_LIKES = gql`
 
 // Queries
 export const GET_ALL_USERS = gql`
-    query GetAllUsers {
-        users {
-            ...UserFields
+    query GetAllUsers($take: Int, $skip: Int) {
+        allUsers(take: $take, skip: $skip) {
+            users {
+                ...UserFields
+            }
+            totalCount
+            totalPages
         }
     }
     ${USER_FIELDS}

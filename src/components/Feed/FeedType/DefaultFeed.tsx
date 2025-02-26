@@ -6,7 +6,7 @@ import { Container, Box } from "@mui/material"
 export default function DefaultFeed({ posts }: FeedTypeProps) {
     const renderPosts = posts.map((post: PostType) => {
         return (
-            <Box sx={{ mb: 8 }}>
+            <Box sx={{ mb: 8 }} key={post.id}>
                 <PostCard
                     key={post.id}
                     postData={post} />

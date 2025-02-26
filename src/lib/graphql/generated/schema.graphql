@@ -61,6 +61,12 @@ type DefaultFeedResponse {
   totalPages: Int!
 }
 
+type DefaultUserListResponse {
+  totalCount: Int!
+  totalPages: Int!
+  users: [User!]!
+}
+
 type FriendWithStatus {
   status: FriendshipStatus!
   user: User!
@@ -156,6 +162,7 @@ enum PostVisibilityType {
 }
 
 type Query {
+  allUsers(skip: Int, take: Int): DefaultUserListResponse!
   categories: [Category!]!
   exploreFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int): DefaultFeedResponse!
   friends(userId: String!): [Friendship!]!
@@ -169,7 +176,6 @@ type Query {
   privateProfileFeedInfo(userId: String!): InfoFeedResponse!
   readNotifications(userId: String!): [Notification!]!
   user(userId: String!): User
-  users: [User!]!
 }
 
 type Session {

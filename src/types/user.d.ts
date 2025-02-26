@@ -5,3 +5,8 @@ export type UserType = {
     image: string
     username: string
 }
+
+export type UserOptions = {
+    skip?: number,
+    take?: number
+}

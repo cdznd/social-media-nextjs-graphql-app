@@ -50,8 +50,8 @@ export const USER_LIKES = gql`
 
 // Queries
 export const GET_ALL_USERS = gql`
-    query GetAllUsers($take: Int, $skip: Int) {
-        allUsers(take: $take, skip: $skip) {
+    query GetAllUsers($searchString: String, $take: Int, $skip: Int) {
+        allUsers(searchString: $searchString, take: $take, skip: $skip) {
             users {
                 ...UserFields
             }

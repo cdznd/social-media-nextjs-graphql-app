@@ -10,3 +10,7 @@ export type UserOptions = {
     skip?: number,
     take?: number
 }
+
+export type UserFilters = {
+    searchString?: string
+}

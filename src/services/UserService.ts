@@ -1,5 +1,5 @@
 import { Context } from "@/lib/prisma/context"
-import { UserOptions } from "@/types/user"
+import { UserOptions, UserFilters } from "@/types/user"
 import { hash } from "bcrypt"
 
 type createUserDTO = {
@@ -14,7 +14,7 @@ export default class UserService {
 
     constructor(
         private context: Context
-    ) {}
+    ) { }
 
     async createUser({ name, email, password, username, image }: createUserDTO) {
         return this.context.prisma.user.create({
@@ -52,15 +52,18 @@ export default class UserService {
                 notificationsReceived: true
             }
         })
-        if(!result) {
+        if (!result) {
             throw new Error('User not found')
         }
         return result
     }
 
-    async getUsers(options: UserOptions) {
+    async getUsers(options: UserOptions, filters: UserFilters) {
         const { take = 10, skip } = options
-        const where = {}
+        const { searchString } = filters
+        const where: any = searchString ? {
+            name: { contains: searchString, mode: 'insensitive' }
+        } : {}
         const totalCount = await this.context.prisma.user.count({ where })
         const totalPages = Math.ceil(totalCount / take)
         const users = await this.context.prisma.user.findMany({

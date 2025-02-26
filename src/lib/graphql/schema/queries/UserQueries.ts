@@ -29,16 +29,22 @@ export const UserQueries = extendType({
             {
                 type: DefaultUserListResponse,
                 args: {
+                    searchString: stringArg(),
                     skip: intArg(),
                     take: intArg()
                 },
                 resolve: async (_parent, args, context: Context) => {
-                    const { take, skip } = args
+                    const { searchString, take, skip } = args
                     const userService = new UserService(context)
-                    const { users, totalCount, totalPages } = await userService.getUsers({
-                        take: take ?? undefined,
-                        skip: skip ?? undefined
-                    })
+                    const { users, totalCount, totalPages } = await userService.getUsers(
+                        {
+                            take: take ?? undefined,
+                            skip: skip ?? undefined
+                        },
+                        {
+                            searchString: searchString ?? undefined
+                        }
+                    )
                     return { users, totalCount, totalPages }
                 }
             }

@@ -589,6 +589,7 @@ export interface NexusGenArgTypes {
   }
   Query: {
     allUsers: { // args
+      searchString?: string | null; // String
       skip?: number | null; // Int
       take?: number | null; // Int
     }

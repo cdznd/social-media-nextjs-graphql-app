@@ -162,7 +162,7 @@ enum PostVisibilityType {
 }
 
 type Query {
-  allUsers(skip: Int, take: Int): DefaultUserListResponse!
+  allUsers(searchString: String, skip: Int, take: Int): DefaultUserListResponse!
   categories: [Category!]!
   exploreFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int): DefaultFeedResponse!
   friends(userId: String!): [Friendship!]!

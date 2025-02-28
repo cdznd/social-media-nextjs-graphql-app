@@ -114,7 +114,7 @@ export default async function UserPage(
         },
         0
     )
-    console.log('numberOfF', numberOfFriends);
+
     // Checks if the logged currentUser is friend of the currentUser
     const friendFriendship = currentProfileFriends.find((friend: any) => friend.user.id === loggedUserId)
     const isFriend = friendFriendship?.status === 'ACCEPTED'

@@ -100,7 +100,6 @@ export default async function UserPage(
     const { data: { user: currentUser } } = await getCurrentProfileData(userId);
     const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(userId);
     const { privatePostsCount, publicPostsCount } = privateProfileFeedInfo || {}
-    const totalPosts = privatePostsCount + publicPostsCount
 
     if (!currentUser) return <ErrorAlert message={'No User found'} />;
 
@@ -119,11 +118,12 @@ export default async function UserPage(
     // Checks if the logged currentUser is friend of the currentUser
     const friendFriendship = currentProfileFriends.find((friend: any) => friend.user.id === loggedUserId)
     const isFriend = friendFriendship?.status === 'ACCEPTED'
+    const isLoggedUserProfile = currentUser?.id === session?.user?.id
 
     let profileFeedPosts;
     let profileFeedPostsCount;
     let profileFeedPostsTotalPages;
-    if (isFriend) {
+    if (isFriend || isLoggedUserProfile) {
         const { data } = await getCurrentProfileFeed(userId, page, search, category, visibility?.toUpperCase())
         const { 
             posts: feedPosts = [],
@@ -134,21 +134,13 @@ export default async function UserPage(
         profileFeedPostsCount = totalCount
         profileFeedPostsTotalPages = totalPages
     }
-
-    console.log('profileFeedPosts');
-    console.log(profileFeedPosts);
-
-    // Counting by post visibility
-
-    
-    if (currentUser?.id === session?.user?.id) return <ErrorAlert message={'The user is the same of the logged one'} />;
     
     return (
         <Container>
             <UserProfileInfoCard
                 user={currentUser}
-                displayFriendshipButton
-                isFriend={isFriend}
+                displayFriendshipButton={!isLoggedUserProfile ? true : false}
+                isFriend={isFriend || isLoggedUserProfile}
                 generalInfo={{
                     friends: numberOfFriends,
                     privatePosts: privatePostsCount,
@@ -156,7 +148,7 @@ export default async function UserPage(
                 }}
             />
             {
-                isFriend && profileFeedPosts
+                isFriend || isLoggedUserProfile && profileFeedPosts
                     ? (
                         <>
                             <Feed

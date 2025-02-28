@@ -9,9 +9,8 @@ type PostListCardProps = {
 }
 
 export default function PostListCard({ title, posts }: PostListCardProps) {
-
     const emptyPostList = posts.length === 0
-
+    const disableUserEngagement = true
     return (
         <Card
             sx={{
@@ -52,7 +51,9 @@ export default function PostListCard({ title, posts }: PostListCardProps) {
                                                 <PostCard
                                                     key={post.id}
                                                     postData={post}
-                                                    variants={['min-info']} />
+                                                    variants={
+                                                        disableUserEngagement ? ['min-info', 'disable-user-engagement'] : ['min-info']
+                                                    } />
                                             </Grid>
                                         )
                                     )

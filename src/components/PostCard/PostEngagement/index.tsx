@@ -20,10 +20,11 @@ import { CommentType } from "@/types/comment";
 type PostEngagementProps = {
     postId: string,
     likes: LikeType[],
-    comments: CommentType[]
+    comments: CommentType[],
+    isDisabled: boolean
 }
 
-export default function PostEngagement({ postId, likes, comments }: PostEngagementProps) {
+export default function PostEngagement({ postId, likes, comments, isDisabled }: PostEngagementProps) {
 
     const { data: session } = useSession();
     const currentUserId = session?.user?.id!
@@ -42,6 +43,9 @@ export default function PostEngagement({ postId, likes, comments }: PostEngageme
     const [triggerLike] = useMutation(TRIGGER_POST_LIKE_MUTATION);
 
     const triggerLikePost = () => {
+        if(isDisabled) {
+            return null
+        }
         if (!isLiked) {
             setIsLiked(true)
             setLikeCount(prev => prev + 1)
@@ -59,7 +63,7 @@ export default function PostEngagement({ postId, likes, comments }: PostEngageme
 
     return (
         <StyledPostEngagementContainer>
-            <StyledPostEngagementItem>
+            <StyledPostEngagementItem isDisabled={isDisabled}>
                 <StyledPostEngagementAction onClick={triggerLikePost}>
                     {
                         isLiked ? (
@@ -84,7 +88,7 @@ export default function PostEngagement({ postId, likes, comments }: PostEngageme
                     <Box sx={{ marginLeft: '.3rem' }}>{likeCount}</Box>
                 </StyledPostEngagementAction>
             </StyledPostEngagementItem>
-            <StyledPostEngagementItem sx={{ borderRight: 'none' }} onClick={() => router.push(`app/post/${postId}`)}>
+            <StyledPostEngagementItem sx={{ borderRight: 'none' }} isDisabled={isDisabled}>
                 <StyledPostEngagementAction>
                     <CommentIcon />
                     <Box sx={{ marginLeft: '.3rem' }}>{comments.length}</Box>

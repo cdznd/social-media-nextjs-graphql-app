@@ -60,6 +60,7 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
 
     // min-info variation does not include image, engagement, or categories
     const minInfo = variants.includes('min-info')
+    const disabledEngagement = variants.includes('disable-user-engagement')
 
     const postLikes = postData?.likes ?? []
     const postComments = postData?.comments ?? []
@@ -157,6 +158,7 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                 postId={postData?.id}
                 likes={postLikes}
                 comments={postComments}
+                isDisabled={disabledEngagement}
             />
         </StyledPostCard>
     );

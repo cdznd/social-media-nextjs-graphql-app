@@ -9,7 +9,11 @@ export const StyledPostEngagementContainer = styled(Box)(({ theme }) => ({
     padding: '.5rem',
 }))
 
-export const StyledPostEngagementItem = styled(Box)(({ theme }) => ({
+type StyledPostEngagementItemProps = {
+    isDisabled?: boolean;
+}
+
+export const StyledPostEngagementItem = styled(Box)<StyledPostEngagementItemProps>(({ theme, isDisabled }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -17,7 +21,7 @@ export const StyledPostEngagementItem = styled(Box)(({ theme }) => ({
     borderColor: gray[600],
     flex: 1,
     transition: '100ms',
-    '&:hover svg': {
+    '&:hover svg': isDisabled ? {} : {
         color: brand[300]
     }
 }))

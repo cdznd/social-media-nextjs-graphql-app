@@ -46,7 +46,6 @@ export default async function MyProfilePage() {
     const { data } = await getCurrentProfileData(session?.user?.id!)
     const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(session?.user?.id!);
     const { privatePostsCount, publicPostsCount } = privateProfileFeedInfo || {}
-    const totalPosts = privatePostsCount + publicPostsCount
 
     const user = data?.user
     if (!user) {

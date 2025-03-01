@@ -5,6 +5,7 @@ const AuthCard = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignSelf: 'center',
+    overflowY: 'scroll',
     width: '100%',
     padding: theme.spacing(4),
     gap: theme.spacing(2),

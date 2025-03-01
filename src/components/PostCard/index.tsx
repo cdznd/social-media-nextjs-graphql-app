@@ -35,10 +35,11 @@ import PostEngagement from './PostEngagement';
 
 type PostCardProps = {
     postData: PostType,
-    variants?: string[]
+    variants?: string[],
+    position?: number
 }
 
-export default function PostCard({ postData, variants = [] }: PostCardProps) {
+export default function PostCard({ postData, variants = [], position }: PostCardProps) {
 
     const author = postData?.author
     const createdAt = postData?.createdAt
@@ -86,6 +87,7 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                             fill
                             alt={postData?.title}
                             style={{ objectFit: 'cover' }} // Ensures proper scaling
+                            priority={position ? position <= 2 : false}
                         />
                     </CardMedia>
                 )

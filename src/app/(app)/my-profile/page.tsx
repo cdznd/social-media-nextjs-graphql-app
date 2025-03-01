@@ -1,4 +1,4 @@
-import { Container, Typography } from "@mui/material";
+import { Container, Typography, Button } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_MY_USER_PROFILE } from "@/fragments/queries/profile";
@@ -6,6 +6,7 @@ import { GET_PRIVATE_PROFILE_FEED_INFO } from "@/fragments/queries/feed";
 import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileInfoCard from "@/components/UserProfileInfoCard";
 import ErrorAlert from "@/components/ErrorAlert";
+import Link from "next/link";
 
 import ProfileFriendList from "@/components/MyProfile/ProfileFriendList";
 
@@ -46,7 +47,6 @@ export default async function MyProfilePage() {
     const { data } = await getCurrentProfileData(session?.user?.id!)
     const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(session?.user?.id!);
     const { privatePostsCount, publicPostsCount } = privateProfileFeedInfo || {}
-    const totalPosts = privatePostsCount + publicPostsCount
 
     const user = data?.user
     if (!user) {
@@ -70,6 +70,7 @@ export default async function MyProfilePage() {
                     publicPosts: publicPostsCount
                 }}
             />
+            <Link href={`/users/${user.id}`}>Check My Feed</Link>
             <ProfileFriendList 
                 userFriends={userFriends} />
             <PostListCard

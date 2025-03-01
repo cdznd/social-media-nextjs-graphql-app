@@ -33,7 +33,7 @@ export const CREATE_USER_MUTATION = gql`
     mutation CreateUser(
         $name: String!,
         $email: String!,
-        $password: String,
+        $password: String!,
         $username: String!,
         $image: String
     ) {

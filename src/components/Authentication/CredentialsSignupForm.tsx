@@ -10,7 +10,7 @@ import {
     Button,
 } from "@mui/material"
 import { useMutation } from "@apollo/client";
-import { CREATE_POST_MUTATION, CREATE_USER_MUTATION } from "@/fragments/mutations/mutations";
+import { CREATE_USER_MUTATION } from "@/fragments/mutations/mutations";
 import { useRouter } from "next/navigation";
 import ErrorAlert from "../ErrorAlert";
 
@@ -93,7 +93,7 @@ const CredentialsSignupForm = () => {
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
             {
-                !submitError ? (
+                submitError ? (
                     <ErrorAlert message={submitErrorMessage} />
                 ) : null
             }

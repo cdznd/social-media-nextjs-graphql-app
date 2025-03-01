@@ -14,7 +14,7 @@ export default function ExploreFeed({ posts }: FeedTypeProps) {
                     <Grid container item spacing={3} key={`row-2-${index}`}>
                         {row1.map((post) => (
                             <Grid item xs={12} sm={6} key={post.id}>
-                                <PostCard postData={post} />
+                                <PostCard postData={post} position={index + 1}/>
                             </Grid>
                         ))}
                     </Grid>
@@ -25,7 +25,7 @@ export default function ExploreFeed({ posts }: FeedTypeProps) {
                     <Grid container item spacing={3} key={`row-3-${index}`}>
                         {row2.map((post) => (
                             <Grid item xs={12} sm={4} key={post.id}>
-                                <PostCard postData={post} />
+                                <PostCard postData={post} position={index + 1}/>
                             </Grid>
                         ))}
                     </Grid>

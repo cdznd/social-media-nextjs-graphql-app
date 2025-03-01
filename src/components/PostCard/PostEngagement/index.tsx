@@ -43,7 +43,7 @@ export default function PostEngagement({ postId, likes, comments, isDisabled }: 
     const [triggerLike] = useMutation(TRIGGER_POST_LIKE_MUTATION);
 
     const triggerLikePost = () => {
-        if(isDisabled) {
+        if (isDisabled) {
             return null
         }
         if (!isLiked) {
@@ -63,7 +63,11 @@ export default function PostEngagement({ postId, likes, comments, isDisabled }: 
 
     return (
         <StyledPostEngagementContainer>
-            <StyledPostEngagementItem isDisabled={isDisabled}>
+            <StyledPostEngagementItem sx={isDisabled ? {} : {
+                '&:hover svg': {
+                    color: brand[300]
+                }
+            }}>
                 <StyledPostEngagementAction onClick={triggerLikePost}>
                     {
                         isLiked ? (
@@ -88,7 +92,12 @@ export default function PostEngagement({ postId, likes, comments, isDisabled }: 
                     <Box sx={{ marginLeft: '.3rem' }}>{likeCount}</Box>
                 </StyledPostEngagementAction>
             </StyledPostEngagementItem>
-            <StyledPostEngagementItem sx={{ borderRight: 'none' }} isDisabled={isDisabled}>
+            <StyledPostEngagementItem sx={isDisabled ? { borderRight: 'none' } : {
+                borderRight: 'none',
+                '&:hover svg': {
+                    color: brand[300]
+                }
+            }}>
                 <StyledPostEngagementAction>
                     <CommentIcon />
                     <Box sx={{ marginLeft: '.3rem' }}>{comments.length}</Box>

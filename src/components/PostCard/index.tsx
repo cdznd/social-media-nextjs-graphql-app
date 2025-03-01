@@ -1,4 +1,5 @@
 "use client"
+
 import {
     Chip,
     Box,
@@ -7,6 +8,9 @@ import {
     Typography,
     Stack
 } from '@mui/material';
+
+import Image from 'next/image';
+
 import { gray } from '../common/themePrimitives';
 
 import {
@@ -65,6 +69,23 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
     const postLikes = postData?.likes ?? []
     const postComments = postData?.comments ?? []
 
+    //     <CardMedia
+    //     component="img"
+    //     alt={postData?.title ?? 'thumbnail image'}
+    //     image={postData?.thumbnail ?? ''}
+    //     sx={{
+    //         aspectRatio: '16 / 9',
+    //         borderBottom: '1px solid',
+    //         borderColor: 'divider',
+    //     }}
+    // />
+
+    /**
+     * When using the property fill from next/image you should have a relative component with a defined height.
+     */
+    
+    const postImageHeight = 400
+
     return (
         <StyledPostCard
             variant="outlined"
@@ -72,16 +93,14 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
         >
             {
                 (postData?.thumbnail) && (
-                    <CardMedia
-                        component="img"
-                        alt={postData?.title ?? 'thumbnail image'}
-                        image={postData?.thumbnail ?? ''}
-                        sx={{
-                            aspectRatio: '16 / 9',
-                            borderBottom: '1px solid',
-                            borderColor: 'divider',
-                        }}
-                    />
+                    <CardMedia sx={{ height: postImageHeight, position: 'relative' }}>
+                        <Image
+                            src={postData?.thumbnail}
+                            fill
+                            alt={postData?.title}
+                            style={{ objectFit: 'cover' }} // Ensures proper scaling
+                        />
+                    </CardMedia>
                 )
             }
 
@@ -137,13 +156,13 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                 </Stack>
                 {
                     !minInfo ? <Typography variant='h6'>{postData.title}</Typography>
-                    : <Typography variant='body2' sx={{ fontWeight: 'bold', textAlign: 'start', mb: 1 }}>{postData.title}</Typography>
+                        : <Typography variant='body2' sx={{ fontWeight: 'bold', textAlign: 'start', mb: 1 }}>{postData.title}</Typography>
                 }
                 <StyledTypography color="text.secondary" gutterBottom>
                     {postData.content}
                 </StyledTypography>
             </StyledPostCardContent>
-            
+
             <Box sx={{ flexGrow: 1 }}></Box>
 
             {

@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { gray } from '../common/themePrimitives';
 
@@ -20,8 +21,6 @@ import {
     StyledTypography,
     StyledPostCardCategories
 } from './style'
-
-import Link from 'next/link';
 
 import { brand } from '../common/themePrimitives';
 
@@ -69,21 +68,9 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
     const postLikes = postData?.likes ?? []
     const postComments = postData?.comments ?? []
 
-    //     <CardMedia
-    //     component="img"
-    //     alt={postData?.title ?? 'thumbnail image'}
-    //     image={postData?.thumbnail ?? ''}
-    //     sx={{
-    //         aspectRatio: '16 / 9',
-    //         borderBottom: '1px solid',
-    //         borderColor: 'divider',
-    //     }}
-    // />
-
     /**
      * When using the property fill from next/image you should have a relative component with a defined height.
      */
-    
     const postImageHeight = 400
 
     return (
@@ -126,10 +113,22 @@ export default function PostCard({ postData, variants = [] }: PostCardProps) {
                                 }}
                             >
                                 <Avatar
-                                    alt={author.name}
-                                    src={author.image}
-                                    sx={{ width: 24, height: 24, border: '1px solid', borderColor: gray[600] }}
-                                />
+                                    sx={{ 
+                                        width: 24,
+                                        height: 24,
+                                        border: '1px solid',
+                                        borderColor: gray[400]
+                                    }}
+                                >
+                                    <Image
+                                        src={author.image}
+                                        width={24}
+                                        height={24}
+                                        alt={postData?.title}
+                                        quality={75}
+                                        style={{ objectFit: 'cover' }}
+                                    />
+                                </Avatar>
                                 <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
                                     {author.name}
                                 </Typography>

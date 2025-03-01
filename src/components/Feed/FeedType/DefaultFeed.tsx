@@ -4,12 +4,12 @@ import PostCard from "@/components/PostCard"
 import { Container, Box } from "@mui/material"
 
 export default function DefaultFeed({ posts }: FeedTypeProps) {
-    const renderPosts = posts.map((post: PostType, key: number) => {
+    const renderPosts = posts.map((post: PostType, index: number) => {
         return (
             <Box sx={{ mb: 8 }} key={post.id}>
                 <PostCard
                     postData={post} 
-                    position={key + 1}
+                    position={index + 1}
                 />
             </Box>
         )

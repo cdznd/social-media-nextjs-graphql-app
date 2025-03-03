@@ -22,7 +22,6 @@ import { SitemarkIcon } from '../common/CustomIcons';
 import ColorModeIconDropdown from '../ColorModeIconDropdown';
 import NotificationButton from '../NotificationButton';
 import { useQuery } from '@apollo/client';
-import { GET_USER_PROFILE } from '@/fragments/queries/profile';
 import { GET_USER_BY_ID } from '@/fragments/queries/user';
 
 export default function Navbar() {

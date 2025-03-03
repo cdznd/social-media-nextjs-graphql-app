@@ -7,6 +7,12 @@ export type FriendshipType = {
     userB: UserType
 }
 
+export type ShortFriendshipType = {
+    id: string,
+    status: string,
+    user: UserType
+}
+
 export type FriendWithStatus = {
     user: UserType,
     status: 'ACCEPTED' | 'REJECTED' | 'PENDING'

@@ -12,6 +12,7 @@ import { auth } from "@/lib/next-auth/auth"
 import Feed from "@/components/Feed"
 import { SearchParamsProps } from "@/types/feed"
 import { Friendship } from "@prisma/client"
+import { ShortFriendshipType } from "@/types/friendship"
 
 type UserPageParams = {
     params: {
@@ -95,7 +96,11 @@ export default async function UserPage(
     } = await searchParams
 
     const session = await auth()
-    const loggedUserId = session?.user?.id!
+    const loggedUserId = session?.user?.id
+
+    if(!loggedUserId) {
+        return <ErrorAlert message="No Logged User ID" />
+    }
 
     const { data: { user: currentUser } } = await getCurrentProfileData(userId);
     const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(userId);
@@ -116,7 +121,7 @@ export default async function UserPage(
     )
 
     // Checks if the logged currentUser is friend of the currentUser
-    const friendFriendship = currentProfileFriends.find((friend: any) => friend.user.id === loggedUserId)
+    const friendFriendship = currentProfileFriends.find((friend: ShortFriendshipType) => friend.user.id === loggedUserId)
     const isFriend = friendFriendship?.status === 'ACCEPTED'
     const isLoggedUserProfile = currentUser?.id === session?.user?.id
 

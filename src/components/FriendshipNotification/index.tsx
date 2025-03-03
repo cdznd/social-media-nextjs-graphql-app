@@ -17,9 +17,6 @@ type FriendshipNotificationProps = {
 }
 
 export default function FriendshipNotification({ notification }: FriendshipNotificationProps) {
-    // Checking if it's a friend_request notification
-    // Notification of type FRIEND_REQUEST have an entityId from the friendship model
-    if (notification.type !== 'FRIEND_REQUEST') return null
     // The person who sent the friend request
     const actor: UserType = notification?.actor
     const userId: string = notification.userId

@@ -41,11 +41,11 @@ export default function ReadNotificationModal(
         if (open === true) {
             refetch()
         }
-    }, [open])
+    }, [open, refetch])
 
     const orderedNotifications = userNotifications.reduce((acc: {
-        friendshipNotifications: any[],
-        commonNotifications: any[]
+        friendshipNotifications: NotificationType[],
+        commonNotifications: NotificationType[]
     }, current: NotificationType) => {
         if (current.type === 'FRIEND_REQUEST') {
             acc.friendshipNotifications?.push(current)
@@ -108,7 +108,7 @@ export default function ReadNotificationModal(
                                     }}>
                                         <List sx={{ p: 0 }}>
                                             {orderedNotifications.commonNotifications.length > 0 ? (
-                                                orderedNotifications.commonNotifications.map((notification: any) => (
+                                                orderedNotifications.commonNotifications.map((notification: NotificationType) => (
                                                     <CommonNotification key={notification.id} notification={notification} wasRead={true} />
                                                 ))
                                             ) : (

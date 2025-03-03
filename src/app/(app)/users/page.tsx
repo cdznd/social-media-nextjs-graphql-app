@@ -35,13 +35,12 @@ export default async function usersPage(
     const { data } = await getAllUsers(page, search)
     const {
         users = [],
-        totalCount: totalUsers = 0,
         totalPages: totalUsersPages = 0
     } = data?.allUsers ?? {}
     // Filtering to remove the current logged user from the list.
     // I could have done it on the backend, but for now it's the simplest way to do it.
     const allUsers = Array.isArray(users)
-        ? users.filter((user: any) => user.id !== session?.user?.id)
+        ? users.filter((user: UserType) => user.id !== session?.user?.id)
         : []
     const emptyListOfUsers = allUsers.length === 0
     return (

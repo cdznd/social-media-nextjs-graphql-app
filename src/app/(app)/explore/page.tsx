@@ -31,8 +31,9 @@ async function getExploreFeedData(
   }
 
 export default async function ExplorePage(
-    { searchParams: { search, category, page = 1 } }: SearchParamsProps
+  props: { searchParams: SearchParamsProps }
 ) {
+    const { search, category, page = 1 } = await props.searchParams
     // TODO: better handle the feed Error here
     const { data } = await getExploreFeedData(
         page,

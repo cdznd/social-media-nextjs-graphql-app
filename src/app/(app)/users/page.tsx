@@ -28,9 +28,9 @@ async function getAllUsers(page: number, searchString?: string) {
 }
 
 export default async function usersPage(
-    { searchParams }: SearchParamsProps
+    props: { searchParams: SearchParamsProps }
 ) {
-    const { search, page = 1 } = await searchParams
+    const { search, page = 1 } = await props.searchParams
     const session = await auth()
     const { data } = await getAllUsers(page, search)
     const {

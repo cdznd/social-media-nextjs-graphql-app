@@ -36,9 +36,9 @@ async function getPrivateFeedData(
 }
 
 export default async function Home(
-  { searchParams }: SearchParamsProps
+  props: { searchParams: SearchParamsProps }
 ) {
-  const { search, category, page = 1, visibility } = await searchParams
+  const { search, category, page = 1, visibility } = await props.searchParams
   const session = await auth()
   const loggedUserId = session?.user?.id
   if(!loggedUserId) {

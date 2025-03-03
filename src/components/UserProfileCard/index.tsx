@@ -1,8 +1,5 @@
-import { Box, Card, CardContent, Avatar, Typography, Button } from "@mui/material"
+import { Box, Card, CardContent, Avatar, Typography } from "@mui/material"
 import { brand } from "../common/themePrimitives";
-
-// TODO: Implement Nextjs Link
-import Link from "next/link";
 
 import FriendshipTriggerButton from "../FriendshipTriggerButton";
 

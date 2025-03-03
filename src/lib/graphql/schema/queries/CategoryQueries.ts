@@ -1,7 +1,5 @@
 import {
     extendType,
-    nonNull,
-    stringArg
 } from "nexus";
 
 import { Context } from "@/lib/prisma/context";

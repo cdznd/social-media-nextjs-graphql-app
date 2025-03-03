@@ -1,4 +1,4 @@
-import { Container, Typography, Button } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_MY_USER_PROFILE } from "@/fragments/queries/profile";
@@ -9,6 +9,7 @@ import ErrorAlert from "@/components/ErrorAlert";
 import Link from "next/link";
 
 import ProfileFriendList from "@/components/MyProfile/ProfileFriendList";
+import { PostType } from "@/types/post";
 
 async function getCurrentProfileData(userId: string) {
     const apolloClient = createApolloClient()
@@ -44,19 +45,20 @@ async function getCurrentProfileFeedInfo(
 
 export default async function MyProfilePage() {
     const session = await auth()
-    const { data } = await getCurrentProfileData(session?.user?.id!)
-    const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(session?.user?.id!);
+    const loggedUserId = session?.user?.id
+    if(!loggedUserId) {
+        return <ErrorAlert message="No User Logged" />
+    }
+    const { data } = await getCurrentProfileData(loggedUserId)
+    const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(loggedUserId);
     const { privatePostsCount, publicPostsCount } = privateProfileFeedInfo || {}
-
     const user = data?.user
     if (!user) {
         return <ErrorAlert message={'No User found'} />
     }
     const userPosts = user?.posts ?? []
-    const userLikedPosts = user?.likes ? user?.likes.map((like: any) => like.post) : []
-
+    const userLikedPosts = user?.likes ? user?.likes.map((like: { post: PostType }) => like.post) : []
     const userFriends = user?.friends ?? []
-
     return (
         <Container>
             <Typography variant="h3" sx={{ marginBottom: '1rem' }}>My Profile</Typography>

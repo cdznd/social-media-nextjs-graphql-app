@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { Context } from "@/lib/prisma/context";
 
 type createNotificationDTO = {
@@ -17,7 +16,7 @@ export default class NotificationService {
         private context: Context
     ) { }
 
-    async createNotification({ type, content, userId, actorId, entityId, entityType, read }: createNotificationDTO) {
+    async createNotification({ type, content, userId, actorId, entityId, entityType }: createNotificationDTO) {
         return this.context.prisma.notification.create({
             data: {
                 type,

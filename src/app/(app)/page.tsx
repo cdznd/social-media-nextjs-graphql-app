@@ -5,6 +5,7 @@ import { Container } from "@mui/material";
 import Feed from "@/components/Feed";
 
 import { SearchParamsProps } from "@/types/feed";
+import ErrorAlert from "@/components/ErrorAlert";
 
 async function getPrivateFeedData(
   userId: string,
@@ -39,9 +40,13 @@ export default async function Home(
 ) {
   const { search, category, page = 1, visibility } = await searchParams
   const session = await auth()
+  const loggedUserId = session?.user?.id
+  if(!loggedUserId) {
+    return <ErrorAlert message="No user id" />
+  }
   // TODO: better handle the feed Error here
-  const { data, feedError } = await getPrivateFeedData(
-    session?.user?.id!,
+  const { data } = await getPrivateFeedData(
+    loggedUserId,
     page,
     search,
     category,

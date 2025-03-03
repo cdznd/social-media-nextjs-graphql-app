@@ -14,3 +14,9 @@ export type UserOptions = {
 export type UserFilters = {
     searchString?: string
 }
+
+import { QueryMode } from "@prisma/client";
+
+export type UsersWhereInput = {
+    name?: { contains: string; mode?: QueryMode }
+};

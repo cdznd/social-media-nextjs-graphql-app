@@ -2,7 +2,7 @@ import { FeedTypeProps } from "@/types/feed"
 import { PostType } from "@/types/post"
 import PostCard from "@/components/PostCard"
 
-import { Box, Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 
 export default function GridFeed({ posts }: FeedTypeProps) {
     const renderPosts = posts.map((post: PostType) => {

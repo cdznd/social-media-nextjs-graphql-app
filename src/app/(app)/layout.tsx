@@ -1,6 +1,4 @@
 "use client"
-import { useSession } from "next-auth/react";
-
 import Navbar from "@/components/Navbar";
 import Container from '@mui/material/Container';
 

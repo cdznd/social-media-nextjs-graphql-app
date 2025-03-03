@@ -1,10 +1,8 @@
-import { Box, Typography, Stack, Chip } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_CATEGORIES } from "@/fragments/queries/category";
 import GeneralSearch from "../../GeneralSearch";
 import CategorySelector from "./CategorySelector";
-import PublicIcon from '@mui/icons-material/Public';
-import LockIcon from '@mui/icons-material/Lock';
 import VisibilityFilter from "./VisibilityFilter";
 
 async function getCategoriesData() {

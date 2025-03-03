@@ -1,11 +1,10 @@
-import { Alert, Card, Container, Grid, Typography, Box, Stack } from "@mui/material";
+import { Alert, Container, Grid, Typography, Box, Stack } from "@mui/material";
 import UserProfileCard from "@/components/UserProfileCard";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_ALL_USERS } from "@/fragments/queries/user";
 import { auth } from "@/lib/next-auth/auth";
 import { UserType } from "@/types/user";
 import { SearchParamsProps } from "@/types/feed";
-import { ApolloError } from "@apollo/client";
 import PaginationComponent from "@/components/PaginationComponent";
 import GeneralSearch from "@/components/GeneralSearch";
 

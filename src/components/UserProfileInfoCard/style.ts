@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const StyledUserProfileInfoCard = styled(Card)(({ theme }) => ({
+export const StyledUserProfileInfoCard = styled(Card)(() => ({
     p: 3,
     textAlign: "center",
     mb: 4,
@@ -10,7 +10,7 @@ export const StyledUserProfileInfoCard = styled(Card)(({ theme }) => ({
     flex: 1
 }));
 
-export const StyledUserProfileInfoCardContent = styled(CardContent)(({ theme }) => ({
+export const StyledUserProfileInfoCardContent = styled(CardContent)(() => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "start",

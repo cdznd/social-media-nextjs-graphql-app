@@ -1,8 +1,8 @@
 import { UserType } from "./user"
 
 export type FriendshipType = {
-    id: String
-    status: String
+    id: string
+    status: string
     userA: UserType
     userB: UserType
 }

@@ -1,6 +1,5 @@
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_EXPLORE_FEED_POSTS } from "@/fragments/queries/feed";
-import { auth } from "@/lib/next-auth/auth";
 import { Container } from "@mui/material";
 import Feed from "@/components/Feed";
 
@@ -35,7 +34,7 @@ export default async function ExplorePage(
     { searchParams: { search, category, page = 1 } }: SearchParamsProps
 ) {
     // TODO: better handle the feed Error here
-    const { data, feedError } = await getExploreFeedData(
+    const { data } = await getExploreFeedData(
         page,
         search,
         category

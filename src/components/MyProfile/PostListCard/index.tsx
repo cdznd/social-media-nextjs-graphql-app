@@ -4,7 +4,7 @@ import { PostType } from "@/types/post";
 import { Stack } from "@mui/system";
 
 type PostListCardProps = {
-    title: String,
+    title: string,
     posts: PostType[],
 }
 

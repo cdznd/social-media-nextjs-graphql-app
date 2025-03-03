@@ -37,7 +37,7 @@ export const FriendshipMutations = extendType({
                     return createdFriendship
                 }
             }
-        ),
+        )
         t.field(
             'updateFriendshipStatus',
             {
@@ -76,19 +76,22 @@ export const FriendshipMutations = extendType({
                     return updateFriendshipStatusResult
                 }
             }
-        ),
-        t.field('deleteFriendship', {
-            type: Friendship,
-            args: {
-                friendshipId: nonNull(stringArg())
-            },
-            resolve: async (_parent, args, context: Context) => {
-                const { friendshipId } = args
-                const friendshipService = new FriendshipService(context)
-                const notificationService = new NotificationService(context)
-                await notificationService.deleteFriendshipNotification(friendshipId)
-                return friendshipService.deleteFriendship(friendshipId)
+        )
+        t.field(
+            'deleteFriendship',
+            {
+                type: Friendship,
+                args: {
+                    friendshipId: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { friendshipId } = args
+                    const friendshipService = new FriendshipService(context)
+                    const notificationService = new NotificationService(context)
+                    await notificationService.deleteFriendshipNotification(friendshipId)
+                    return friendshipService.deleteFriendship(friendshipId)
+                }
             }
-        })
+        )
     }
 })

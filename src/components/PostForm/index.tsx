@@ -53,7 +53,7 @@ export default function PostForm({ categories }: PostFormProps) {
     const [imageFilePreview, setImageFilePreview] = useState('');
 
     // React.FormEvent<HTMLFormElement>
-    const handleFileChange = (event: any) => {
+    const handleFileChange = (event: React.FormEvent<HTMLFormElement>) => {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
             setImageFile(selectedFile);

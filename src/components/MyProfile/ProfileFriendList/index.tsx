@@ -2,7 +2,7 @@ import UserProfileCard from "@/components/UserProfileCard";
 import { FriendWithStatus } from "@/types/friendship";
 import { Box, Card, Typography, Alert, Stack, Grid } from "@mui/material"
 
-export default function ProfileFriendList({ userFriends }: { userFriends: any }) {
+export default function ProfileFriendList({ userFriends }: { userFriends: FriendWithStatus[] }) {
     const emptyFriendList = userFriends.length === 0
     return (
         <Card sx={{

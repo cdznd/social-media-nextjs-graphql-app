@@ -1,6 +1,5 @@
 "use client"
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
 import { TRIGGER_POST_LIKE_MUTATION } from "@/fragments/mutations/mutations";
@@ -27,9 +26,7 @@ type PostEngagementProps = {
 export default function PostEngagement({ postId, likes, comments, isDisabled }: PostEngagementProps) {
 
     const { data: session } = useSession();
-    const currentUserId = session?.user?.id!
-
-    const router = useRouter()
+    const currentUserId = session?.user?.id
 
     const [isLiked, setIsLiked] = useState(false)
 
@@ -37,7 +34,7 @@ export default function PostEngagement({ postId, likes, comments, isDisabled }: 
         if (currentUserId) {
             setIsLiked(likes.some(like => like.userId === currentUserId))
         }
-    }, [currentUserId])
+    }, [currentUserId, likes])
 
     const [likeCount, setLikeCount] = useState(likes.length)
     const [triggerLike] = useMutation(TRIGGER_POST_LIKE_MUTATION);

@@ -54,12 +54,12 @@ export default function NotificationModal(
         if(open === true) {
             refetch()
         }
-    }, [open])
+    }, [open, refetch])
 
     // Split notifications between friend requests and common notifications
     const orderedNotifications = userNotifications.reduce((acc: {
-        friendshipNotifications: any[],
-        commonNotifications: any[]
+        friendshipNotifications: NotificationType[],
+        commonNotifications: NotificationType[]
     }, current: NotificationType) => {
         if (current.type === 'FRIEND_REQUEST') {
             acc.friendshipNotifications?.push(current)
@@ -152,7 +152,7 @@ export default function NotificationModal(
                                     }}>
                                         <List sx={{ p: 0 }}>
                                             {orderedNotifications.commonNotifications.length > 0 ? (
-                                                orderedNotifications.commonNotifications.map((notification: any) => (
+                                                orderedNotifications.commonNotifications.map((notification: NotificationType) => (
                                                     <CommonNotification key={notification.id} notification={notification} />
                                                 ))
                                             ) : (

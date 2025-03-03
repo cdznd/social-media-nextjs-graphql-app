@@ -1,7 +1,5 @@
 import {
     extendType,
-    nonNull,
-    stringArg
 } from "nexus";
 
 import { Context } from "@apollo/client";
@@ -12,7 +10,7 @@ export const LikeQueries = extendType({
     definition(t) {
         t.nonNull.list.field("likes", {
             type: Like,
-            resolve: (parent, args, context) => {
+            resolve: (parent, args, context: Context) => {
                 return context.prisma.like.findMany({});
             },
         });

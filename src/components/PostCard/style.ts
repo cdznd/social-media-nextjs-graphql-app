@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { gray } from '@/components/common/themePrimitives';
 
 export const StyledPostCard = styled(Card)(({ theme }) => ({
     display: 'flex',

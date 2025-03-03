@@ -20,11 +20,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useSession } from "next-auth/react";
 
 type CreatePostDTO = {
-    title: String,
-    content: String,
-    authorId: String,
-    thumbnail: String,
-    categories: String[]
+    title: string,
+    content: string,
+    authorId: string,
+    thumbnail: string,
+    categories: string[]
 };
 
 import { CategoryType } from "@/types/category";
@@ -37,7 +37,7 @@ export default function PostForm({ categories }: PostFormProps) {
 
     const router = useRouter()
 
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
     const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
 

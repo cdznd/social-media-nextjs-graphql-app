@@ -40,7 +40,7 @@ export default async function Home(
   const { search, category, page = 1, visibility } = await searchParams
   const session = await auth()
   // TODO: better handle the feed Error here
-  const { data, feedError } = await getPrivateFeedData(
+  const { data } = await getPrivateFeedData(
     session?.user?.id!,
     page,
     search,

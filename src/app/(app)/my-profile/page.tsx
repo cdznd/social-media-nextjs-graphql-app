@@ -1,4 +1,4 @@
-import { Container, Typography, Button } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_MY_USER_PROFILE } from "@/fragments/queries/profile";

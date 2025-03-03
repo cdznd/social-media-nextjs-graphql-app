@@ -25,8 +25,8 @@ const CredentialsSignupForm = () => {
     const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
     const [passwordError, setPasswordError] = useState<boolean>(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
-    const [usernameError, setUsernameError] = useState<boolean>(false)
-    const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>('')
+    // const [usernameError, setUsernameError] = useState<boolean>(false)
+    // const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>('')
     const [submitError, setSubmitError] = useState<boolean>(false)
     const [submitErrorMessage, setSubmitErrorMessage] = useState<string>('')
 
@@ -149,9 +149,9 @@ const CredentialsSignupForm = () => {
                     required
                     fullWidth
                     id="username"
-                    error={usernameError}
-                    helperText={usernameErrorMessage}
-                    color={usernameError ? 'error' : 'primary'}
+                    // error={usernameError}
+                    // helperText={usernameErrorMessage}
+                    // color={usernameError ? 'error' : 'primary'}
                 />
             </FormControl>
             <FormControlLabel

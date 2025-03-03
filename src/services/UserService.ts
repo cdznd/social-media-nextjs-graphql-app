@@ -1,5 +1,5 @@
 import { Context } from "@/lib/prisma/context"
-import { UserOptions, UserFilters } from "@/types/user"
+import { UserOptions, UserFilters, UsersWhereInput } from "@/types/user"
 import { hash } from "bcrypt"
 
 type createUserDTO = {
@@ -61,7 +61,7 @@ export default class UserService {
     async getUsers(options: UserOptions, filters: UserFilters) {
         const { take = 10, skip } = options
         const { searchString } = filters
-        const where: any = searchString ? {
+        const where: UsersWhereInput = searchString ? {
             name: { contains: searchString, mode: 'insensitive' }
         } : {}
         const totalCount = await this.context.prisma.user.count({ where })

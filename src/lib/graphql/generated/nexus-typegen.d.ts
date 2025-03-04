@@ -581,7 +581,7 @@ export interface NexusGenArgTypes {
     }
     updateFriendshipStatus: { // args
       friendshipId: string; // String!
-      status: string; // String!
+      status: NexusGenEnums['FriendshipStatus']; // FriendshipStatus!
     }
     updateNotificationReadStatus: { // args
       notificationId: string; // String!

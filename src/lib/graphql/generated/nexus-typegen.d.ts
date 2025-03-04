@@ -126,18 +126,18 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Notification: { // root type
-    actor: NexusGenRootTypes['User']; // User!
+    actor?: NexusGenRootTypes['User'] | null; // User
     actorId: string; // String!
     content: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     entityId?: string | null; // String
-    entityType: string; // String!
-    expiresAt: NexusGenScalars['DateTime']; // DateTime!
+    entityType: NexusGenEnums['NotificationEntityType']; // NotificationEntityType!
+    expiresAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id: string; // ID!
     read: boolean; // Boolean!
     type: NexusGenEnums['NotificationType']; // NotificationType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    user: NexusGenRootTypes['User']; // User!
+    user?: NexusGenRootTypes['User'] | null; // User
     userId: string; // String!
   }
   Post: { // root type
@@ -289,18 +289,18 @@ export interface NexusGenFieldTypes {
     updateNotificationReadStatus: NexusGenRootTypes['Notification'] | null; // Notification
   }
   Notification: { // field return type
-    actor: NexusGenRootTypes['User']; // User!
+    actor: NexusGenRootTypes['User'] | null; // User
     actorId: string; // String!
     content: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     entityId: string | null; // String
-    entityType: string; // String!
-    expiresAt: NexusGenScalars['DateTime']; // DateTime!
+    entityType: NexusGenEnums['NotificationEntityType']; // NotificationEntityType!
+    expiresAt: NexusGenScalars['DateTime'] | null; // DateTime
     id: string; // ID!
     read: boolean; // Boolean!
     type: NexusGenEnums['NotificationType']; // NotificationType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    user: NexusGenRootTypes['User']; // User!
+    user: NexusGenRootTypes['User'] | null; // User
     userId: string; // String!
   }
   Post: { // field return type
@@ -463,7 +463,7 @@ export interface NexusGenFieldTypeNames {
     content: 'String'
     createdAt: 'DateTime'
     entityId: 'String'
-    entityType: 'String'
+    entityType: 'NotificationEntityType'
     expiresAt: 'DateTime'
     id: 'ID'
     read: 'Boolean'

@@ -113,18 +113,18 @@ type Mutation {
 }
 
 type Notification {
-  actor: User!
+  actor: User
   actorId: String!
   content: String!
   createdAt: DateTime!
   entityId: String
-  entityType: String!
-  expiresAt: DateTime!
+  entityType: NotificationEntityType!
+  expiresAt: DateTime
   id: ID!
   read: Boolean!
   type: NotificationType!
   updatedAt: DateTime!
-  user: User!
+  user: User
   userId: String!
 }
 

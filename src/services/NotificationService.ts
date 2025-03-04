@@ -1,14 +1,5 @@
 import { Context } from "@/lib/prisma/context";
-
-type createNotificationDTO = {
-    type: "LIKE" | "COMMENT" | "FRIEND_REQUEST" | "FRIEND_REQUEST_RESPONSE" | undefined | null, // TODO: Remove undefined and null
-    content: string,
-    userId: string,
-    actorId: string,
-    entityId?: string,
-    entityType?: "POST" | "COMMENT" | "FRIENDSHIP" | undefined | null, // TODO: Remove undefined and null
-    read?: boolean,
-}
+import { createNotificationDTO } from "@/types/notification";
 
 export default class NotificationService {
 
@@ -26,6 +17,25 @@ export default class NotificationService {
                 entityId,
                 entityType,
                 read: false
+            }
+        })
+    }
+
+    async updateNotificationReadStatus(notificationId: string) {
+        return this.context.prisma.notification.update({
+            where: {
+                id: notificationId
+            },
+            data: {
+                read: true
+            }
+        })
+    }
+
+    async deleteNotification(notificationId: string) {
+        return this.context.prisma.notification.delete({
+            where: {
+                id: notificationId,
             }
         })
     }
@@ -55,14 +65,6 @@ export default class NotificationService {
             }
         })
     }
-    
-    async deleteNotification(notificationId: string) {
-        return this.context.prisma.notification.delete({
-            where: {
-                id: notificationId,
-            }
-        })
-    }
 
     // Deleted any friend_request or friend_request_response notification if exists
     async deleteFriendshipNotification(entityId: string) {
@@ -76,17 +78,6 @@ export default class NotificationService {
         return this.context.prisma.notification.delete({
             where: {
                 id: currentFriendshipNotification.id
-            }
-        })
-    }
-
-    async updateNotificationReadStatus(notificationId: string) {
-        return this.context.prisma.notification.update({
-            where: {
-                id: notificationId
-            },
-            data: {
-                read: true
             }
         })
     }

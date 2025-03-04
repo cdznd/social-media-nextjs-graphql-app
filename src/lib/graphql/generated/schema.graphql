@@ -36,7 +36,7 @@ type Authenticator {
 type Category {
   id: ID
   name: String
-  posts: [Post!]!
+  posts: [Post!]
 }
 
 type Comment {

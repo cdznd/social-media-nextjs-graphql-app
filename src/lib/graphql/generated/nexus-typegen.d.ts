@@ -81,6 +81,7 @@ export interface NexusGenObjects {
   Category: { // root type
     id?: string | null; // ID
     name?: string | null; // String
+    posts?: NexusGenRootTypes['Post'][] | null; // [Post!]
   }
   Comment: { // root type
     content?: string | null; // String
@@ -228,7 +229,7 @@ export interface NexusGenFieldTypes {
   Category: { // field return type
     id: string | null; // ID
     name: string | null; // String
-    posts: NexusGenRootTypes['Post'][]; // [Post!]!
+    posts: NexusGenRootTypes['Post'][] | null; // [Post!]
   }
   Comment: { // field return type
     content: string | null; // String

@@ -3,7 +3,6 @@ import { Context } from "@/lib/prisma/context";
 
 import { Post } from "./Post";
 import { Like } from "./Like";
-import { Comment } from "./Comment";
 
 import { Notification } from "./Notification";
 

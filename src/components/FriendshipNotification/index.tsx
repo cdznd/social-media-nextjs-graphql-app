@@ -8,7 +8,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { GET_USER_NOTIFICATIONS } from "@/fragments/queries/notification"
 import { UPDATE_FRIENDSHIP_STATUS_MUTATION } from "@/fragments/mutations/friendship"
 import { UPDATE_NOTIFICATION_READ_STATUS_MUTATION } from "@/fragments/mutations/notification"
-import { NotificationType } from "@/types/notification"
 import { UserType } from "@/types/user"
 import { gray, brand } from "../common/themePrimitives"
 import { FriendshipNotificationProps } from "@/types/notification";

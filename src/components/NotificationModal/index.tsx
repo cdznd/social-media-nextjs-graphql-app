@@ -22,11 +22,7 @@ import CommonNotification from '../CommonNotification';
 import ReadNotificationModal from './ReadNotificationsModal';
 import EmptyNotifications from './EmptyNotifications';
 import { NotificationType } from '@/types/notification';
-
-interface NotificationModalProps {
-    open: boolean;
-    onClose: () => void;
-}
+import { NotificationModalProps } from '@/types/notification';
 
 export default function NotificationModal(
     { open, onClose }: NotificationModalProps) {
@@ -50,6 +46,7 @@ export default function NotificationModal(
     )
     const userNotifications = data?.notifications ?? []
 
+    // Everytime the modal in opened refetch the notifications.
     useEffect(() => {
         if(open === true) {
             refetch()

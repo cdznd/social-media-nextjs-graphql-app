@@ -9,7 +9,7 @@ export const CREATE_FRIENDSHIP_REQUEST_MUTATION = gql`
 `
 
 export const UPDATE_FRIENDSHIP_STATUS_MUTATION = gql`
-    mutation UpdateFriendshipStatus($friendshipId: String!, $status: String!) {
+    mutation UpdateFriendshipStatus($friendshipId: String!, $status: FriendshipStatus!) {
         updateFriendshipStatus(friendshipId: $friendshipId, status: $status) {
             id
         }

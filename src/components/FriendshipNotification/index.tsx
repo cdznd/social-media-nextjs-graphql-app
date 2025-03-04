@@ -11,10 +11,7 @@ import { UPDATE_NOTIFICATION_READ_STATUS_MUTATION } from "@/fragments/mutations/
 import { NotificationType } from "@/types/notification"
 import { UserType } from "@/types/user"
 import { gray, brand } from "../common/themePrimitives"
-
-type FriendshipNotificationProps = {
-    notification: NotificationType
-}
+import { FriendshipNotificationProps } from "@/types/notification";
 
 export default function FriendshipNotification({ notification }: FriendshipNotificationProps) {
     // The person who sent the friend request
@@ -40,9 +37,9 @@ export default function FriendshipNotification({ notification }: FriendshipNotif
 
     const handleAcceptFriendship = async () => {
         try {
-            await updateFriendshipStatus({ // OBS, every update on friendship status, creates a notification on the backend
+            await updateFriendshipStatus({
                 variables: {
-                    friendshipId: notification.entityId, // EntityId from the notification
+                    friendshipId: notification.entityId,
                     status: 'ACCEPTED'
                 }
             })

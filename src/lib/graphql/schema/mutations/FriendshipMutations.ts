@@ -44,7 +44,7 @@ export const FriendshipMutations = extendType({
                 type: Friendship,
                 args: {
                     friendshipId: nonNull(stringArg()),
-                    status: nonNull(stringArg())
+                    status: nonNull('FriendshipStatus')
                 },
                 resolve: async (_parent, args, context: Context) => {
                     const { friendshipId, status = 'PENDING' } = args

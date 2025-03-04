@@ -36,6 +36,8 @@ export default class UserService {
             include: {
                 posts: {
                     include: {
+                        categories: true,
+                        comments: true,
                         likes: true
                     }
                 },
@@ -43,11 +45,24 @@ export default class UserService {
                     include: {
                         post: {
                             include: {
+                                categories: true,
+                                comments: true,
                                 likes: true
                             }
                         }
                     }
                 },
+                // comments: {
+                //     include: {
+                //         post: {
+                //             include: {
+                //                 categories: true,
+                //                 comments: true,
+                //                 likes: true
+                //             }
+                //         }
+                //     }
+                // },
                 notificationsSent: true,
                 notificationsReceived: true
             }

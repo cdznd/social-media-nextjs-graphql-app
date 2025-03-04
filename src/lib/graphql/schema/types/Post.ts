@@ -17,8 +17,8 @@ export const Post = objectType({
         t.field("author", { type: User });
         t.nonNull.field("visibility", { type: PostVisibilityType })
         t.list.nonNull.field("likes", { type: Like });
-        t.nonNull.list.nonNull.field("comments", { type: Comment });
-        t.nonNull.list.nonNull.field("categories", { type: Category });
+        t.list.nonNull.field("comments", { type: Comment });
+        t.list.nonNull.field("categories", { type: Category });
         t.nonNull.field("createdAt", { type: "DateTime" });
         t.nonNull.field("updatedAt", { type: "DateTime" });
     },

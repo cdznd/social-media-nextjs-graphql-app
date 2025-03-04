@@ -4,9 +4,9 @@ import { hash } from "bcrypt";
 
 async function main() {
 
-    const numberOfUsers = 10
-    const numberOfCategories = 10
-    const numberOfPosts = 100
+    const numberOfUsers = 1000
+    const numberOfCategories = 100
+    const numberOfPosts = 10000
 
     // Creating users
     for (let i = 0; i < numberOfUsers; i++) {

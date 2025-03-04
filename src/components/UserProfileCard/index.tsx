@@ -15,9 +15,6 @@ type UserProfileCardProps = {
 export default function UserProfileCard(
   { user }: UserProfileCardProps
 ) {
-
-  console.log('checking user', user);
-
   return (
     <Card
       key={user.id}

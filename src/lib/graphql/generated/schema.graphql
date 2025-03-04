@@ -36,7 +36,7 @@ type Authenticator {
 type Category {
   id: ID
   name: String
-  posts: [Post!]!
+  posts: [Post!]
 }
 
 type Comment {
@@ -113,18 +113,18 @@ type Mutation {
 }
 
 type Notification {
-  actor: User!
+  actor: User
   actorId: String!
   content: String!
   createdAt: DateTime!
   entityId: String
-  entityType: String!
-  expiresAt: DateTime!
+  entityType: NotificationEntityType!
+  expiresAt: DateTime
   id: ID!
   read: Boolean!
   type: NotificationType!
   updatedAt: DateTime!
-  user: User!
+  user: User
   userId: String!
 }
 
@@ -144,8 +144,8 @@ enum NotificationType {
 type Post {
   author: User
   authorId: String
-  categories: [Category!]!
-  comments: [Comment!]!
+  categories: [Category!]
+  comments: [Comment!]
   content: String
   createdAt: DateTime!
   id: ID
@@ -169,8 +169,6 @@ type Query {
   friendship(fromUserId: String!, toUserId: String!): Friendship
   likes: [Like]!
   notifications(userId: String!): [Notification!]!
-  post(postId: String!): Post
-  posts: [Post!]!
   privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!, visibility: String): DefaultFeedResponse!
   privateProfileFeed(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!, visibility: String): DefaultFeedResponse!
   privateProfileFeedInfo(userId: String!): InfoFeedResponse!
@@ -193,9 +191,6 @@ enum SortOrder {
 }
 
 type User {
-  accounts: [Account!]
-  authenticators: [Authenticator!]
-  comments: [Comment!]
   createdAt: DateTime!
   email: String
   emailVerified: DateTime
@@ -208,7 +203,6 @@ type User {
   notificationsSent: [Notification!]
   password: String
   posts: [Post!]
-  sessions: [Session!]
   updatedAt: DateTime!
   username: String!
 }

@@ -1,6 +1,3 @@
-'use client';
-
-import React from 'react';
 import { 
   Container, 
   Typography, 
@@ -8,6 +5,7 @@ import {
   Box, 
   Stack 
 } from '@mui/material';
+
 import Link from 'next/link';
 
 export default function LandingPage() {

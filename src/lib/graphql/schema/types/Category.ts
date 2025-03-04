@@ -6,9 +6,6 @@ export const Category = objectType({
     definition(t) {
         t.id("id");
         t.string("name");
-        t.nonNull.list.nonNull.field("posts", {
-            type: Post,
-            resolve: (_parent) => _parent.posts ?? []
-        });
+        t.list.nonNull.field("posts", { type: Post });
     },
 });

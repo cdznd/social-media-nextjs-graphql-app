@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import { getToken } from 'next-auth/jwt'; // Used server side to get JWT Tokens
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request });
@@ -34,7 +34,6 @@ export async function middleware(request: NextRequest) {
   }
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: [
     /*

@@ -11,11 +11,9 @@ export type FeedTypeProps = {
   posts: PostType[]
 }
 
-export type SearchParamsProps = {
-    searchParams: {
-      page?: number
-      search?: string
-      category?: string
-      visibility?: string
-    }
-}
+export type SearchParamsProps = Promise<{
+  page?: number
+  search?: string
+  category?: string
+  visibility?: string
+}>

@@ -1,10 +1,12 @@
+import { ReactNode } from "react"
 import { FeedTypeProps } from "@/types/feed"
 import PostCard from "@/components/PostCard"
 import { Grid } from "@mui/material"
 
+
 export default function ExploreFeed({ posts }: FeedTypeProps) {
 
-    const renderPosts = posts.reduce((acc: JSX.Element[], _, index: number) => {
+    const renderPosts = posts.reduce((acc: ReactNode[], _, index: number) => {
         if (index % 5 === 0) {
             // Every 5 items, start a new chunk: first row (2 items), second row (3 items)
             const row1 = posts.slice(index, index + 2); // 2 posts

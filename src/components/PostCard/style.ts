@@ -11,7 +11,7 @@ export const StyledPostCard = styled(Card)(({ theme }) => ({
     gap: '8px',
     padding: 0,
     height: '100%',
-    backgroundColor: (theme.vars || theme).palette.background.paper,
+    backgroundColor: theme.palette.background.paper,
     '&:hover': {
         backgroundColor: 'transparent',
         cursor: 'pointer',
@@ -32,7 +32,7 @@ export const StyledPostCardInfo = styled(Box)(({ theme }) => ({
     padding: '1rem',
     paddingTop: '.5rem',
     paddingBottom: '.5rem',
-    background: (theme.vars || theme).palette.background.paper,
+    background: theme.palette.background.paper,
 }))
 
 export const StyledPostCardContent = styled(CardContent)({

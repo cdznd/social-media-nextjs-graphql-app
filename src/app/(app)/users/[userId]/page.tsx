@@ -14,11 +14,9 @@ import { SearchParamsProps } from "@/types/feed"
 import { Friendship } from "@prisma/client"
 import { ShortFriendshipType } from "@/types/friendship"
 
-type UserPageParams = {
-    params: {
-        userId: string,
-    }
-}
+type UserPageParams = Promise<{
+    userId: string,
+}>
 
 async function getCurrentProfileData(userId: string) {
     const apolloClient = createApolloClient()
@@ -81,24 +79,24 @@ async function getCurrentProfileFeedInfo(
 }
 
 export default async function UserPage(
-    { params, searchParams }: UserPageParams & SearchParamsProps,
+    props: { params: UserPageParams, searchParams: SearchParamsProps },
 ) {
 
     const {
         userId,
-    } = await params
+    } = await props.params
 
     const {
         page = 1,
         search,
         category,
         visibility
-    } = await searchParams
+    } = await props.searchParams
 
     const session = await auth()
     const loggedUserId = session?.user?.id
 
-    if(!loggedUserId) {
+    if (!loggedUserId) {
         return <ErrorAlert message="No Logged User ID" />
     }
 
@@ -111,8 +109,8 @@ export default async function UserPage(
     // Get all friends from this currentUser
     const currentProfileFriends = currentUser?.friends ?? [];
     const numberOfFriends = currentProfileFriends.reduce(
-        (acc: number, friendship: Friendship ) => {
-            if(friendship?.status === 'ACCEPTED') {
+        (acc: number, friendship: Friendship) => {
+            if (friendship?.status === 'ACCEPTED') {
                 acc += 1
             }
             return acc
@@ -130,7 +128,7 @@ export default async function UserPage(
     let profileFeedPostsTotalPages;
     if (isFriend || isLoggedUserProfile) {
         const { data } = await getCurrentProfileFeed(userId, page, search, category, visibility?.toUpperCase())
-        const { 
+        const {
             posts: feedPosts = [],
             totalCount = 0,
             totalPages = 1
@@ -139,7 +137,7 @@ export default async function UserPage(
         profileFeedPostsCount = totalCount
         profileFeedPostsTotalPages = totalPages
     }
-    
+
     return (
         <Container>
             <UserProfileInfoCard

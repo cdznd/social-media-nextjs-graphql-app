@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
         const arrayBuffer = await file.arrayBuffer();
         const fileBuffer = Buffer.from(arrayBuffer);
         // Upload file to S3
-        const fileUrl = await uploadFileToS3(fileBuffer, file.name, file.type);
+        const fileUrl = await uploadFileToS3(fileBuffer, file.name);
         return NextResponse.json({ success: true, fileUrl });
     } catch (error) {
         return NextResponse.json({ error: `Error while uploading image to S3, ${error}` })

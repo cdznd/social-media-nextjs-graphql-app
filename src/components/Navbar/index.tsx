@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, MouseEvent } from 'react'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
@@ -31,10 +31,10 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
 
-  const handleMenuOpen = (event) => {
+  const handleMenuOpen = (event: MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -159,12 +159,13 @@ export default function Navbar() {
                     </Typography>
 
                     {/* Profile Picture with Dropdown Menu */}
-                    <Avatar
-                      alt={userLogged.name || 'User'}
-                      src={userLogged?.image}
-                      onClick={handleMenuOpen}
-                      sx={{ cursor: 'pointer' }}
-                    />
+                    <Box onClick={handleMenuOpen}>
+                      <Avatar
+                        alt={userLogged.name || 'User'}
+                        src={userLogged?.image}
+                        sx={{ cursor: 'pointer' }}
+                      />
+                    </Box>
 
                     {/* Dropdown Menu */}
                     <Menu

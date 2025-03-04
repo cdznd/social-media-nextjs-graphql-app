@@ -27,3 +27,12 @@ export type createNotificationDTO = {
     entityType: EntityTypes;
     read?: boolean;
 }
+
+export type NotificationModalProps = {
+    open: boolean;
+    onClose: () => void;
+}
+
+export type FriendshipNotificationProps = {
+    notification: NotificationType
+}

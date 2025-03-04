@@ -17,32 +17,34 @@ import { GET_READ_USER_NOTIFICATIONS } from '@/fragments/queries/notification';
 import EmptyNotifications from '../EmptyNotifications';
 import CommonNotification from '../../CommonNotification';
 import { NotificationType } from '@/types/notification';
-
-interface ReadNotificationModalProps {
-    open: boolean;
-    onClose: () => void;
-}
+import { NotificationModalProps } from '@/types/notification';
 
 export default function ReadNotificationModal(
-    { open, onClose }: ReadNotificationModalProps) {
-
+    { open, onClose }: NotificationModalProps
+) {
     const { data: session } = useSession();
     const loggedUserId = session?.user?.id
 
-    const { data, loading, error, refetch } = useQuery(GET_READ_USER_NOTIFICATIONS, {
-        variables: {
-            userId: loggedUserId
-        },
-        skip: !loggedUserId
-    })
+    const { data, loading, error, refetch } = useQuery(
+        GET_READ_USER_NOTIFICATIONS,
+        {
+            variables: {
+                userId: loggedUserId
+            },
+            skip: !loggedUserId
+        }
+    )
+
     const userNotifications = data?.readNotifications ?? []
 
+    // Everytime the modal in opened refetch the notifications.
     useEffect(() => {
         if (open === true) {
             refetch()
         }
     }, [open, refetch])
 
+    // Split notifications between friend requests and common notifications
     const orderedNotifications = userNotifications.reduce((acc: {
         friendshipNotifications: NotificationType[],
         commonNotifications: NotificationType[]
@@ -83,8 +85,8 @@ export default function ReadNotificationModal(
                 {
                     (!error && !loading) ? (
                         <>
-                            <Stack 
-                                direction="row" 
+                            <Stack
+                                direction="row"
                                 justifyContent="space-between"
                                 alignItems="center"
                                 mb={2}
@@ -120,7 +122,7 @@ export default function ReadNotificationModal(
                                     </Box>
                                 )
                             }
-                            { emptyNotifications && <EmptyNotifications /> }
+                            {emptyNotifications && <EmptyNotifications />}
                         </>
                     ) : <Stack direction="row" alignItems="center" justifyContent="center">
                         <CircularProgress />

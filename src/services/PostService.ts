@@ -31,15 +31,15 @@ export default class PostService {
         })
     }
 
-    async getPostById(postId: string) {
-        const result = await this.context.prisma.post.findUnique({
-            where: { id: postId }
-        })
-        if(!result) {
-            throw new Error('Post not found')
-        }
-        return result
-    }
+    // async getPostById(postId: string) {
+    //     const result = await this.context.prisma.post.findUnique({
+    //         where: { id: postId }
+    //     })
+    //     if(!result) {
+    //         throw new Error('Post not found')
+    //     }
+    //     return result
+    // }
 
     async getPosts() {
         const result = await this.context.prisma.post.findMany({})

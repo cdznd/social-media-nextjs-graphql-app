@@ -164,9 +164,6 @@ export interface NexusGenObjects {
     userId?: string | null; // String
   }
   User: { // root type
-    accounts?: NexusGenRootTypes['Account'][] | null; // [Account!]
-    authenticators?: NexusGenRootTypes['Authenticator'][] | null; // [Authenticator!]
-    comments?: NexusGenRootTypes['Comment'][] | null; // [Comment!]
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     email?: string | null; // String
     emailVerified?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -178,7 +175,6 @@ export interface NexusGenObjects {
     notificationsSent?: NexusGenRootTypes['Notification'][] | null; // [Notification!]
     password?: string | null; // String
     posts?: NexusGenRootTypes['Post'][] | null; // [Post!]
-    sessions?: NexusGenRootTypes['Session'][] | null; // [Session!]
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     username: string; // String!
   }
@@ -325,8 +321,6 @@ export interface NexusGenFieldTypes {
     friendship: NexusGenRootTypes['Friendship'] | null; // Friendship
     likes: Array<NexusGenRootTypes['Like'] | null>; // [Like]!
     notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
-    post: NexusGenRootTypes['Post'] | null; // Post
-    posts: NexusGenRootTypes['Post'][]; // [Post!]!
     privateFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeed: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeedInfo: NexusGenRootTypes['InfoFeedResponse']; // InfoFeedResponse!
@@ -342,9 +336,6 @@ export interface NexusGenFieldTypes {
     userId: string | null; // String
   }
   User: { // field return type
-    accounts: NexusGenRootTypes['Account'][] | null; // [Account!]
-    authenticators: NexusGenRootTypes['Authenticator'][] | null; // [Authenticator!]
-    comments: NexusGenRootTypes['Comment'][] | null; // [Comment!]
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     email: string | null; // String
     emailVerified: NexusGenScalars['DateTime'] | null; // DateTime
@@ -357,7 +348,6 @@ export interface NexusGenFieldTypes {
     notificationsSent: NexusGenRootTypes['Notification'][] | null; // [Notification!]
     password: string | null; // String
     posts: NexusGenRootTypes['Post'][] | null; // [Post!]
-    sessions: NexusGenRootTypes['Session'][] | null; // [Session!]
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     username: string; // String!
   }
@@ -494,8 +484,6 @@ export interface NexusGenFieldTypeNames {
     friendship: 'Friendship'
     likes: 'Like'
     notifications: 'Notification'
-    post: 'Post'
-    posts: 'Post'
     privateFeedPosts: 'DefaultFeedResponse'
     privateProfileFeed: 'DefaultFeedResponse'
     privateProfileFeedInfo: 'InfoFeedResponse'
@@ -511,9 +499,6 @@ export interface NexusGenFieldTypeNames {
     userId: 'String'
   }
   User: { // field return type name
-    accounts: 'Account'
-    authenticators: 'Authenticator'
-    comments: 'Comment'
     createdAt: 'DateTime'
     email: 'String'
     emailVerified: 'DateTime'
@@ -526,7 +511,6 @@ export interface NexusGenFieldTypeNames {
     notificationsSent: 'Notification'
     password: 'String'
     posts: 'Post'
-    sessions: 'Session'
     updatedAt: 'DateTime'
     username: 'String'
   }
@@ -609,9 +593,6 @@ export interface NexusGenArgTypes {
     }
     notifications: { // args
       userId: string; // String!
-    }
-    post: { // args
-      postId: string; // String!
     }
     privateFeedPosts: { // args
       category?: string | null; // String

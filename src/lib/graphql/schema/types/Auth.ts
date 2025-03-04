@@ -18,12 +18,12 @@ export const User = objectType({
         t.nonNull.string("username")
         t.nullable.string("image");
 
-        t.list.nonNull.field("accounts", { type: "Account" });
-        t.list.nonNull.field("sessions", { type: "Session" });
-        t.list.nonNull.field("authenticators", { type: "Authenticator" });
+        // t.nullable.list.nonNull.field("accounts", { type: Account });
+        // t.nullable.list.nonNull.field("sessions", { type: Session });
+        // t.nullable.list.nonNull.field("authenticators", { type: Authenticator });
         t.list.nonNull.field("posts", { type: Post });
         t.list.nonNull.field("likes", { type: Like });
-        t.list.nonNull.field("comments", { type: Comment });
+        // t.list.nonNull.field("comments", { type: Comment });
 
         t.list.nonNull.field("friends", {
             type: "FriendWithStatus",

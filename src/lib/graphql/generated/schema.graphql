@@ -144,8 +144,8 @@ enum NotificationType {
 type Post {
   author: User
   authorId: String
-  categories: [Category!]!
-  comments: [Comment!]!
+  categories: [Category!]
+  comments: [Comment!]
   content: String
   createdAt: DateTime!
   id: ID

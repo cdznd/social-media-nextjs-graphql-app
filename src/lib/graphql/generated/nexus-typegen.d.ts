@@ -143,8 +143,8 @@ export interface NexusGenObjects {
   Post: { // root type
     author?: NexusGenRootTypes['User'] | null; // User
     authorId?: string | null; // String
-    categories: NexusGenRootTypes['Category'][]; // [Category!]!
-    comments: NexusGenRootTypes['Comment'][]; // [Comment!]!
+    categories?: NexusGenRootTypes['Category'][] | null; // [Category!]
+    comments?: NexusGenRootTypes['Comment'][] | null; // [Comment!]
     content?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id?: string | null; // ID
@@ -302,8 +302,8 @@ export interface NexusGenFieldTypes {
   Post: { // field return type
     author: NexusGenRootTypes['User'] | null; // User
     authorId: string | null; // String
-    categories: NexusGenRootTypes['Category'][]; // [Category!]!
-    comments: NexusGenRootTypes['Comment'][]; // [Comment!]!
+    categories: NexusGenRootTypes['Category'][] | null; // [Category!]
+    comments: NexusGenRootTypes['Comment'][] | null; // [Comment!]
     content: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string | null; // ID

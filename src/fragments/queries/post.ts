@@ -39,3 +39,12 @@ export const POST_CATEGORIES = gql`
         }
     }
 `
+
+export const GET_POST = gql`
+    query GetPost($postId: String!) {
+        post(postId: $postId) {
+            ...PostFields
+        }
+    }
+    ${POST_FIELDS}
+`

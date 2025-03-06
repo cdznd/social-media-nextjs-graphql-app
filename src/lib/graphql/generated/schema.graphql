@@ -169,6 +169,7 @@ type Query {
   friendship(fromUserId: String!, toUserId: String!): Friendship
   likes: [Like]!
   notifications(userId: String!): [Notification!]!
+  post(postId: String!): Post
   privateFeedPosts(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!, visibility: String): DefaultFeedResponse!
   privateProfileFeed(category: String, orderBy: SortOrder = desc, searchString: String, skip: Int, take: Int, userId: String!, visibility: String): DefaultFeedResponse!
   privateProfileFeedInfo(userId: String!): InfoFeedResponse!

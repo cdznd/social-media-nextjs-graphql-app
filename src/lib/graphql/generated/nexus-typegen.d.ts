@@ -322,6 +322,7 @@ export interface NexusGenFieldTypes {
     friendship: NexusGenRootTypes['Friendship'] | null; // Friendship
     likes: Array<NexusGenRootTypes['Like'] | null>; // [Like]!
     notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
+    post: NexusGenRootTypes['Post'] | null; // Post
     privateFeedPosts: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeed: NexusGenRootTypes['DefaultFeedResponse']; // DefaultFeedResponse!
     privateProfileFeedInfo: NexusGenRootTypes['InfoFeedResponse']; // InfoFeedResponse!
@@ -485,6 +486,7 @@ export interface NexusGenFieldTypeNames {
     friendship: 'Friendship'
     likes: 'Like'
     notifications: 'Notification'
+    post: 'Post'
     privateFeedPosts: 'DefaultFeedResponse'
     privateProfileFeed: 'DefaultFeedResponse'
     privateProfileFeedInfo: 'InfoFeedResponse'
@@ -594,6 +596,9 @@ export interface NexusGenArgTypes {
     }
     notifications: { // args
       userId: string; // String!
+    }
+    post: { // args
+      postId: string; // String!
     }
     privateFeedPosts: { // args
       category?: string | null; // String

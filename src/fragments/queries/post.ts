@@ -27,6 +27,8 @@ export const POST_AUTHOR = gql`
             id
             name
             image
+            email
+            username
         }
     }
 `
@@ -44,7 +46,11 @@ export const GET_POST = gql`
     query GetPost($postId: String!) {
         post(postId: $postId) {
             ...PostFields
+            ...PostAuthor
+            ...PostCategories
         }
     }
     ${POST_FIELDS}
+    ${POST_AUTHOR}
+    ${POST_CATEGORIES}
 `

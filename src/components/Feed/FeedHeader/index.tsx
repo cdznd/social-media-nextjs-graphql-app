@@ -46,6 +46,7 @@ export default async function FeedHeader({ numberOfPosts, feedType }: FeedHeader
                         flexDirection: "row",
                         gap: 3,
                         overflow: "auto",
+                        flex: 1
                     }}
                 >
                     {

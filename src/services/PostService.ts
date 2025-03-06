@@ -9,10 +9,10 @@ import {
 import FriendshipService from "./FriendshipService"
 
 export default class PostService {
-    
+
     constructor(
         private context: Context
-    ) {}
+    ) { }
 
     async createPost({ title, content, authorId, thumbnail, categories }: CreatePostDTO) {
         return this.context.prisma.post.create({
@@ -32,10 +32,16 @@ export default class PostService {
     }
 
     async getPostById(postId: string) {
-        const result = await this.context.prisma.post.findUnique({
-            where: { id: postId }
-        })
-        if(!result) {
+        const result =
+            await this.context.prisma.post.findUnique({
+                where: { id: postId },
+                include: {
+                    author: true,
+                    likes: true,
+                    comments: true
+                }
+            })
+        if (!result) {
             throw new Error('Post not found')
         }
         return result
@@ -43,7 +49,7 @@ export default class PostService {
 
     async getPosts() {
         const result = await this.context.prisma.post.findMany({})
-        if(!result) {
+        if (!result) {
             throw new Error('Posts not found')
         }
         return result
@@ -54,7 +60,7 @@ export default class PostService {
         options: FeedOptions,
         filters: FeedFilters,
     ) {
-        const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
+        const { orderBy, skip, take = 10 } = options // TODO: Take is by default 10, better organize it
         const { searchString, category, visibility } = filters
         const friendshipService = new FriendshipService(this.context)
         // Getting all friends of this userid
@@ -100,7 +106,7 @@ export default class PostService {
         options: FeedOptions,
         filters: FeedFilters,
     ) {
-        const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
+        const { orderBy, skip, take = 10 } = options // TODO: Take is by default 10, better organize it
         const { searchString, category } = filters
         // Where clause matching search string AND category if it exists
         const where: PostWhereInput = {
@@ -141,7 +147,7 @@ export default class PostService {
         options: FeedOptions,
         filters: FeedFilters,
     ) {
-        const { orderBy, skip, take = 10} = options // TODO: Take is by default 10, better organize it
+        const { orderBy, skip, take = 10 } = options // TODO: Take is by default 10, better organize it
         const { searchString, category, visibility } = filters
         // Where clause matching search string AND category if it exists
         const where: PostWhereInput = {
@@ -178,14 +184,18 @@ export default class PostService {
     }
 
     async getProfileFeedInfo(userId: string) {
-        const publicPostsCount = await this.context.prisma.post.count({ where: {
-            authorId: userId,
-            visibility: 'PUBLIC'
-        } })
-        const privatePostsCount = await this.context.prisma.post.count({ where: {
-            authorId: userId,
-            visibility: 'PRIVATE'
-        } })
+        const publicPostsCount = await this.context.prisma.post.count({
+            where: {
+                authorId: userId,
+                visibility: 'PUBLIC'
+            }
+        })
+        const privatePostsCount = await this.context.prisma.post.count({
+            where: {
+                authorId: userId,
+                visibility: 'PRIVATE'
+            }
+        })
         return { publicPostsCount, privatePostsCount }
     }
 

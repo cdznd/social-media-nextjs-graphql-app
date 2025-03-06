@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import {
     Chip,
@@ -156,8 +156,15 @@ export default function PostCard({ postData, variants = [], position }: PostCard
                     />
                 </Stack>
                 {
-                    !minInfo ? <Typography variant='h6'>{postData.title}</Typography>
-                        : <Typography variant='body2' sx={{ fontWeight: 'bold', textAlign: 'start', mb: 1 }}>{postData.title}</Typography>
+                    !minInfo ? (
+                        <Link href={`/post/${postData.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Typography variant='h6' sx={{ '&:hover': { color: 'red' }}}>{postData.title}</Typography>
+                        </Link>
+                    ) : (
+                        <Link href={`/post/${postData.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Typography variant='body2' sx={{ fontWeight: 'bold', textAlign: 'start', mb: 1 }}>{postData.title}</Typography>
+                        </Link>
+                    )
                 }
                 <StyledTypography color="text.secondary" gutterBottom>
                     {postData.content}

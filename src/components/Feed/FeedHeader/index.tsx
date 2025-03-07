@@ -1,6 +1,6 @@
-import { Box, Typography } from "@mui/material";
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_CATEGORIES } from "@/fragments/queries/category";
+import { Box, Typography } from "@mui/material";
 import GeneralSearch from "../../GeneralSearch";
 import CategorySelector from "./CategorySelector";
 import VisibilityFilter from "./VisibilityFilter";
@@ -19,12 +19,17 @@ async function getCategoriesData() {
     }
 }
 
-export default async function FeedHeader({ numberOfPosts, feedType }: FeedHeaderProps) {
+export default async function FeedHeader(
+    { 
+        numberOfPosts,
+        feedType
+    }: FeedHeaderProps
+) {
     const { data } = await getCategoriesData();
     const categories = data?.categories ?? []
     const isNotExploreFeed = feedType !== 'explore'
     return (
-        <Box>
+        <>
             <Box
                 sx={{
                     display: "flex",
@@ -82,7 +87,6 @@ export default async function FeedHeader({ numberOfPosts, feedType }: FeedHeader
                     isNotExploreFeed && <VisibilityFilter />
                 }
             </Box>
-
-        </Box>
+        </>
     );
 }

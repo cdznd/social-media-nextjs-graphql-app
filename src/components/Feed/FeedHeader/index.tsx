@@ -4,6 +4,7 @@ import { GET_CATEGORIES } from "@/fragments/queries/category";
 import GeneralSearch from "../../GeneralSearch";
 import CategorySelector from "./CategorySelector";
 import VisibilityFilter from "./VisibilityFilter";
+import { FeedHeaderProps } from "@/types/feed";
 
 async function getCategoriesData() {
     const apolloClient = createApolloClient();
@@ -16,11 +17,6 @@ async function getCategoriesData() {
         console.error(error)
         return { data: null, feedError: error };
     }
-}
-
-type FeedHeaderProps = {
-    numberOfPosts: number,
-    feedType: string
 }
 
 export default async function FeedHeader({ numberOfPosts, feedType }: FeedHeaderProps) {

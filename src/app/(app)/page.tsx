@@ -3,7 +3,6 @@ import { GET_PRIVATE_FEED_POSTS } from "@/fragments/queries/feed";
 import { auth } from "@/lib/next-auth/auth";
 import { Container } from "@mui/material";
 import Feed from "@/components/Feed";
-
 import { SearchParamsProps } from "@/types/feed";
 import ErrorAlert from "@/components/ErrorAlert";
 

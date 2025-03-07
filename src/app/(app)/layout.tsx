@@ -1,10 +1,8 @@
-"use client"
 import Navbar from "@/components/Navbar";
 import Container from '@mui/material/Container';
-
 import Footer from "@/components/Footer";
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

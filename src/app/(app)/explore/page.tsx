@@ -2,10 +2,8 @@ import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { GET_EXPLORE_FEED_POSTS } from "@/fragments/queries/feed";
 import { Container } from "@mui/material";
 import Feed from "@/components/Feed";
-
 import { SearchParamsProps } from "@/types/feed";
 
-// It's the same from private feed but without userId, now
 async function getExploreFeedData(
     page: number,
     searchString?: string,
@@ -40,13 +38,11 @@ export default async function ExplorePage(
         search,
         category
     );
-
     const { 
       posts: feedPosts = [],
       totalCount = 0,
       totalPages = 1
     } = data?.exploreFeedPosts
-
     return (
         <Container>
             <Feed

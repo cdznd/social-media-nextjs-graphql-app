@@ -1,4 +1,5 @@
-import { Box, CircularProgress } from "@mui/material"
+import { Box } from "@mui/material"
+import SpinnerLoading from "@/components/Loading/Spinner"
 
 /**
  * The loading file will be nested inside the layout
@@ -15,6 +16,6 @@ export default function Loading() {
         alignItems: 'center',
         justifyContent: 'center'
     }}>
-        <CircularProgress />
+        <SpinnerLoading />
     </Box>
 }

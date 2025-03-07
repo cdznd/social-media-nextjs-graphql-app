@@ -1,15 +1,14 @@
 'use client'
 import { Box, Chip } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CategoryType } from '@/types/category';
+import { CategorySelectorProps } from '@/types/category';
 import { brand } from '@/components/common/themePrimitives';
 
-type CategorySelectorProps = {
-    categories: CategoryType[]
-}
-
 export default function CategorySelector(
-    { categories = [] }: CategorySelectorProps) {
+    { 
+        categories = []
+    }: CategorySelectorProps
+) {
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -36,7 +35,7 @@ export default function CategorySelector(
                 overflow: "auto",
             }}
         >
-            {categories.map((category: CategoryType) => {
+            {categories.map((category) => {
                 const isChecked = selectedCategory === category.name
                 return (
                     <Chip

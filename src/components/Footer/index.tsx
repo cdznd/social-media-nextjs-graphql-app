@@ -1,32 +1,22 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Container,
+  Divider,
+  IconButton,
+  Link,
+  Stack,
+  Typography,
+} from '@mui/material'
 import FacebookIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/X';
 import { SitemarkIcon } from '../common/CustomIcons';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-      {'Copyright © '}
-      <Link color="text.secondary" href="https://mui.com/">
-        Sitemark
-      </Link>
-      &nbsp;
-      {new Date().getFullYear()}
-    </Typography>
-  );
-}
+import Copyright from '../Copyright';
 
 export default function Footer() {
   return (
-    <React.Fragment>
+    <>
       <Divider />
       <Container
         sx={{
@@ -97,6 +87,6 @@ export default function Footer() {
           </Stack>
         </Box>
       </Container>
-    </React.Fragment>
+    </>
   );
 }

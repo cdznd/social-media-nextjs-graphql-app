@@ -17,3 +17,8 @@ export type SearchParamsProps = Promise<{
   category?: string
   visibility?: string
 }>
+
+export type FeedHeaderProps = {
+  numberOfPosts: number,
+  feedType: string
+}

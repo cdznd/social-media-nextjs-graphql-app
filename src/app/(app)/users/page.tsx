@@ -11,7 +11,7 @@ import GeneralSearch from "@/components/GeneralSearch";
 async function getAllUsers(page: number, searchString?: string) {
     const apolloClient = createApolloClient()
     try {
-        const usersPerPage = 10
+        const usersPerPage = page == 1 ? 13 : 12
         const { data } = await apolloClient.query({
             query: GET_ALL_USERS,
             variables: {
@@ -52,13 +52,13 @@ export default async function usersPage(
             <Box>
                 {
                     emptyListOfUsers ?
-                        <Box sx={{ mt: 2 }}><Alert severity="info">No users available</Alert></Box> :
+                        <Box sx={{ mt: 2, mb: 2 }}><Alert severity="info">No users available</Alert></Box> :
                         (
                             <Grid container spacing={3} sx={{ py: 4 }}>
                                 {
                                     allUsers.map((user: UserType) => (
                                         <Grid item xs={12} sm={6} md={4} lg={3} key={user.id}>
-                                            <UserProfileCard user={user} />
+                                            <UserProfileCard user={user} key={user.id} />
                                         </Grid>
                                     ))
                                 }

@@ -20,3 +20,8 @@ import { QueryMode } from "@prisma/client";
 export type UsersWhereInput = {
     name?: { contains: string; mode?: QueryMode }
 };
+
+export type UserProfileCardProps = {
+    user: UserType
+}
+  

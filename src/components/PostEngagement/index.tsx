@@ -7,28 +7,29 @@ import { Box } from "@mui/material"
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import CommentIcon from '@mui/icons-material/Comment';
-import {
-    StyledPostEngagementContainer,
-    StyledPostEngagementItem,
-    StyledPostEngagementAction
-} from "./style";
-import { brand } from '../common/themePrimitives';
+import { brand, gray } from '../common/themePrimitives';
 import { LikeType } from "@/types/like";
 import { CommentType } from "@/types/comment";
 
 type PostEngagementProps = {
-    postId: string,
+    postId: string, // Why do we need?
     likes: LikeType[],
     comments: CommentType[],
     isDisabled: boolean
 }
 
-export default function PostEngagement({ postId, likes, comments, isDisabled }: PostEngagementProps) {
-
+/**
+ * This is a Client Component, because it has interactivity and event listeners
+ * like onClick
+ */
+export default function PostEngagement(
+    { postId, likes, comments, isDisabled }: PostEngagementProps
+) {
     const { data: session } = useSession();
     const currentUserId = session?.user?.id
 
     const [isLiked, setIsLiked] = useState(false)
+    const [likeCount, setLikeCount] = useState(likes.length)
 
     useEffect(() => {
         if (currentUserId) {
@@ -36,20 +37,17 @@ export default function PostEngagement({ postId, likes, comments, isDisabled }: 
         }
     }, [currentUserId, likes])
 
-    const [likeCount, setLikeCount] = useState(likes.length)
+    // UseMutation, can we use server actions?
     const [triggerLike] = useMutation(TRIGGER_POST_LIKE_MUTATION);
 
+    // Client interactivity with click event
     const triggerLikePost = () => {
         if (isDisabled) {
             return null
         }
-        if (!isLiked) {
-            setIsLiked(true)
-            setLikeCount(prev => prev + 1)
-        } else {
-            setIsLiked(false)
-            setLikeCount(prev => prev - 1)
-        }
+        setIsLiked(!isLiked);
+        setLikeCount(prev => (isLiked ? prev - 1 : prev + 1));
+        // Trigger the mutation
         triggerLike({
             variables: {
                 userId: session?.user.id,
@@ -59,47 +57,106 @@ export default function PostEngagement({ postId, likes, comments, isDisabled }: 
     }
 
     return (
-        <StyledPostEngagementContainer>
-            <StyledPostEngagementItem sx={isDisabled ? {} : {
-                '&:hover svg': {
-                    color: brand[300]
-                }
-            }}>
-                <StyledPostEngagementAction onClick={triggerLikePost}>
+        <Box
+            sx={{
+                display: 'flex',
+                borderTop: '1px solid',
+                borderColor: gray[400],
+                padding: 1,
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRight: '1px solid',
+                    borderColor: gray[300],
+                    flex: 1,
+                    ...(isDisabled
+                        ? {}
+                        : { '&:hover svg': { color: brand[300] } }
+                    )
+                }}
+            >
+                <Box
+                    onClick={triggerLikePost}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        '& > svg': {
+                            height: '1.5rem',
+                            width: '1.5rem',
+                            transition: '100ms',
+                            ...(isDisabled
+                                ? { color: gray[400] }
+                                : {}
+                            )
+                        }
+                    }}>
                     {
                         isLiked ? (
                             <ThumbUpIcon
                                 sx={{
-                                    height: '1.5rem',
-                                    width: '1.5rem',
                                     color: brand[700],
-                                    transition: '100ms',
                                 }}
                             />
-                        ) : (
-                            <ThumbUpOffAltIcon
-                                sx={{
-                                    height: '1.5rem',
-                                    width: '1.5rem',
-                                    transition: '100ms',
-                                }}
-                            />
-                        )
+                        ) : (<ThumbUpOffAltIcon />)
                     }
-                    <Box sx={{ marginLeft: '.3rem' }}>{likeCount}</Box>
-                </StyledPostEngagementAction>
-            </StyledPostEngagementItem>
-            <StyledPostEngagementItem sx={isDisabled ? { borderRight: 'none' } : {
-                borderRight: 'none',
-                '&:hover svg': {
-                    color: brand[300]
-                }
-            }}>
-                <StyledPostEngagementAction>
+                    <Box
+                        sx={{
+                            marginLeft: 1,
+                            ...(isDisabled
+                                ? { color: gray[400] }
+                                : {}
+                            )
+                        }}>
+                        {likeCount}
+                    </Box>
+                </Box>
+            </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRight: 'none',
+                    borderColor: gray[600],
+                    flex: 1,
+                    ...(isDisabled
+                        ? {}
+                        : { '&:hover svg': { color: brand[300] } }
+                    )
+                }}
+            >
+                <Box
+                    onClick={triggerLikePost}
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        '& > svg': {
+                            height: '1.5rem',
+                            width: '1.5rem',
+                            transition: '100ms',
+                            ...(isDisabled
+                                ? { color: gray[400] }
+                                : {}
+                            )
+                        }
+                    }}>
                     <CommentIcon />
-                    <Box sx={{ marginLeft: '.3rem' }}>{comments.length}</Box>
-                </StyledPostEngagementAction>
-            </StyledPostEngagementItem>
-        </StyledPostEngagementContainer>
+                    <Box
+                        sx={{
+                            marginLeft: 1,
+                            ...(isDisabled
+                                ? { color: gray[400] }
+                                : {}
+                            )
+                        }}>
+                        {comments.length}
+                    </Box>
+                </Box>
+            </Box>
+        </Box>
     );
 }

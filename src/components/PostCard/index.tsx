@@ -160,6 +160,7 @@ export default function PostCard({ postData, variants = [], position }: PostCard
                                 postCategories.map(category => {
                                     return (
                                         <PostCategoryChip
+                                            key={category.id}
                                             category={category} />
                                     )
                                 })

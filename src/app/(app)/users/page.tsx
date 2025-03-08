@@ -58,7 +58,7 @@ export default async function usersPage(
                                 {
                                     allUsers.map((user: UserType) => (
                                         <Grid item xs={12} sm={6} md={4} lg={3} key={user.id}>
-                                            <UserProfileCard user={user} />
+                                            <UserProfileCard user={user} key={user.id} />
                                         </Grid>
                                     ))
                                 }

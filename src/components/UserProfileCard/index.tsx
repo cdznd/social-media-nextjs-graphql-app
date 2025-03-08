@@ -1,23 +1,14 @@
 import { Box, Card, CardContent, Avatar, Typography } from "@mui/material"
 import { brand } from "../common/themePrimitives";
-
 import FriendshipTriggerButton from "../FriendshipTriggerButton";
-
-type UserProfileCardProps = {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image: string;
-  }
-}
+import { UserProfileCardProps } from "@/types/user";
+import Image from "next/image";
 
 export default function UserProfileCard(
   { user }: UserProfileCardProps
 ) {
   return (
     <Card
-      key={user.id}
       sx={{
         display: "flex",
         flexDirection: 'column',
@@ -26,15 +17,24 @@ export default function UserProfileCard(
         p: '1rem',
       }}
     >
-
       <Avatar
-        src={user.image}
-        alt={user.name}
-        sx={{ width: 75, height: 75 }}
-      />
-
+        sx={{
+          width: 75,
+          height: 75,
+          border: '1px solid',
+          borderColor: brand[400]
+        }}
+      >
+        <Image
+          src={user.image}
+          fill={true}
+          alt={user?.name}
+          priority={true}
+          quality={75}
+          style={{ objectFit: 'cover' }}
+        />
+      </Avatar>
       <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "start" }}>
-
         <Box sx={{
           marginBottom: '2rem',
           width: 1,
@@ -61,8 +61,6 @@ export default function UserProfileCard(
           toUserId={user.id}
         />
       </CardContent>
-
     </Card>
   )
-
 }

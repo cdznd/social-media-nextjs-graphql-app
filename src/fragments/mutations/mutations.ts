@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { POST_LIKES } from "../queries/post";
 
 export const CREATE_POST_MUTATION = gql`
     mutation CreatePost(
@@ -25,8 +26,10 @@ export const TRIGGER_POST_LIKE_MUTATION = gql`
     mutation TriggerLike($userId: String!, $postId: String!) {
         triggerLike(userId: $userId, postId: $postId) {
             id
+            ...PostLikes
         }
     }
+    ${POST_LIKES}
 `
 
 export const CREATE_USER_MUTATION = gql`

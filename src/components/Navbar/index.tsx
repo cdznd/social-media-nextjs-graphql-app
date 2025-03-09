@@ -67,7 +67,7 @@ export default function Navbar() {
   }
 
   const handleLogout = () => {
-    signOut({ redirect: false })
+    signOut({ redirect: true })
   }
 
   const navbarItems = [

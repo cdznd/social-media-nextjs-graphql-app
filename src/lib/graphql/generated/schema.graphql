@@ -107,7 +107,7 @@ type Mutation {
   createUser(email: String!, image: String, name: String!, password: String!, username: String!): User
   deleteFriendship(friendshipId: String!): Friendship
   deleteNotification(notificationId: String!): Notification
-  triggerLike(postId: String!, userId: String!): Like
+  triggerLike(postId: String!, userId: String!): Post
   updateFriendshipStatus(friendshipId: String!, status: FriendshipStatus!): Friendship
   updateNotificationReadStatus(notificationId: String!): Notification
 }

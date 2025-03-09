@@ -1,8 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
-import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { TRIGGER_POST_LIKE_MUTATION } from "@/fragments/mutations/mutations";
 import { Box } from "@mui/material"
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -10,6 +8,8 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { brand, gray } from '../common/themePrimitives';
 import { LikeType } from "@/types/like";
 import { CommentType } from "@/types/comment";
+
+import { triggerLike } from "./actions";
 
 type PostEngagementProps = {
     postId: string, // Why do we need?
@@ -37,23 +37,18 @@ export default function PostEngagement(
         }
     }, [currentUserId, likes])
 
-    // UseMutation, can we use server actions?
-    const [triggerLike] = useMutation(TRIGGER_POST_LIKE_MUTATION);
+    if(!currentUserId) {
+        return null
+    }
 
     // Client interactivity with click event
-    const triggerLikePost = () => {
+    const triggerLikePost = async () => {
         if (isDisabled) {
             return null
         }
         setIsLiked(!isLiked);
-        setLikeCount(prev => (isLiked ? prev - 1 : prev + 1));
-        // Trigger the mutation
-        triggerLike({
-            variables: {
-                userId: session?.user.id,
-                postId: postId
-            }
-        })
+        const result = await triggerLike(currentUserId, postId)
+        setLikeCount(result.length);
     }
 
     return (

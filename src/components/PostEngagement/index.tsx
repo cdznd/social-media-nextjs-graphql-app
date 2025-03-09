@@ -1,18 +1,17 @@
 "use client"
+
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Box } from "@mui/material"
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import CommentIcon from '@mui/icons-material/Comment';
 import { brand, gray } from '../common/themePrimitives';
 import { LikeType } from "@/types/like";
 import { CommentType } from "@/types/comment";
-
 import { triggerLike } from "./actions";
+import EngagementLike from "./EngagementLike";
 
 type PostEngagementProps = {
-    postId: string, // Why do we need?
+    postId: string,
     likes: LikeType[],
     comments: CommentType[],
     isDisabled: boolean
@@ -27,28 +26,28 @@ export default function PostEngagement(
 ) {
     const { data: session } = useSession();
     const currentUserId = session?.user?.id
-
-    const [isLiked, setIsLiked] = useState(false)
+    const [hasUserLiked, setHasUserLiked] = useState(false)
     const [likeCount, setLikeCount] = useState(likes.length)
 
     useEffect(() => {
-        if (currentUserId) {
-            setIsLiked(likes.some(like => like.userId === currentUserId))
+        if(currentUserId) {
+            setHasUserLiked(likes.some(like => like.userId === currentUserId))
         }
     }, [currentUserId, likes])
 
-    if(!currentUserId) {
+    if (!currentUserId) {
         return null
     }
 
-    // Client interactivity with click event
     const triggerLikePost = async () => {
-        if (isDisabled) {
-            return null
-        }
-        setIsLiked(!isLiked);
+        // Server function/action
         const result = await triggerLike(currentUserId, postId)
-        setLikeCount(result.length);
+        if (result.success) {
+            setHasUserLiked(state => !state)
+            setLikeCount(result.likes.length)
+        } else {
+            alert(result.error)
+        }
     }
 
     return (
@@ -60,6 +59,7 @@ export default function PostEngagement(
                 padding: 1,
             }}
         >
+            {/* Engagement Like */}
             <Box
                 sx={{
                     display: 'flex',
@@ -74,42 +74,14 @@ export default function PostEngagement(
                     )
                 }}
             >
-                <Box
-                    onClick={triggerLikePost}
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        '& > svg': {
-                            height: '1.5rem',
-                            width: '1.5rem',
-                            transition: '100ms',
-                            ...(isDisabled
-                                ? { color: gray[400] }
-                                : {}
-                            )
-                        }
-                    }}>
-                    {
-                        isLiked ? (
-                            <ThumbUpIcon
-                                sx={{
-                                    color: brand[700],
-                                }}
-                            />
-                        ) : (<ThumbUpOffAltIcon />)
-                    }
-                    <Box
-                        sx={{
-                            marginLeft: 1,
-                            ...(isDisabled
-                                ? { color: gray[400] }
-                                : {}
-                            )
-                        }}>
-                        {likeCount}
-                    </Box>
-                </Box>
+                <EngagementLike
+                    isLiked={hasUserLiked}
+                    likeCount={likeCount}
+                    triggerLike={triggerLikePost}
+                    isDisabled={isDisabled}
+                />
             </Box>
+            {/* Engagement Comment */}
             <Box
                 sx={{
                     display: 'flex',
@@ -125,7 +97,7 @@ export default function PostEngagement(
                 }}
             >
                 <Box
-                    onClick={triggerLikePost}
+                    onClick={() => { }}
                     sx={{
                         display: 'flex',
                         alignItems: 'center',

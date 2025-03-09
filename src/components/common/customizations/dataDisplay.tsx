@@ -25,9 +25,6 @@ export const dataDisplayCustomizations: Components<Theme> = {
           height: '1rem',
           color: theme.palette.text.secondary,
         },
-        [`& .${typographyClasses.root}`]: {
-          fontWeight: 500,
-        },
         [`& .${buttonBaseClasses.root}`]: {
           display: 'flex',
           gap: 8,

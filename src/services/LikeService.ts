@@ -22,7 +22,7 @@ export default class LikeService {
                 }
             }
         })
-        // If it exists, delete it, if now create.
+        // If it exists, delete it, if not create.
         if (existingLike) {
             return this.context.prisma.like.delete({
                 where: {

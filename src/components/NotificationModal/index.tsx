@@ -24,9 +24,14 @@ import { NotificationModalProps } from '@/types/notification';
 import ModalContainer from './ModalContainer';
 import ModalHeader from './ModalHeader';
 
+import NotificationList from './NotificationList';
+
+import { orderNotifications } from './utils';
+
 export default function NotificationModal(
     { open, onClose }: NotificationModalProps
 ) {
+
     const { data: session } = useSession();
     const loggedUserId = session?.user?.id
 
@@ -52,22 +57,8 @@ export default function NotificationModal(
         }
     }, [open, refetch])
 
-    // Split notifications between friend requests and common notifications
-    const orderedNotifications = userNotifications.reduce((acc: {
-        friendshipNotifications: NotificationType[],
-        commonNotifications: NotificationType[]
-    }, current: NotificationType) => {
-        if (current.type === 'FRIEND_REQUEST') {
-            acc.friendshipNotifications?.push(current)
-        } else {
-            acc.commonNotifications?.push(current)
-        }
-        return acc
-    }, {
-        friendshipNotifications: [],
-        commonNotifications: []
-    })
-
+    // Split notifications between friend requests and common notifications 
+    const orderedNotifications = orderNotifications(userNotifications)
     const emptyNotifications =
         orderedNotifications.commonNotifications.length === 0 &&
         orderedNotifications.friendshipNotifications.length === 0
@@ -77,67 +68,27 @@ export default function NotificationModal(
             open={open}
             onClose={onClose}
         >
+            <ModalHeader
+                title='Notifications'
+                onClose={onClose}
+            />
             {
                 (!error && !loading) ? (
                     <>
-                        <ModalHeader
-                            title='Notifications'
-                            onClose={onClose}
-                        />
                         {
                             orderedNotifications.friendshipNotifications.length > 0 && (
-                                <Box sx={{
-                                    background: gray[700],
-                                    border: '1px solid',
-                                    borderColor: gray[500],
-                                    borderRadius: '1rem',
-                                    p: 2,
-                                    mb: 2
-                                }}>
-                                    <Stack
-                                        direction="row"
-                                        justifyContent="start"
-                                        alignItems="center"
-                                        spacing={1}
-                                        sx={{ mb: 1 }}
-                                    >
-                                        <GroupIcon />
-                                        <Typography variant="h6">
-                                            Friend Requests
-                                        </Typography>
-                                    </Stack>
-                                    <List sx={{ p: 0 }}>
-                                        {userNotifications.map((notification: NotificationType) => (
-                                            <FriendshipNotification
-                                                key={notification.id}
-                                                notification={notification} />
-                                        ))}
-                                    </List>
-                                </Box>
+                                <NotificationList
+                                    displayHeader={true}
+                                    notificationType='FRIEND_REQUEST'
+                                    userNotifications={orderedNotifications.friendshipNotifications} />
                             )
                         }
                         {
                             orderedNotifications.commonNotifications.length > 0 && (
-                                <Box sx={{
-                                    background: gray[700],
-                                    border: '1px solid',
-                                    borderColor: gray[500],
-                                    borderRadius: '1rem',
-                                    p: 2,
-                                    mb: 2
-                                }}>
-                                    <List sx={{ p: 0 }}>
-                                        {orderedNotifications.commonNotifications.length > 0 ? (
-                                            orderedNotifications.commonNotifications.map((notification: NotificationType) => (
-                                                <CommonNotification key={notification.id} notification={notification} />
-                                            ))
-                                        ) : (
-                                            <Typography color="text.secondary" align="center" py={2}>
-                                                No userNotifications yet
-                                            </Typography>
-                                        )}
-                                    </List>
-                                </Box>
+                                <NotificationList
+                                    displayHeader={false}
+                                    notificationType='COMMON'
+                                    userNotifications={orderedNotifications.commonNotifications} />
                             )
                         }
                         {emptyNotifications && <EmptyNotifications />}

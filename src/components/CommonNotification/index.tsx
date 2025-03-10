@@ -1,11 +1,11 @@
 'use client'
 
-import { Button, ListItem, Typography, Avatar, Stack, IconButton } from "@mui/material"
+import { Button, ListItem, Typography, Stack, IconButton } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
 import Link from "next/link"
 import { useMutation } from "@apollo/client"
-import { GET_READ_USER_NOTIFICATIONS } from "@/fragments/queries/notification"; 
-import { 
+import { GET_READ_USER_NOTIFICATIONS } from "@/fragments/queries/notification";
+import {
     UPDATE_NOTIFICATION_READ_STATUS_MUTATION,
     DELETE_NOTIFICATION_MUTATION
 } from "@/fragments/mutations/notification"
@@ -13,12 +13,16 @@ import { GET_USER_NOTIFICATIONS } from "@/fragments/queries/notification"
 import { brand, gray } from "../common/themePrimitives"
 import { NotificationType } from "@/types/notification"
 
+import UserAvatar from "../UserAvatar";
+
 type CommonNotificationProps = {
     notification: NotificationType,
     wasRead?: boolean
 }
 
-export default function CommonNotification({ notification, wasRead }: CommonNotificationProps) {
+export default function CommonNotification(
+    { notification, wasRead }: CommonNotificationProps
+) {
 
     const notificationActor = notification.actor
     const notificationUserId = notification.userId
@@ -67,9 +71,14 @@ export default function CommonNotification({ notification, wasRead }: CommonNoti
         <ListItem
             sx={{
                 border: '1px solid',
-                borderColor: gray[600],
-                borderRadius: '1rem',
-                mb: 2
+                borderColor: gray[400],
+                borderRadius: 2,
+                backgroundColor: 'background.default',
+                mb: 2,
+                p: 2,
+                '&:last-child': {
+                    mb: 0
+                }
             }}
         >
             <Stack
@@ -86,24 +95,32 @@ export default function CommonNotification({ notification, wasRead }: CommonNoti
                     alignItems="center"
                     spacing={2}
                 >
-                    <Avatar
-                        alt={notificationActor.name || 'User'}
-                        src={notificationActor?.image}
-                        sx={{
-                            height: '50px',
-                            width: '50px'
+                    <UserAvatar
+                        userImage={notificationActor?.image}
+                        size={{
+                            height: 65,
+                            width: 65
                         }}
                     />
                     <Stack direction="column" justifyContent="center">
-                        <Link href={`/users/${notificationActor.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <Typography variant="h6" sx={{
-                                transition: '100ms',
-                                '&:hover': {
-                                    color: brand[300]
-                                }
-                            }}>{notificationActor.name}</Typography>
+                        <Link
+                            href={`/users/${notificationActor?.id}`}
+                            style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Typography
+                                variant="h6"
+                                color="text.primary"
+                                sx={{
+                                    '&:hover': {
+                                        color: brand[400],
+                                    }
+                                }}>
+                                {notificationActor?.name}
+                            </Typography>
                         </Link>
-                        <Typography variant="body2">
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                        >
                             {notification.content}
                         </Typography>
                     </Stack>
@@ -112,20 +129,22 @@ export default function CommonNotification({ notification, wasRead }: CommonNoti
                     !wasRead ?
                         (
                             <Button
+                                aria-label="read"
                                 variant="contained"
-                                color="success"
                                 onClick={handleMarkNofiticationAsRead}
                                 sx={{ width: '150px' }}
                             >
                                 Mark as read
                             </Button>
-                        ) : <IconButton
-                            aria-label="delete"
-                            onClick={handleDeleteNotification}
-                            sx={{ ml: 2 }}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
+                        ) : (
+                            <IconButton
+                                aria-label="delete"
+                                onClick={handleDeleteNotification}
+                                sx={{ ml: 8 }}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        )
                 }
             </Stack>
         </ListItem>

@@ -3,22 +3,16 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@apollo/client';
 import {
-    List,
-    Box,
-    Typography,
     Stack,
     Button,
     CircularProgress
 } from '@mui/material';
-import GroupIcon from '@mui/icons-material/Group';
+
 import RestoreIcon from '@mui/icons-material/Restore';
-import { gray } from '../common/themePrimitives';
-import { GET_USER_NOTIFICATIONS } from '@/fragments/queries/notification';
-import FriendshipNotification from '../FriendshipNotification';
-import CommonNotification from '../CommonNotification';
+
+import { GET_USER_NOTIFICATIONS } from '@/fragments/queries/notification'
 import ReadNotificationModal from './ReadNotificationsModal';
 import EmptyNotifications from './EmptyNotifications';
-import { NotificationType } from '@/types/notification';
 import { NotificationModalProps } from '@/types/notification';
 
 import ModalContainer from './ModalContainer';

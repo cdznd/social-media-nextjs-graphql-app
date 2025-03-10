@@ -7,17 +7,18 @@ import {
     Box,
     Modal,
     Typography,
-    IconButton,
     Stack,
     CircularProgress
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+
 import { gray } from '../../common/themePrimitives';
 import { GET_READ_USER_NOTIFICATIONS } from '@/fragments/queries/notification';
 import EmptyNotifications from '../EmptyNotifications';
 import CommonNotification from '../../CommonNotification';
 import { NotificationType } from '@/types/notification';
 import { NotificationModalProps } from '@/types/notification';
+
+import ModalHeader from '../ModalHeader';
 
 export default function ReadNotificationModal(
     { open, onClose }: NotificationModalProps
@@ -74,41 +75,33 @@ export default function ReadNotificationModal(
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 width: 800,
-                maxHeight: '80%',
+                maxHeight: '60%',
                 overflowY: 'scroll',
-                bgcolor: 'background.paper',
+                backgroundColor: 'background.paper',
                 boxShadow: 24,
-                borderRadius: '1rem',
-                paddingY: '1.5rem',
-                paddingX: '2rem'
+                borderRadius: 2,
+                paddingY: 3,
+                paddingX: 4
             }}>
                 {
                     (!error && !loading) ? (
                         <>
-                            <Stack
-                                direction="row"
-                                justifyContent="space-between"
-                                alignItems="center"
-                                mb={2}
-                            >
-                                <Typography variant="h4">
-                                    Marked as read
-                                </Typography>
-                                <IconButton onClick={onClose} size="small">
-                                    <CloseIcon />
-                                </IconButton>
-                            </Stack>
+                            <ModalHeader
+                                title='Marked as Read'
+                                onClose={onClose}
+                            />
                             {
                                 orderedNotifications.commonNotifications.length > 0 && (
                                     <Box sx={{
                                         border: '1px solid',
                                         borderColor: gray[600],
-                                        borderRadius: '1rem',
+                                        borderRadius: 2,
                                         p: 2,
-                                        background: '#1F2937',
                                         mb: 2
                                     }}>
-                                        <List sx={{ p: 0 }}>
+                                        <List sx={{
+                                            p: 0,
+                                        }}>
                                             {orderedNotifications.commonNotifications.length > 0 ? (
                                                 orderedNotifications.commonNotifications.map((notification: NotificationType) => (
                                                     <CommonNotification key={notification.id} notification={notification} wasRead={true} />
@@ -124,9 +117,11 @@ export default function ReadNotificationModal(
                             }
                             {emptyNotifications && <EmptyNotifications />}
                         </>
-                    ) : <Stack direction="row" alignItems="center" justifyContent="center">
-                        <CircularProgress />
-                    </Stack>
+                    ) : (
+                        <Stack direction="row" alignItems="center" justifyContent="center">
+                            <CircularProgress />
+                        </Stack>
+                    )
                 }
             </Box>
         </Modal>

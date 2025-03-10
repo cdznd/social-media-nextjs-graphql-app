@@ -2,29 +2,32 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import { IconButton } from "@mui/material"
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import NotificationModal from "../NotificationModal";
 import { GET_USER_NOTIFICATIONS } from "@/fragments/queries/notification";
 import { brand } from "../common/themePrimitives";
 
-export default function NotificationButton() {
-    const [open, setOpen] = useState(false);
+const NotificationModal = dynamic(() => import('../NotificationModal'))
 
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+export default function NotificationButton() {
 
     const { data: session } = useSession();
     const loggedUserId = session?.user?.id
 
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    // Data used to define the icon to display based 
+    // on the existense of unread notifications
     const { data } = useQuery(GET_USER_NOTIFICATIONS, {
         variables: {
             userId: loggedUserId
         },
         skip: !loggedUserId
     })
-
     const userNotifications = data?.notifications ?? []
     const hasNotifications = userNotifications.length > 0
 
@@ -42,7 +45,11 @@ export default function NotificationButton() {
                 }}
                 onClick={handleOpen}
             >
-                { hasNotifications? <NotificationsActiveIcon /> : <NotificationsNoneIcon /> }
+                {
+                    hasNotifications
+                        ? <NotificationsActiveIcon />
+                        : <NotificationsNoneIcon />
+                }
             </IconButton>
             <NotificationModal open={open} onClose={handleClose} />
         </>

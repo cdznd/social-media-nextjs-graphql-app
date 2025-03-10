@@ -1,24 +1,28 @@
 'use client'
 
-import { Button, ListItem, Typography, Avatar, Stack, IconButton } from "@mui/material"
+import { Button, Stack, IconButton } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
-import Link from "next/link"
 import { useMutation } from "@apollo/client"
-import { GET_READ_USER_NOTIFICATIONS } from "@/fragments/queries/notification"; 
-import { 
+import { GET_READ_USER_NOTIFICATIONS } from "@/fragments/queries/notification";
+import {
     UPDATE_NOTIFICATION_READ_STATUS_MUTATION,
     DELETE_NOTIFICATION_MUTATION
 } from "@/fragments/mutations/notification"
 import { GET_USER_NOTIFICATIONS } from "@/fragments/queries/notification"
-import { brand, gray } from "../common/themePrimitives"
 import { NotificationType } from "@/types/notification"
+
+import NotificationUserCard from "../NotificationUserCard";
+import NotificationLayout from "../NotificationLayout";
+
 
 type CommonNotificationProps = {
     notification: NotificationType,
     wasRead?: boolean
 }
 
-export default function CommonNotification({ notification, wasRead }: CommonNotificationProps) {
+export default function CommonNotification(
+    { notification, wasRead }: CommonNotificationProps
+) {
 
     const notificationActor = notification.actor
     const notificationUserId = notification.userId
@@ -64,70 +68,32 @@ export default function CommonNotification({ notification, wasRead }: CommonNoti
     }
 
     return (
-        <ListItem
-            sx={{
-                border: '1px solid',
-                borderColor: gray[600],
-                borderRadius: '1rem',
-                mb: 2
-            }}
-        >
-            <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{
-                    width: 1
-                }}
-            >
-                <Stack
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={2}
-                >
-                    <Avatar
-                        alt={notificationActor.name || 'User'}
-                        src={notificationActor?.image}
-                        sx={{
-                            height: '50px',
-                            width: '50px'
-                        }}
-                    />
-                    <Stack direction="column" justifyContent="center">
-                        <Link href={`/users/${notificationActor.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <Typography variant="h6" sx={{
-                                transition: '100ms',
-                                '&:hover': {
-                                    color: brand[300]
-                                }
-                            }}>{notificationActor.name}</Typography>
-                        </Link>
-                        <Typography variant="body2">
-                            {notification.content}
-                        </Typography>
-                    </Stack>
-                </Stack>
+        <NotificationLayout>
+            <NotificationUserCard
+                notification={notification} />
+            <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
                 {
                     !wasRead ?
                         (
                             <Button
+                                aria-label="read"
                                 variant="contained"
-                                color="success"
                                 onClick={handleMarkNofiticationAsRead}
-                                sx={{ width: '150px' }}
+                                sx={{ ml: 8 }}
                             >
                                 Mark as read
                             </Button>
-                        ) : <IconButton
-                            aria-label="delete"
-                            onClick={handleDeleteNotification}
-                            sx={{ ml: 2 }}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
+                        ) : (
+                            <IconButton
+                                aria-label="delete"
+                                onClick={handleDeleteNotification}
+                                sx={{ ml: 8 }}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        )
                 }
             </Stack>
-        </ListItem>
+        </NotificationLayout >
     )
 }

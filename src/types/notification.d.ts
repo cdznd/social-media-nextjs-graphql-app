@@ -32,7 +32,3 @@ export type NotificationModalProps = {
     open: boolean;
     onClose: () => void;
 }
-
-export type FriendshipNotificationProps = {
-    notification: NotificationType
-}

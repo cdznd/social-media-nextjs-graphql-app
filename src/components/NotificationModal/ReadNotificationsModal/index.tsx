@@ -3,18 +3,12 @@ import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@apollo/client';
 import {
-    List,
-    Box,
-    Typography,
     Stack,
     CircularProgress
 } from '@mui/material';
 
-import { gray } from '../../common/themePrimitives';
 import { GET_READ_USER_NOTIFICATIONS } from '@/fragments/queries/notification';
 import EmptyNotifications from '../EmptyNotifications';
-import CommonNotification from '../../CommonNotification';
-import { NotificationType } from '@/types/notification';
 import { NotificationModalProps } from '@/types/notification';
 
 import ModalContainer from '../ModalContainer';

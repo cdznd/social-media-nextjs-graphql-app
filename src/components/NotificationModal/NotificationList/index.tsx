@@ -4,8 +4,8 @@ import GroupIcon from '@mui/icons-material/Group';
 import { gray } from '@/components/common/themePrimitives';
 import { NotificationType } from '@/types/notification';
 
-const FriendshipNotification = dynamic(() => import('@/components/FriendshipNotification'));
-const CommonNotification = dynamic(() => import('@/components/CommonNotification'));
+const FriendshipNotification = dynamic(() => import('@/components/NotificationType/FriendshipNotification'));
+const CommonNotification = dynamic(() => import('@/components/NotificationType/CommonNotification'));
 
 type NotificationListProps = {
     userNotifications: NotificationType[]

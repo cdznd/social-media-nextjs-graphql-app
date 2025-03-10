@@ -1,10 +1,7 @@
 'use server'
 import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { auth } from "@/lib/next-auth/auth";
-
 import { UPDATE_FRIENDSHIP_STATUS_MUTATION } from "@/fragments/mutations/friendship"
-import { UPDATE_NOTIFICATION_READ_STATUS_MUTATION } from "@/fragments/mutations/notification"
-
 import { updateNotificationReadStatus } from "../actions";
 
 const apolloClient = createApolloClient();

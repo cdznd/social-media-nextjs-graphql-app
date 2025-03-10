@@ -1,8 +1,7 @@
 'use client'
 
-import { Button, ListItem, Typography, Stack, IconButton } from "@mui/material"
+import { Button, Stack, IconButton } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
-import Link from "next/link"
 import { useMutation } from "@apollo/client"
 import { GET_READ_USER_NOTIFICATIONS } from "@/fragments/queries/notification";
 import {
@@ -10,10 +9,11 @@ import {
     DELETE_NOTIFICATION_MUTATION
 } from "@/fragments/mutations/notification"
 import { GET_USER_NOTIFICATIONS } from "@/fragments/queries/notification"
-import { brand, gray } from "../common/themePrimitives"
 import { NotificationType } from "@/types/notification"
 
-import UserAvatar from "../UserAvatar";
+import NotificationUserCard from "../NotificationUserCard";
+import NotificationLayout from "../NotificationLayout";
+
 
 type CommonNotificationProps = {
     notification: NotificationType,
@@ -68,63 +68,10 @@ export default function CommonNotification(
     }
 
     return (
-        <ListItem
-            sx={{
-                border: '1px solid',
-                borderColor: gray[400],
-                borderRadius: 2,
-                backgroundColor: 'background.default',
-                mb: 2,
-                p: 2,
-                '&:last-child': {
-                    mb: 0
-                }
-            }}
-        >
-            <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{
-                    width: 1
-                }}
-            >
-                <Stack
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={2}
-                >
-                    <UserAvatar
-                        userImage={notificationActor?.image}
-                        size={{
-                            height: 65,
-                            width: 65
-                        }}
-                    />
-                    <Stack direction="column" justifyContent="center">
-                        <Link
-                            href={`/users/${notificationActor?.id}`}
-                            style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <Typography
-                                variant="h6"
-                                color="text.primary"
-                                sx={{
-                                    '&:hover': {
-                                        color: brand[400],
-                                    }
-                                }}>
-                                {notificationActor?.name}
-                            </Typography>
-                        </Link>
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                        >
-                            {notification.content}
-                        </Typography>
-                    </Stack>
-                </Stack>
+        <NotificationLayout>
+            <NotificationUserCard
+                notification={notification} />
+            <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
                 {
                     !wasRead ?
                         (
@@ -132,7 +79,7 @@ export default function CommonNotification(
                                 aria-label="read"
                                 variant="contained"
                                 onClick={handleMarkNofiticationAsRead}
-                                sx={{ width: '150px' }}
+                                sx={{ ml: 8 }}
                             >
                                 Mark as read
                             </Button>
@@ -147,6 +94,6 @@ export default function CommonNotification(
                         )
                 }
             </Stack>
-        </ListItem>
+        </NotificationLayout >
     )
 }

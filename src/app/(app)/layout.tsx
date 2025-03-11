@@ -13,7 +13,7 @@ export default async function AppLayout({
       <Container
         maxWidth="lg"
         component="main"
-        sx={{ display: 'flex', flexDirection: 'column', my: 16, gap: 4 }}
+        sx={{ display: 'flex', flexDirection: 'column', mt: 16, mb: 4, gap: 4 }}
       >
         {children}
       </Container>

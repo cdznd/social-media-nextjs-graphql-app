@@ -1,11 +1,13 @@
 'use client'
 import { useState, MouseEvent } from 'react';
-import { Box, Button, Menu, MenuItem } from '@mui/material'
-import UserAvatar from '../UserAvatar'
-
 import Link from 'next/link'
+import { Box, Button, Menu, MenuItem } from '@mui/material'
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import UserAvatar from '../UserAvatar'
+import { UserType } from '@/types/user';
 
-export default function NavbarSubmenu() {
+export default function NavbarSubmenu({ loggedUser }: { loggedUser: UserType }) {
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -23,8 +25,19 @@ export default function NavbarSubmenu() {
 
     return (
         <>
-            <Box onClick={handleMenuOpen}>
-                <UserAvatar userImage={userLogged.image} />
+            <Box
+                onClick={handleMenuOpen}
+                sx={{
+                    cursor: 'pointer'
+                }}    
+            >
+                <UserAvatar
+                    userImage={loggedUser.image}
+                    size={{
+                        height: 36,
+                        width: 36
+                    }}
+                />
             </Box>
 
             <Menu
@@ -40,13 +53,32 @@ export default function NavbarSubmenu() {
                 }}
             >
                 <MenuItem onClick={handleLogout}>
-                    <Button color="primary" variant="contained" size="small" fullWidth>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        size="small"
+                        fullWidth
+                        endIcon={<LogoutIcon />}
+                    >
                         Logout
                     </Button>
                 </MenuItem>
                 <MenuItem>
-                    <Link href={`/my-profile`}>
-                        <Button color="primary" variant="contained" size="small" fullWidth>
+                    <Link
+                        href={`/my-profile`}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                        <Button
+                            size="small"
+                            variant="contained"
+                            fullWidth
+                            endIcon={<AccountCircleIcon />}
+                            sx={{
+                                '&:focus': {
+                                    outline: 'none'
+                                }
+                            }}
+                        >
                             My Profile
                         </Button>
                     </Link>

@@ -7,7 +7,7 @@ import {
   Container,
   Toolbar
 } from '@mui/material'
-import NavbarUser from '../NavbarUser';
+import NavbarAuth from '../NavbarAuth';
 import NavbarLinks from './NavbarLinks';
 import NotificationButton from '../NotificationButton';
 import { SitemarkIcon } from '../common/CustomIcons';
@@ -85,7 +85,7 @@ export default async function Navbar() {
             gap: 1,
             alignItems: 'center',
           }}>
-            <NavbarUser
+            <NavbarAuth
               loggedUser={loggedUserData} />
             <NotificationButton />
             <ColorModeIconDropdown />

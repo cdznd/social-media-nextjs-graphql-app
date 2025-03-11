@@ -6,6 +6,7 @@ import PostAuthorChip from "@/components/PostAuthorChip"
 import ErrorAlert from "@/components/ErrorAlert"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { gray } from "@/components/common/themePrimitives"
+import { CategoryType } from "@/types/category"
 
 type PostPageParams = Promise<{
     postId: string
@@ -40,7 +41,7 @@ export default async function PostPage(
 
     const renderCategories =
         postData?.categories && postData?.categories.length > 0 ?
-            postData?.categories.map((category: any) => {
+            postData?.categories.map((category: CategoryType) => {
                 return (
                     <Chip
                         key={category?.name}

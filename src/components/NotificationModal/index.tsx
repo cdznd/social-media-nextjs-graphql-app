@@ -12,13 +12,13 @@ import RestoreIcon from '@mui/icons-material/Restore';
 
 import { GET_USER_NOTIFICATIONS } from '@/fragments/queries/notification'
 import ReadNotificationModal from './ReadNotificationsModal';
-import EmptyNotifications from './EmptyNotifications';
+import EmptyNotifications from '../NotificationsEmpty';
 import { NotificationModalProps } from '@/types/notification';
 
 import ModalContainer from './ModalContainer';
 import ModalHeader from './ModalHeader';
 
-import NotificationList from './NotificationList';
+import NotificationList from '../NotificationList';
 
 import { orderNotifications } from './utils';
 

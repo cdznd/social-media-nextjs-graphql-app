@@ -24,6 +24,7 @@ export default function EngagementLike(
     const [isPending, startTransition] = useTransition()
 
     const triggerLikeAction = () => {
+        if (isDisabled) return;
         startTransition(() => {
             updateOptimisticState(null)
             triggerLike()

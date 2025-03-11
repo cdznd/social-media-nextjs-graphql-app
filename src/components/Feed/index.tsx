@@ -38,9 +38,9 @@ export default function Feed(
   })()
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <Suspense fallback={<LinearLoading />}>
+      {/* <Suspense fallback={<LinearLoading />}> */}
         <FeedHeader numberOfPosts={numberOfPosts} feedType={feedType} />
-      </Suspense>
+      {/* </Suspense> */}
       {
         hasPosts ?
           <FeedContentComponent posts={feedData} />

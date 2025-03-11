@@ -33,7 +33,7 @@ export default function UserAvatar(
                 alt='User Avatar'
                 height={height}
                 width={width}
-                quality={20}
+                quality={80}
                 priority={true}
                 style={{ objectFit: 'cover' }}
             />

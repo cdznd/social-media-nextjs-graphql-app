@@ -1,107 +1,51 @@
-'use client'
-import { useState, MouseEvent } from 'react'
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useSession, signOut } from 'next-auth/react';
 import {
   Box,
   AppBar,
-  Button,
-  IconButton,
   Container,
-  Divider,
-  MenuItem,
-  Drawer,
-  Typography,
-  Avatar,
-  Menu
+  Toolbar
 } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { StyledToolbar } from './style';
+
+import dynamic from 'next/dynamic';
+
+import NotificationButton from '../NotificationButton';
+
+import NavbarUser from '../NavbarUser';
+import NavbarLinks from './NavbarLinks';
 import { SitemarkIcon } from '../common/CustomIcons';
 import ColorModeIconDropdown from '../ColorModeIconDropdown';
-import NotificationButton from '../NotificationButton';
-import { useQuery } from '@apollo/client';
+
+import { auth } from '@/lib/next-auth/auth';
+import createApolloClient from '@/lib/apollo-client/apolloClient';
 import { GET_USER_BY_ID } from '@/fragments/queries/user';
 
-export default function Navbar() {
+const NavbarMobile = dynamic(() => import('./NavbarMobile'));
 
-  const router = useRouter();
-
-  const { data: session } = useSession();
-
-  const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-
-  const handleMenuOpen = (event: MouseEvent<HTMLDivElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const sessionUserLogged = session?.user
-
-  const { data } = useQuery(GET_USER_BY_ID, {
-    variables: {
-      userId: sessionUserLogged?.id
-    },
-    skip: !sessionUserLogged?.id
-  })
-
-  const userLogged = data?.user
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
-  const openSignInPage = () => {
-    router.push('/sign-in')
+async function getUserInfo(userId: string) {
+  const apolloClient = createApolloClient()
+  try {
+    const { data } = await apolloClient.query({
+      query: GET_USER_BY_ID,
+      variables: {
+        userId: userId
+      }
+    })
+    return { data, error: null }
+  } catch(error) {
+    console.error(error)
+    return { data: null, error }
   }
+}
 
-  const openSignUpPage = () => {
-    router.push('/sign-up')
-  }
+export default async function Navbar() {
 
-  const handleLogout = () => {
-    signOut({ redirect: true })
-  }
+  const session = await auth()
+  const loggedUserId = session?.user?.id
+  
+  // console.log('loggedUserId', loggedUserId);
 
-  const navbarItems = [
-    {
-      label: 'Feed',
-      open: () => { router.push('/') }
-    },
-    {
-      label: 'Explore',
-      open: () => { router.push('/explore') }
-    },
-    {
-      label: 'Users',
-      open: () => { router.push('/users') }
-    },
-    {
-      label: 'New Post',
-      open: () => { router.push('/new-post') }
-    }
-  ]
+  const loggedUserData = loggedUserId ? await getUserInfo(loggedUserId) : null;
 
-  const renderNavbarItems = navbarItems.map((item, key) => {
-    return (
-      <Button
-        key={key}
-        variant="text"
-        color="info"
-        size="small"
-        onClick={item.open}
-      >
-        {item.label}
-      </Button>
-    )
-  })
+  // console.log('loggedUserData', loggedUserData);
 
   return (
     <AppBar
@@ -115,136 +59,48 @@ export default function Navbar() {
       }}
     >
       <Container maxWidth="lg">
-        <StyledToolbar variant="dense" disableGutters>
-          {/* NavItems */}
+        <Toolbar
+          variant="dense"
+          disableGutters
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexShrink: 0,
+            borderRadius: 2,
+            backdropFilter: 'blur(24px)',
+            border: '1px solid',
+            borderColor: 'divider',
+            backgroundColor: 'background.default',
+            boxShadow: 'shadows[1]',
+            padding: '8px 12px',
+          }}
+        >
+          {/* Site Logo + Navbar links */}
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
             <SitemarkIcon />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              {renderNavbarItems}
+              {<NavbarLinks />}
             </Box>
           </Box>
-          {/* NavAuthButtons */}
-          <Box
+          {/* User + Notification + DarkMode */}
+          {/* <Box
             sx={{
               display: { xs: 'none', md: 'flex' },
               gap: 1,
               alignItems: 'center',
             }}
-          >
-            {
-              !userLogged ? (
-                <>
-                  <Button
-                    color="primary"
-                    variant="text"
-                    size="small"
-                    onClick={() => openSignInPage()}
-                  >
-                    Sign in
-                  </Button>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    onClick={() => openSignUpPage()}
-                  >
-                    Sign up
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    {/* User Email */}
-                    <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                      {userLogged.name}
-                    </Typography>
+          > */}
+            {/* <NavbarUser
+              userLogged={loggedUserData} /> */}
+            {/* <NotificationButton />
+            <ColorModeIconDropdown /> */}
+          {/* </Box> */}
 
-                    {/* Profile Picture with Dropdown Menu */}
-                    <Box onClick={handleMenuOpen}>
-                      <Avatar
-                        alt={userLogged.name || 'User'}
-                        src={userLogged?.image}
-                        sx={{ cursor: 'pointer' }}
-                      />
-                    </Box>
-
-                    {/* Dropdown Menu */}
-                    <Menu
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={handleMenuClose}
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                      sx={{
-                        '&:focus': {
-                          outline: 'none'
-                        }
-                      }}
-                    >
-                      <MenuItem onClick={handleLogout}>
-                        <Button color="primary" variant="contained" size="small" fullWidth>
-                          Logout
-                        </Button>
-                      </MenuItem>
-                      <MenuItem>
-                        <Link href={`/my-profile`}>
-                          <Button color="primary" variant="contained" size="small" fullWidth>
-                            My Profile
-                          </Button>
-                        </Link>
-                      </MenuItem>
-                    </Menu>
-                  </Box>
-                </>
-              )
-            }
-            {/* DarkMode + Notifications */}
-            <NotificationButton />
-            <ColorModeIconDropdown />
-          </Box>
           {/* Mobile */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
-            <ColorModeIconDropdown size="medium" />
-            <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
-              <MenuIcon />
-            </IconButton>
-            <Drawer
-              anchor="top"
-              open={open}
-              onClose={toggleDrawer(false)}
-              PaperProps={{
-                sx: {
-                  top: 'var(--template-frame-height, 0px)',
-                },
-              }}
-            >
-              <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <IconButton onClick={toggleDrawer(false)}>
-                    <CloseRoundedIcon />
-                  </IconButton>
-                </Box>
-                {renderNavbarItems}
-                <Divider sx={{ my: 3 }} />
-                <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>
-                    Sign up
-                  </Button>
-                </MenuItem>
-                <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
-                    Sign in
-                  </Button>
-                </MenuItem>
-              </Box>
-            </Drawer>
-          </Box>
-        </StyledToolbar>
+          <NavbarMobile />
+
+        </Toolbar>
       </Container>
     </AppBar>
   );

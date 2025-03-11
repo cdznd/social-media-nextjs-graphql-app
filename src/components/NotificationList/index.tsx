@@ -4,6 +4,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import { gray } from '@/components/common/themePrimitives';
 import { NotificationType } from '@/types/notification';
 
+// Client Components
 const FriendshipNotification = dynamic(() => import('@/components/NotificationType/FriendshipNotification'));
 const CommonNotification = dynamic(() => import('@/components/NotificationType/CommonNotification'));
 

@@ -1,8 +1,8 @@
-import Image from "next/image"
 import Link from "next/link"
-import { Avatar, Typography, Stack } from "@mui/material"
+import { Typography, Stack } from "@mui/material"
 import { gray } from "../common/themePrimitives"
 import { UserType } from "@/types/user"
+import UserAvatar from "../UserAvatar"
 
 type PostAuthorChipProps = {
     author: UserType
@@ -33,22 +33,13 @@ export default async function PostAuthorChip(
                     },
                 }}
             >
-                <Avatar
-                    sx={{
-                        width: 30,
+                <UserAvatar
+                    userImage={author?.image}
+                    size={{
                         height: 30,
-                        position: 'relative',
-                        border: '1px solid',
-                        borderColor: gray[400]
+                        width: 30
                     }}
-                >
-                    <Image
-                        src={author?.image}
-                        fill={true}
-                        alt={author?.name}
-                        style={{ objectFit: 'contain' }}
-                    />
-                </Avatar>
+                />
                 <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
                     {author.name}
                 </Typography>

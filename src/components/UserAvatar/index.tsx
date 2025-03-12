@@ -1,5 +1,3 @@
-'use client' // TODO: Try to update to a server component.
-
 import { Avatar } from "@mui/material"
 import Image from "next/image"
 import { brand } from "../common/themePrimitives"

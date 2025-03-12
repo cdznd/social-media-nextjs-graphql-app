@@ -6,6 +6,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
 
+import UserAvatar from "../UserAvatar";
+
 type UserProfileCardProps = {
   user: UserType;
   displayFriendshipButton: boolean,
@@ -21,12 +23,15 @@ type UserProfileCardProps = {
 export default function UserProfileInfoCard(
   { user, displayFriendshipButton, isFriend, isCurrentUser, generalInfo }: UserProfileCardProps) {
   return (
-    <Card sx={{ p: 3, textAlign: "center", mb: 4, display: "flex", justifyContent: "start", flex: 1 }}>
-
-      <Avatar src={user.image} alt={user.name} sx={{ width: 100, height: 100 }} />
-
+    <Card sx={{ display: "flex", justifyContent: "start", textAlign: "center", flex: 1, mb: 4, p: 3 }}>
+      <UserAvatar
+        userImage={user?.image}
+        size={{
+          height: 100,
+          width: 100
+        }}
+      />
       <CardContent sx={{ display: "flex", alignItems: "start", justifyContent: "space-between", width: 1 }}>
-
         <Stack direction="column" alignItems="start">
           <Typography variant="h5">{user.name}</Typography>
           {
@@ -61,7 +66,6 @@ export default function UserProfileInfoCard(
             </Stack>
           </Stack>
         </Stack>
-
         {
           displayFriendshipButton && (
             <Box>
@@ -71,9 +75,7 @@ export default function UserProfileInfoCard(
             </Box>
           )
         }
-
       </CardContent>
-
     </Card>
   );
 };

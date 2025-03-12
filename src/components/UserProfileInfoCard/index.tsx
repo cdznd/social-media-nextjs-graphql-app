@@ -1,4 +1,4 @@
-import { Avatar, Card, CardContent, Typography, Box, Stack } from "@mui/material";
+import { Card, CardContent, Typography, Box, Stack } from "@mui/material";
 import FriendshipTriggerButton from "../FriendshipTriggerButton";
 import { UserType } from "@/types/user";
 

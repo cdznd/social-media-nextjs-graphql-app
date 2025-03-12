@@ -1,6 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Box, Card, CardContent, Avatar, Typography } from "@mui/material"
+import { Box, Card, CardContent, Typography } from "@mui/material"
 import { brand } from "../common/themePrimitives";
 import FriendshipTriggerButton from "../FriendshipTriggerButton";
 import { UserProfileCardProps } from "@/types/user";

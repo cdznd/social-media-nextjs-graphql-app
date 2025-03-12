@@ -37,7 +37,7 @@ export default function PostCard({ postData, variants = [], position }: PostCard
     const minInfo = variants.includes('min-info')
     const disabledEngagement = variants.includes('disable-user-engagement')
 
-    const postMediaHeight = 400
+    const postMediaHeight = minInfo ? 200 : 400
 
     return (
         <Card
@@ -63,7 +63,10 @@ export default function PostCard({ postData, variants = [], position }: PostCard
             {/* Post Media */}
             {
                 postData?.thumbnail && (
-                    <CardMedia sx={{ height: postMediaHeight, position: 'relative' }}>
+                    <CardMedia sx={{ 
+                        height: postMediaHeight,
+                        position: 'relative' 
+                    }}>
                         <Image
                             src={postData?.thumbnail}
                             fill // When using the property fill from next/image you should have a relative component with a defined height.

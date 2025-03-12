@@ -1,5 +1,3 @@
-'use client' // TODO: Try to update to a server component.
-
 import { Avatar } from "@mui/material"
 import Image from "next/image"
 import { brand } from "../common/themePrimitives"
@@ -33,7 +31,7 @@ export default function UserAvatar(
                 alt='User Avatar'
                 height={height}
                 width={width}
-                quality={20}
+                quality={80}
                 priority={true}
                 style={{ objectFit: 'cover' }}
             />

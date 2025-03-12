@@ -1,5 +1,3 @@
-'use client'
-
 import { useOptimistic, useTransition } from 'react'
 import { Box } from '@mui/material'
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
@@ -22,9 +20,11 @@ export default function EngagementLike(
     { isLiked, likeCount, triggerLike, isDisabled }: PostEngagementProps
 ) {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isPending, startTransition] = useTransition()
 
     const triggerLikeAction = () => {
+        if (isDisabled) return;
         startTransition(() => {
             updateOptimisticState(null)
             triggerLike()
@@ -38,6 +38,7 @@ export default function EngagementLike(
 
     const [optimisticState, updateOptimisticState] = useOptimistic(
         optimisticInitialState,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         (state: OptimisticState, action: null) => ({
             isLiked: !state.isLiked,
             likeCount: state.isLiked ? state.likeCount - 1 : state.likeCount + 1,

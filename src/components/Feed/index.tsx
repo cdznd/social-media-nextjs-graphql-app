@@ -1,12 +1,9 @@
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
 import { Alert, Box } from '@mui/material';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import FeedHeader from '@/components/Feed/FeedHeader';
 import PaginationComponent from '@/components/PaginationComponent';
 import { FeedProps } from '@/types/feed';
-
-import LinearLoading from '../Loading/Linear';
 
 const DefaultFeed = dynamic(() => import('./FeedType/DefaultFeed'))
 const GridFeed = dynamic(() => import('./FeedType/GridFeed'))
@@ -38,9 +35,7 @@ export default function Feed(
   })()
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <Suspense fallback={<LinearLoading />}>
         <FeedHeader numberOfPosts={numberOfPosts} feedType={feedType} />
-      </Suspense>
       {
         hasPosts ?
           <FeedContentComponent posts={feedData} />

@@ -1,21 +1,18 @@
+import dynamic from 'next/dynamic';
+import createApolloClient from '@/lib/apollo-client/apolloClient';
+import { auth } from '@/lib/next-auth/auth';
 import {
   Box,
   AppBar,
   Container,
   Toolbar
 } from '@mui/material'
-
-import dynamic from 'next/dynamic';
-
-import NotificationButton from '../NotificationButton';
-
-import NavbarUser from '../NavbarUser';
+import NavbarAuth from '../NavbarAuth';
 import NavbarLinks from './NavbarLinks';
+import NotificationButton from '../NotificationButton';
 import { SitemarkIcon } from '../common/CustomIcons';
 import ColorModeIconDropdown from '../ColorModeIconDropdown';
 
-import { auth } from '@/lib/next-auth/auth';
-import createApolloClient from '@/lib/apollo-client/apolloClient';
 import { GET_USER_BY_ID } from '@/fragments/queries/user';
 
 const NavbarMobile = dynamic(() => import('./NavbarMobile'));
@@ -30,23 +27,17 @@ async function getUserInfo(userId: string) {
       }
     })
     return { data, error: null }
-  } catch(error) {
+  } catch (error) {
     console.error(error)
     return { data: null, error }
   }
 }
 
 export default async function Navbar() {
-
   const session = await auth()
   const loggedUserId = session?.user?.id
-  
-  // console.log('loggedUserId', loggedUserId);
-
-  const loggedUserData = loggedUserId ? await getUserInfo(loggedUserId) : null;
-
-  // console.log('loggedUserData', loggedUserData);
-
+  const loggedUser = loggedUserId ? await getUserInfo(loggedUserId) : null;
+  const loggedUserData = loggedUser?.data?.user ?? null
   return (
     <AppBar
       position="fixed"
@@ -72,34 +63,35 @@ export default async function Navbar() {
             border: '1px solid',
             borderColor: 'divider',
             backgroundColor: 'background.default',
-            boxShadow: 'shadows[1]',
+            boxShadow: '24px',
             padding: '8px 12px',
           }}
         >
           {/* Site Logo + Navbar links */}
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
+          <Box sx={{
+            flexGrow: 1,
+            display: 'flex',
+            alignItems: 'center',
+            px: 0
+          }}>
             <SitemarkIcon />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               {<NavbarLinks />}
             </Box>
           </Box>
           {/* User + Notification + DarkMode */}
-          {/* <Box
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              gap: 1,
-              alignItems: 'center',
-            }}
-          > */}
-            {/* <NavbarUser
-              userLogged={loggedUserData} /> */}
-            {/* <NotificationButton />
-            <ColorModeIconDropdown /> */}
-          {/* </Box> */}
-
+          <Box sx={{
+            display: { xs: 'none', md: 'flex' },
+            gap: 1,
+            alignItems: 'center',
+          }}>
+            <NavbarAuth
+              loggedUser={loggedUserData} />
+            <NotificationButton />
+            <ColorModeIconDropdown />
+          </Box>
           {/* Mobile */}
           <NavbarMobile />
-
         </Toolbar>
       </Container>
     </AppBar>

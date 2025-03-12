@@ -41,7 +41,7 @@ export default function NotificationButton() {
                         width: '1.2rem',
                         height: '1.2rem'
                     },
-                    color: hasNotifications ? brand[300] : 'inherit'
+                    color: hasNotifications ? brand[300] : null
                 }}
                 onClick={handleOpen}
             >

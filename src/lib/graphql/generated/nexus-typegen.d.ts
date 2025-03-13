@@ -275,6 +275,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createCategory: NexusGenRootTypes['Category'] | null; // Category
+    createComment: NexusGenRootTypes['Comment'] | null; // Comment
     createFriendshipRequest: NexusGenRootTypes['Friendship'] | null; // Friendship
     createNotification: NexusGenRootTypes['Notification'] | null; // Notification
     createPost: NexusGenRootTypes['Post'] | null; // Post
@@ -439,6 +440,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createCategory: 'Category'
+    createComment: 'Comment'
     createFriendshipRequest: 'Friendship'
     createNotification: 'Notification'
     createPost: 'Post'
@@ -528,6 +530,11 @@ export interface NexusGenArgTypes {
   Mutation: {
     createCategory: { // args
       name: string; // String!
+    }
+    createComment: { // args
+      content: string; // String!
+      postId: string; // String!
+      userId: string; // String!
     }
     createFriendshipRequest: { // args
       fromUserId: string; // String!

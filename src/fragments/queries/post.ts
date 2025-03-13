@@ -1,6 +1,5 @@
 import gql from "graphql-tag";
 
-
 export const POST_FIELDS = gql`
     fragment PostFields on Post {
         id
@@ -17,6 +16,23 @@ export const POST_LIKES = gql`
         likes {
             id
             userId
+        }
+    }
+`
+
+export const POST_COMMENTS = gql`
+    fragment PostComments on Post {
+        comments {
+            id
+            content
+            user {
+                id
+                email
+                name
+                image
+                username
+            }
+            createdAt
         }
     }
 `
@@ -48,9 +64,13 @@ export const GET_POST = gql`
             ...PostFields
             ...PostAuthor
             ...PostCategories
+            ...PostLikes
+            ...PostComments
         }
     }
     ${POST_FIELDS}
     ${POST_AUTHOR}
     ${POST_CATEGORIES}
+    ${POST_LIKES}
+    ${POST_COMMENTS}
 `

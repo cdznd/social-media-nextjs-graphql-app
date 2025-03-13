@@ -14,7 +14,8 @@ type PostEngagementProps = {
     postId: string,
     likes: LikeType[],
     comments: CommentType[],
-    isDisabled: boolean
+    isDisabled: boolean,
+    variants?: string[]
 }
 
 /**
@@ -22,7 +23,7 @@ type PostEngagementProps = {
  * like onClick
  */
 export default function PostEngagement(
-    { postId, likes, comments, isDisabled }: PostEngagementProps
+    { postId, likes, comments, isDisabled, variants = [] }: PostEngagementProps
 ) {
     const { data: session } = useSession();
     const currentUserId = session?.user?.id
@@ -50,11 +51,13 @@ export default function PostEngagement(
         }
     }
 
+    const isPostPage = variants.includes('isPostPage')
+
     return (
         <Box
             sx={{
                 display: 'flex',
-                borderTop: '1px solid',
+                borderTop: !isPostPage ? '1px solid' : 'none',
                 borderColor: gray[400],
                 padding: 1,
             }}

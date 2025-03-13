@@ -59,7 +59,6 @@ export default async function Navbar() {
             justifyContent: 'space-between',
             flexShrink: 0,
             borderRadius: 2,
-            backdropFilter: 'blur(24px)',
             border: '1px solid',
             borderColor: 'divider',
             backgroundColor: 'background.default',

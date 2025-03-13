@@ -7,10 +7,12 @@ import {
 
 import { Context } from "@/lib/prisma/context"
 import { Post } from "../types/Post"
+import { Comment } from "../types"
 import PostService from "@/services/PostService"
 import LikeService from "@/services/LikeService"
 import UserService from "@/services/UserService"
 import NotificationService from "@/services/NotificationService"
+import CommentService from "@/services/CommentService"
 
 export const PostMutations = extendType({
     type: 'Mutation',
@@ -59,6 +61,26 @@ export const PostMutations = extendType({
                         entityId: postId
                     })
                     return likedPost
+                }
+            }
+        )
+        t.field(
+            'createComment',
+            {
+                type: Comment,
+                args: {
+                    content: nonNull(stringArg()),
+                    postId: nonNull(stringArg()),
+                    userId: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { content, userId, postId } = args
+                    const commentService = new CommentService(context)
+                    return commentService.createComment(
+                        content,
+                        userId,
+                        postId
+                    )
                 }
             }
         )

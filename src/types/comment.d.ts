@@ -1,5 +1,8 @@
+import { UserType } from "./user";
+
 export type CommentType = {
     id: string;
     content: string;
-    authorId: string;
+    user: UserType;
+    createdAt: string;
 }

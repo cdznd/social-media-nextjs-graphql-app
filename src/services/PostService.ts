@@ -38,7 +38,11 @@ export default class PostService {
                 include: {
                     author: true,
                     likes: true,
-                    comments: true,
+                    comments: {
+                        include: {
+                            user: true
+                        }
+                    },
                     categories: true
                 }
             })

@@ -87,7 +87,7 @@ export default class PostService {
                     ? { categories: { some: { name: { equals: category, mode: "insensitive" } } } }
                     : {}
             ],
-            authorId: { in: allUserFriendsIDs }, // Fetch only friend's posts
+            authorId: { in: [...allUserFriendsIDs, userId] }, // Fetch only friend's posts
             visibility: visibility === "PUBLIC" || visibility === "PRIVATE" ? visibility : undefined
         }
         const totalCount = await this.context.prisma.post.count({ where })

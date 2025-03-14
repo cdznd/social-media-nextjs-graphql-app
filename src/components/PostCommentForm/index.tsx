@@ -1,46 +1,25 @@
 'use client'
 import { useActionState } from "react";
-import { Box, TextField, Button, Stack, Typography } from "@mui/material"
-import SendIcon from '@mui/icons-material/Send';
-
 import { createComment } from "./actions";
-
-import { useSession } from "next-auth/react";
-
+import { Box, TextField, Button, Stack, Typography } from "@mui/material"
 import LinearLoading from "../Loading/Linear";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
-
-import { useApolloClient } from "@apollo/client";
+import SendIcon from '@mui/icons-material/Send';
 
 const initialState = {
     success: false
 }
 
-
-export default function PostCommentForm({ postId }: { postId: string }) {
-    const { data: session } = useSession();
-    const currentUserId = session?.user?.id ?? ''
-
-    const client = useApolloClient();
-
+export default function PostCommentForm(
+    { postId, loggedUserId }: { postId: string, loggedUserId: string }
+) {
+    const currentUserId = loggedUserId
     const createCommentAction = createComment.bind(
         null,
         postId,
         currentUserId,
     );
-
     const [state, formAction, pending] = useActionState(createCommentAction, initialState)
-
-    console.log('state', state);
-    console.log('pending', pending);
-
-    // if (state?.success) {
-    //     console.log('OKI');
-    //     // client.refetchQueries({ include: [] })
-    // } else {
-    //     // alert('failed to add comment')
-    // }
-
     return (
         <Box
             component='form'

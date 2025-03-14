@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { Alert, Box } from '@mui/material';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import FeedHeader from '@/components/Feed/FeedHeader';
+import FeedNewPost from '../FeedNewPost';
 import PaginationComponent from '@/components/PaginationComponent';
 import { FeedProps } from '@/types/feed';
 
@@ -36,6 +37,11 @@ export default function Feed(
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <FeedHeader numberOfPosts={numberOfPosts} feedType={feedType} />
+      {
+        (feedType === 'private') && (
+          <FeedNewPost />
+        )
+      }
       {
         hasPosts ?
           <FeedContentComponent posts={feedData} />

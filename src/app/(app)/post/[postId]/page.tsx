@@ -1,21 +1,15 @@
 import Image from "next/image"
 import Link from "next/link"
-
 import createApolloClient from "@/lib/apollo-client/apolloClient"
 import { GET_POST } from "@/fragments/queries/post"
-
-import { Typography, Container, Box, Stack, IconButton, Chip } from "@mui/material"
+import { Typography, Container, Box, Stack, IconButton } from "@mui/material"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
-import { gray } from "@/components/common/themePrimitives"
-
 import PostVisibilityStatus from "@/components/PostVisibilityStatus"
 import PostCategoryChip from "@/components/PostCategoryChip"
 import PostEngagement from "@/components/PostEngagement"
 import PostAuthorChip from "@/components/PostAuthorChip"
 import PostComments from "@/components/PostComments"
 import ErrorAlert from "@/components/ErrorAlert"
-
 import { CategoryType } from "@/types/category"
 
 type PostPageParams = Promise<{
@@ -44,9 +38,6 @@ export default async function PostPage(
     const { postId } = await props.params
     const { data } = await getPostData(postId)
     const postData = data?.post
-
-    // console.log('postData');
-    // console.log(postData);
 
     const postAuthor = postData?.author
     const postCategories = postData?.categories
@@ -175,8 +166,9 @@ export default async function PostPage(
             >
                 <Typography variant="h6" color="text.primary">Comments</Typography>
                 <PostComments
+                    comments={postComments}
                     postId={postId}
-                    comments={postComments} />
+                />
             </Box>
         </Container>
     )

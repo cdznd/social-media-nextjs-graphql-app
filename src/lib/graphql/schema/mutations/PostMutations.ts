@@ -84,5 +84,21 @@ export const PostMutations = extendType({
                 }
             }
         )
+        t.field(
+            'deleteMutation',
+            {
+                type: Comment,
+                args: {
+                    commentId: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { commentId } = args
+                    const commentService = new CommentService(context)
+                    return commentService.deleteComment(
+                        commentId
+                    )
+                }
+            }
+        )
     }
 })

@@ -1,7 +1,7 @@
 'use client'
 import { useActionState } from "react";
 import { createComment } from "./actions";
-import { Box, TextField, Button, Stack, Typography } from "@mui/material"
+import { Box, TextField, Button, Stack } from "@mui/material"
 import LinearLoading from "../Loading/Linear";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import SendIcon from '@mui/icons-material/Send';

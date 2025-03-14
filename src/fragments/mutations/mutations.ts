@@ -33,6 +33,14 @@ export const CREATE_POST_COMMENT_MUTATION = gql`
     }
 `
 
+export const DELETE_POST_COMMENT_MUTATION = gql`
+    mutation DeleteComment($commentId: String!) {
+        deleteMutation(commentId: $commentId) {
+            id
+        }
+    }
+`
+
 export const TRIGGER_POST_LIKE_MUTATION = gql`
     mutation TriggerLike($userId: String!, $postId: String!) {
         triggerLike(userId: $userId, postId: $postId) {

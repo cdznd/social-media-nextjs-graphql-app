@@ -39,6 +39,7 @@ export default class PostService {
                     author: true,
                     likes: true,
                     comments: {
+                        orderBy: { createdAt: 'desc' },
                         include: {
                             user: true
                         }

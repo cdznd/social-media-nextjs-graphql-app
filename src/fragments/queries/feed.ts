@@ -4,7 +4,8 @@ import {
   POST_FIELDS,
   POST_LIKES,
   POST_AUTHOR,
-  POST_CATEGORIES
+  POST_CATEGORIES,
+  POST_COMMENTS
 } from "./post";
 
 export const GET_PRIVATE_FEED_POSTS = gql`
@@ -29,6 +30,7 @@ export const GET_PRIVATE_FEED_POSTS = gql`
         ...PostLikes
         ...PostAuthor
         ...PostCategories
+        ...PostComments
       }
       totalCount
       totalPages
@@ -38,6 +40,7 @@ export const GET_PRIVATE_FEED_POSTS = gql`
   ${POST_LIKES}
   ${POST_AUTHOR}
   ${POST_CATEGORIES}
+  ${POST_COMMENTS}
 `;
 
 export const GET_EXPLORE_FEED_POSTS = gql`
@@ -58,6 +61,7 @@ export const GET_EXPLORE_FEED_POSTS = gql`
         ...PostLikes
         ...PostAuthor
         ...PostCategories
+        ...PostComments
       }
       totalCount
       totalPages
@@ -67,6 +71,7 @@ export const GET_EXPLORE_FEED_POSTS = gql`
   ${POST_LIKES}
   ${POST_AUTHOR}
   ${POST_CATEGORIES}
+  ${POST_COMMENTS}
 `;
 
 export const GET_PRIVATE_PROFILE_FEED_POSTS = gql`
@@ -91,6 +96,7 @@ export const GET_PRIVATE_PROFILE_FEED_POSTS = gql`
         ...PostLikes
         ...PostAuthor
         ...PostCategories
+        ...PostComments
       }
       totalCount
       totalPages
@@ -100,6 +106,7 @@ export const GET_PRIVATE_PROFILE_FEED_POSTS = gql`
   ${POST_LIKES}
   ${POST_AUTHOR}
   ${POST_CATEGORIES}
+  ${POST_COMMENTS}
 `;
 
 export const GET_PRIVATE_PROFILE_FEED_INFO = gql`

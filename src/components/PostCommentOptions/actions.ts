@@ -1,20 +1,17 @@
 'use server'
 import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { CREATE_POST_COMMENT_MUTATION } from "@/fragments/mutations/mutations"
+import { DELETE_POST_COMMENT_MUTATION } from "@/fragments/mutations/mutations"
 import { auth } from "@/lib/next-auth/auth";
 import { revalidatePath } from "next/cache";
 
 const apolloClient = createApolloClient();
 
-export async function createComment(
+export async function deleteComment(
+    commentId: string,
     postId: string,
     userId: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    previousState: { success: boolean },
-    formData: FormData
 ) {
     try {
-        const content = formData.get('content')
         // Ensuring the user is authorized to perform the action
         const session = await auth()
         const loggedUserId = session?.user?.id
@@ -22,11 +19,9 @@ export async function createComment(
             throw new Error('Error with logged user')
         }
         await apolloClient.mutate({
-            mutation: CREATE_POST_COMMENT_MUTATION,
+            mutation: DELETE_POST_COMMENT_MUTATION,
             variables: {
-                content,
-                userId,
-                postId
+                commentId
             }
         })
         revalidatePath(`/posts/${postId}`)

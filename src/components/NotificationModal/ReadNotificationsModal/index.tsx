@@ -11,8 +11,8 @@ import { GET_READ_USER_NOTIFICATIONS } from '@/fragments/queries/notification';
 import EmptyNotifications from '../../NotificationsEmpty';
 import { NotificationModalProps } from '@/types/notification';
 
-import ModalContainer from '../ModalContainer';
-import ModalHeader from '../ModalHeader';
+import ModalContainer from '../../ModalContainer';
+import ModalHeader from '../../ModalHeader';
 import { orderNotifications } from '../utils';
 import NotificationList from '../../NotificationList';
 

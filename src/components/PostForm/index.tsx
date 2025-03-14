@@ -1,11 +1,11 @@
-/* eslint-disable */
 "use client"
 
-import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useActionState } from "react";
+
 import {
     Box,
     FormControl,
+    Stack,
     FormLabel,
     TextField,
     Button,
@@ -13,64 +13,39 @@ import {
     FormGroup,
     Checkbox
 } from "@mui/material";
-import { useMutation } from "@apollo/client";
-import { CREATE_POST_MUTATION } from "@/fragments/mutations/mutations";
-import { StyledTextarea } from "@/components/common/CustomTextArea";
+
 import ClearIcon from '@mui/icons-material/Clear';
 
 import { useSession } from "next-auth/react";
 
-type CreatePostDTO = {
-    title: string,
-    content: string,
-    authorId: string,
-    thumbnail: string,
-    categories: string[]
-};
+import { createPost } from "./actions";
 
 import { CategoryType } from "@/types/category";
 
-type PostFormProps = {
-    categories: CategoryType[]
-}
-
-export default function PostForm({ categories }: PostFormProps) {
-
-    const router = useRouter()
+export default function PostForm({ closeModal }: { closeModal: () => void }) {
 
     const { data: session } = useSession();
 
-    const [createPost, { loading, error }] = useMutation(CREATE_POST_MUTATION);
+    // fetch categories
+    const categories: any = []
 
+    // Error states
     const [titleError, setTitleError] = useState(false);
     const [contentError, setContentError] = useState(false);
     const [titleErrorMessage, setTitleErrorMessage] = useState('');
     const [contentErrorMessage, setContentErrorMessage] = useState('');
-
+    // Image
     const imageFileInputRef = useRef<HTMLInputElement>(null)
-
     // Image Upload state
     const [imageFile, setImageFile] = useState(null);
     const [imageFilePreview, setImageFilePreview] = useState('');
 
-    // React.FormEvent<HTMLFormElement>
-    const handleFileChange = (event: any) => {
-        const targed = event.currentTarget
-        const selectedFile = targed?.files[0]
-        if (selectedFile) {
-            setImageFile(selectedFile);
-            setImageFilePreview(URL.createObjectURL(selectedFile));
-        }
+    // Server action
+    const initialState = {
+        success: false,
+        message: ''
     }
-
-    const handleReset = (event: any) => {
-        event.preventDefault();
-        if (imageFileInputRef.current) {
-            imageFileInputRef.current.value = ""
-            setImageFile(null);
-            setImageFilePreview('');
-        }
-    };
+    const [state, formAction, pending] = useActionState(createPost, initialState)
 
     // Categories
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
@@ -80,11 +55,31 @@ export default function PostForm({ categories }: PostFormProps) {
             prev.includes(value) ? prev.filter((item: any) => item !== value) : [...prev, value]
         );
     };
+   
+    // Image
+    const handleFileChange = (event: any) => {
+        const targed = event.currentTarget
+        const selectedFile = targed?.files[0]
+        if (selectedFile) {
+            setImageFile(selectedFile);
+            setImageFilePreview(URL.createObjectURL(selectedFile));
+        }
+    }
 
-    const validateInputs = (formData: any) => {
+    const handleImageReset = (event: any) => {
+        event.preventDefault();
+        if (imageFileInputRef.current) {
+            imageFileInputRef.current.value = ""
+            setImageFile(null);
+            setImageFilePreview('');
+        }
+    };
+
+    // client side validation
+    const validateInputs = (formData: FormData) => {
         let isValid = true;
-        const title = formData.get('title')
-        const content = formData.get('content')
+        const title: string = (formData.get("title") as string) ?? "";
+        const content: string = (formData.get("content") as string) ?? "";
         if (!title || title.length < 5) {
             setTitleError(true);
             setTitleErrorMessage('Title must be at least 5 characters long.');
@@ -94,6 +89,8 @@ export default function PostForm({ categories }: PostFormProps) {
             setTitleErrorMessage('');
         }
         if (!content || content.length < 10) {
+            console.log('checking content lenght');
+            console.log(content.length);
             setContentError(true);
             setContentErrorMessage('Content must be at least 10 characters long.');
             isValid = false;
@@ -104,48 +101,39 @@ export default function PostForm({ categories }: PostFormProps) {
         return isValid
     };
 
+    // Submit
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        console.log('handle submit');
+        // Transform into FormData
         const formData = new FormData(event.currentTarget);
         if (!validateInputs(formData)) {
             return;
+        } else {
+            setTitleError(false);
+            setContentError(false);
         }
-        let imageFileS3Url = '';
         if (imageFile) {
-            formData.append("imageFile", imageFile);
+            const imageFormData = new FormData()
+            imageFormData.append('imageFile', imageFile)
             try {
                 const response = await fetch("/api/s3-upload", {
                     method: "POST",
-                    body: formData,
+                    body: imageFormData,
                 });
                 const result = await response.json();
                 if (!response.ok) {
                     throw new Error(result.error || "Upload failed");
                 }
-                imageFileS3Url = result?.fileUrl
+                const imageFileS3Url = result?.fileUrl
+                formData.append("thumbnail", imageFileS3Url)
+                console.log('upload went well!');
             } catch (error) {
                 console.error("Error uploading file:", error);
             }
         }
-
-        const createPostType: CreatePostDTO = {
-            title: formData.get('title') as string,
-            content: formData.get('content') as string,
-            authorId: session?.user.id as string,
-            thumbnail: imageFileS3Url ?? '',
-            categories: selectedValues
-        }
-
-        try {
-            const response = await createPost({
-                variables: { ...createPostType },
-            });
-            console.log('Post created successfully:', response.data.createPost);
-            router.push('/')
-        } catch (err) {
-            console.log(JSON.stringify(err))
-            console.error('Error creating post:', err);
-        }
+        formAction(formData)
+        closeModal()
     };
 
     return (
@@ -153,7 +141,8 @@ export default function PostForm({ categories }: PostFormProps) {
             component={'form'}
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        >
+        >   
+            {/* Title */}
             <FormControl>
                 <FormLabel htmlFor="title">Title</FormLabel>
                 <TextField
@@ -166,15 +155,29 @@ export default function PostForm({ categories }: PostFormProps) {
                     helperText={titleErrorMessage}
                 />
             </FormControl>
+            {/* Content */}
             <FormControl>
                 <FormLabel htmlFor="content">Content</FormLabel>
-                <StyledTextarea
+                <TextField
+                    required
+                    fullWidth
+                    multiline
+                    minRows={8}
                     id="content"
                     name="content"
-                    placeholder="Enter post content"
+                    placeholder="Content"
+                    sx={{
+                        width: 1,
+                        '& .MuiInputBase-root': {
+                            height: 'auto',
+                            backgroundColor: 'background.default'
+                        },
+                    }}
+                    error={contentError}
+                    helperText={contentErrorMessage}
                 />
-                {contentError && <p style={{ color: 'red' }}>Error: {contentErrorMessage}</p>}
             </FormControl>
+            {/* Image */}
             <FormControl>
                 <FormLabel htmlFor="raised-button-file">Image</FormLabel>
                 <input
@@ -186,14 +189,17 @@ export default function PostForm({ categories }: PostFormProps) {
                     name="imageFile"
                     onChange={handleFileChange}
                 />
-                <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '1rem',
-                    border: '1px solid #666',
-                    borderRadius: '1rem'
-                }}>
+                <Stack
+                    direction='column'
+                    alignItems='center'
+                    justifyContent='center'
+                    sx={{
+                        padding: 2,
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        borderRadius: 2,
+                        backgroundColor: 'background.default'
+                    }}>
                     {
                         !imageFilePreview ? (
                             <FormLabel htmlFor="raised-button-file" sx={{ mb: 0 }}>
@@ -205,7 +211,7 @@ export default function PostForm({ categories }: PostFormProps) {
                             <Button
                                 variant="outlined"
                                 component="span"
-                                onClick={(event) => handleReset(event)}
+                                onClick={(event) => handleImageReset(event)}
                             >
                                 <ClearIcon />
                             </Button>
@@ -219,9 +225,9 @@ export default function PostForm({ categories }: PostFormProps) {
                             <img src={imageFilePreview} alt="Preview" style={{ maxWidth: '100%', height: '100%' }} />
                         </Box>
                     )}
-                </Box>
+                </Stack>
             </FormControl>
-
+            {/* Categories */}
             <FormControl>
                 <FormLabel id="category-selector-label">Select Categories</FormLabel>
                 <FormGroup row>
@@ -262,16 +268,15 @@ export default function PostForm({ categories }: PostFormProps) {
                     ))}
                 </FormGroup>
             </FormControl>
-
             <Button
                 type="submit"
                 variant="contained"
                 color="primary"
-                disabled={loading}
+                disabled={false}
             >
-                {loading ? 'Creating...' : 'Create Post'}
+                {false ? 'Creating...' : 'Create Post'}
             </Button>
-            {error && <p style={{ color: 'red' }}>Error: {error.message}</p>}
+            {true && <p style={{ color: 'red' }}>Error: {'aslkdfj'}</p>}
         </Box>
     );
 };

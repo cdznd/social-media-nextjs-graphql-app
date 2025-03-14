@@ -50,3 +50,11 @@ export type PostWhereInput = {
     authorId?: { in: Array<string> } | string;
     visibility?: 'PUBLIC' | 'PRIVATE';
 }
+
+type CreatePostDTO = {
+    title: string,
+    content: string,
+    authorId: string,
+    thumbnail: string,
+    categories: string[]
+};

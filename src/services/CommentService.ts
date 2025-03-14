@@ -20,4 +20,14 @@ export default class CommentService {
         })
     }
 
+    async deleteComment(
+        commentId: string
+    ) {
+        return this.context.prisma.comment.delete({
+            where: {
+                id: commentId
+            }
+        })
+    }
+
 }

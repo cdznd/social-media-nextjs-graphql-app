@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useActionState } from "react";
-
 import {
     Box,
     FormControl,
@@ -11,23 +10,24 @@ import {
     Button,
     FormControlLabel,
     FormGroup,
-    Checkbox
+    Checkbox,
+    ToggleButtonGroup,
+    ToggleButton
 } from "@mui/material";
-
 import ClearIcon from '@mui/icons-material/Clear';
-
-import { useSession } from "next-auth/react";
-
+import PublicIcon from '@mui/icons-material/Public';
+import LockIcon from '@mui/icons-material/Lock';
 import { createPost } from "./actions";
-
 import { CategoryType } from "@/types/category";
 
-export default function PostForm({ closeModal }: { closeModal: () => void }) {
+type PostFormProps = {
+    categories: CategoryType[],
+    closeModal: () => void
+}
 
-    const { data: session } = useSession();
-
-    // fetch categories
-    const categories: any = []
+export default function PostForm(
+    { categories, closeModal }: PostFormProps
+) {
 
     // Error states
     const [titleError, setTitleError] = useState(false);
@@ -39,6 +39,8 @@ export default function PostForm({ closeModal }: { closeModal: () => void }) {
     // Image Upload state
     const [imageFile, setImageFile] = useState(null);
     const [imageFilePreview, setImageFilePreview] = useState('');
+    // Visibility
+    const [postVisibility, setPostVisibility] = useState('PRIVATE')
 
     // Server action
     const initialState = {
@@ -55,7 +57,7 @@ export default function PostForm({ closeModal }: { closeModal: () => void }) {
             prev.includes(value) ? prev.filter((item: any) => item !== value) : [...prev, value]
         );
     };
-   
+
     // Image
     const handleFileChange = (event: any) => {
         const targed = event.currentTarget
@@ -132,6 +134,8 @@ export default function PostForm({ closeModal }: { closeModal: () => void }) {
                 console.error("Error uploading file:", error);
             }
         }
+        // Appending visibility to formData
+        formData.append('visibility', postVisibility)
         formAction(formData)
         closeModal()
     };
@@ -141,7 +145,7 @@ export default function PostForm({ closeModal }: { closeModal: () => void }) {
             component={'form'}
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        >   
+        >
             {/* Title */}
             <FormControl>
                 <FormLabel htmlFor="title">Title</FormLabel>
@@ -228,7 +232,12 @@ export default function PostForm({ closeModal }: { closeModal: () => void }) {
                 </Stack>
             </FormControl>
             {/* Categories */}
-            <FormControl>
+            <FormControl
+                sx={{
+                    maxHeight: '12rem',
+                    overflowY: 'scroll'
+                }}
+            >
                 <FormLabel id="category-selector-label">Select Categories</FormLabel>
                 <FormGroup row>
                     {categories.map((category: CategoryType) => (
@@ -268,15 +277,36 @@ export default function PostForm({ closeModal }: { closeModal: () => void }) {
                     ))}
                 </FormGroup>
             </FormControl>
+            <FormControl>
+                <FormLabel id="post-visibility-toggle">Visibility</FormLabel>
+                <ToggleButtonGroup
+                    value={postVisibility}
+                    onChange={(event) => setPostVisibility(event.target.value)}
+                    aria-label="Platform"
+                    sx={{
+                        backgroundColor: 'background.paper',
+                        boxShadow: 'none !important',
+                        border: 'none'
+                    }}
+                >
+                    <ToggleButton
+                        value="PUBLIC"
+                        aria-label="post-visibility-public"
+                    > <PublicIcon sx={{ mr: 1 }} />Public </ToggleButton>
+                    <ToggleButton
+                        value="PRIVATE"
+                        aria-label="post-visibility-private"
+                    > <LockIcon sx={{ mr: 1 }}/>Private </ToggleButton>
+                </ToggleButtonGroup>
+            </FormControl>
             <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 disabled={false}
             >
-                {false ? 'Creating...' : 'Create Post'}
+                {pending ? 'Creating...' : 'Create Post'}
             </Button>
-            {true && <p style={{ color: 'red' }}>Error: {'aslkdfj'}</p>}
         </Box>
     );
 };

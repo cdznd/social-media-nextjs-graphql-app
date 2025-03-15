@@ -8,6 +8,7 @@ export const CREATE_POST_MUTATION = gql`
         $authorId: String!,
         $thumbnail: String,
         $categories: [String!]!
+        $visibility: PostVisibilityType!
     ) {
         createPost(
             title: $title,
@@ -15,6 +16,7 @@ export const CREATE_POST_MUTATION = gql`
             authorId: $authorId,
             thumbnail: $thumbnail,
             categories: $categories
+            visibility: $visibility
         ) {
             id
         }

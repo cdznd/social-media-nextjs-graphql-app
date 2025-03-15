@@ -2,7 +2,8 @@ import {
     extendType,
     nonNull,
     stringArg,
-    list
+    list,
+    arg
 } from "nexus"
 
 import { Context } from "@/lib/prisma/context"
@@ -13,25 +14,30 @@ import LikeService from "@/services/LikeService"
 import UserService from "@/services/UserService"
 import NotificationService from "@/services/NotificationService"
 import CommentService from "@/services/CommentService"
+import { PostVisibilityType } from "../enums"
 
 export const PostMutations = extendType({
     type: 'Mutation',
     definition(t) {
-        t.field('createPost', {
-            type: Post,
-            args: {
-                title: nonNull(stringArg()),
-                content: nonNull(stringArg()),
-                authorId: nonNull(stringArg()),
-                thumbnail: stringArg(),
-                categories: nonNull(list(nonNull(stringArg())))
-            },
-            resolve: async (_parent, args, context: Context) => {
-                const { title, content, authorId, thumbnail, categories } = args
-                const postService = new PostService(context)
-                return postService.createPost({ title, content, authorId, thumbnail, categories })
+        t.field(
+            'createPost',
+            {
+                type: Post,
+                args: {
+                    title: nonNull(stringArg()),
+                    content: nonNull(stringArg()),
+                    authorId: nonNull(stringArg()),
+                    thumbnail: stringArg(),
+                    categories: nonNull(list(nonNull(stringArg()))),
+                    visibility: nonNull(arg({ type: PostVisibilityType }))
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { title, content, authorId, thumbnail, categories, visibility } = args
+                    const postService = new PostService(context)
+                    return postService.createPost({ title, content, authorId, thumbnail, categories, visibility })
+                }
             }
-        })
+        )
         t.field(
             'triggerLike',
             {

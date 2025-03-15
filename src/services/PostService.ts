@@ -14,7 +14,7 @@ export default class PostService {
         private context: Context
     ) { }
 
-    async createPost({ title, content, authorId, thumbnail, categories }: CreatePostDTO) {
+    async createPost({ title, content, authorId, thumbnail, categories, visibility }: CreatePostDTO) {
         return this.context.prisma.post.create({
             data: {
                 title: title as string,
@@ -26,7 +26,8 @@ export default class PostService {
                         where: { name: category },
                         create: { name: category }
                     }))
-                }
+                },
+                visibility: visibility
             },
         })
     }

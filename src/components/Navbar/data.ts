@@ -11,10 +11,6 @@ const navbarItems: { label: string; href: string }[] = [
         label: 'Users',
         href: '/users'
     },
-    {
-        label: 'New Post',
-        href: '/new-post'
-    }
 ]
 
 export default navbarItems

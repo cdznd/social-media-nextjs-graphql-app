@@ -104,7 +104,7 @@ type Mutation {
   createComment(content: String!, postId: String!, userId: String!): Comment
   createFriendshipRequest(fromUserId: String!, toUserId: String!): Friendship
   createNotification(actorId: String!, content: String!, entityId: String!, entityType: NotificationEntityType!, read: Boolean! = false, type: NotificationType!, userId: String!): Notification
-  createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!): Post
+  createPost(authorId: String!, categories: [String!]!, content: String!, thumbnail: String, title: String!, visibility: PostVisibilityType!): Post
   createUser(email: String!, image: String, name: String!, password: String!, username: String!): User
   deleteFriendship(friendshipId: String!): Friendship
   deleteMutation(commentId: String!): Comment

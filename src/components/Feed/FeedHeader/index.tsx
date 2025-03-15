@@ -6,7 +6,7 @@ import CategorySelector from "./CategorySelector";
 import VisibilityFilter from "./VisibilityFilter";
 import { FeedHeaderProps } from "@/types/feed";
 
-async function getCategoriesData() {
+async function getCategories() {
     const apolloClient = createApolloClient();
     try {
         const { data } = await apolloClient.query({
@@ -25,7 +25,7 @@ export default async function FeedHeader(
         feedType
     }: FeedHeaderProps
 ) {
-    const { data } = await getCategoriesData();
+    const { data } = await getCategories();
     const categories = data?.categories ?? []
     const isNotExploreFeed = feedType !== 'explore'
     return (

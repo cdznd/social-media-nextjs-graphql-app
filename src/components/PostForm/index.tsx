@@ -47,6 +47,7 @@ export default function PostForm(
         success: false,
         message: ''
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, formAction, pending] = useActionState(createPost, initialState)
 
     // Categories

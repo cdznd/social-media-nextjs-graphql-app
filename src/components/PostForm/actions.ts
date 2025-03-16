@@ -7,7 +7,6 @@ import { CREATE_POST_MUTATION } from "@/fragments/mutations/mutations";
 const apolloClient = createApolloClient();
 
 export async function createPost(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     previousState: { success: boolean },
     formData: FormData
 ) {

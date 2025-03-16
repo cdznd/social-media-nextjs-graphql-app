@@ -557,6 +557,7 @@ export interface NexusGenArgTypes {
       content: string; // String!
       thumbnail?: string | null; // String
       title: string; // String!
+      visibility: NexusGenEnums['PostVisibilityType']; // PostVisibilityType!
     }
     createUser: { // args
       email: string; // String!

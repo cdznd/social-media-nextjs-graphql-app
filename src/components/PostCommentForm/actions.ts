@@ -9,7 +9,6 @@ const apolloClient = createApolloClient();
 export async function createComment(
     postId: string,
     userId: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     previousState: { success: boolean },
     formData: FormData
 ) {

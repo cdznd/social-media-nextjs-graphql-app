@@ -26,5 +26,4 @@ export default function ModalHeader(
             </IconButton>
         </Stack>
     )
-
 }

@@ -7,8 +7,11 @@ import { brand } from '../common/themePrimitives';
 import ModalContainer from '../ModalContainer';
 import ModalHeader from '../ModalHeader';
 import PostForm from '../PostForm';
+import { CategoryType } from '@/types/category';
 
-export default function FeedNewPostButton() {
+export default function FeedNewPostButton({
+    categories
+}: { categories: CategoryType[] }) {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -36,6 +39,7 @@ export default function FeedNewPostButton() {
                 <Typography color="text.secondary">Click here to create new post</Typography>
                 <DriveFileRenameOutlineIcon />
             </Stack>
+            {/* Modal */}
             <ModalContainer
                 open={open}
                 onClose={handleClose}>
@@ -43,6 +47,7 @@ export default function FeedNewPostButton() {
                     title='Create new post'
                     onClose={handleClose} />
                 <PostForm
+                    categories={categories}
                     closeModal={handleClose} />
             </ModalContainer>
         </>

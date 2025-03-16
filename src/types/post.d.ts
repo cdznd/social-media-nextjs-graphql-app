@@ -2,19 +2,21 @@ import { CategoryType } from "./category";
 import { LikeType } from "./like";
 import { CommentType } from "./comment";
 
+type PostVisibilityType = "PUBLIC" | "PRIVATE"
+
 export type PostType = {
-    id: string;
-    title: string;
-    content: string;
-    thumbnail?: string | null;
-    authorId: string;
-    author: UserType;
-    visibility: "PUBLIC" | "PRIVATE";
-    likes: LikeType[];
-    comments: CommentType[];
-    categories: CategoryType[];
-    createdAt: string;
-    updatedAt: string;
+    id: string
+    title: string
+    content: string
+    thumbnail?: string | null
+    authorId: string
+    author: UserType
+    visibility: PostVisibilityType
+    likes: LikeType[]
+    comments: CommentType[]
+    categories: CategoryType[]
+    createdAt: string
+    updatedAt: string
 };
 
 type CreatePostDTO = {
@@ -23,6 +25,7 @@ type CreatePostDTO = {
     authorId: string
     thumbnail?: string | null
     categories: string[]
+    visibility: PostVisibilityType
 }
 
 type FeedSortByOrder = 'asc' | 'desc';

@@ -4,6 +4,8 @@ import { GET_USER_BY_ID } from "@/fragments/queries/user";
 import { Container, Stack } from "@mui/material";
 import UserAvatar from "../UserAvatar";
 import FeedNewPostButton from "../FeedNewPostButton";
+import { GET_CATEGORIES } from "@/fragments/queries/category";
+import { CategoryType } from "@/types/category";
 
 async function getUserInfo(userId: string) {
     const apolloClient = createApolloClient()
@@ -21,11 +23,26 @@ async function getUserInfo(userId: string) {
     }
 }
 
+async function getCategories() {
+    const apolloClient = createApolloClient()
+    try {
+        const { data } = await apolloClient.query({
+            query: GET_CATEGORIES
+        })
+        return { data, error: null }
+    } catch(error) {
+        console.error(error)
+        return { data: null, error: error }
+    }
+}
+
 export default async function FeedNewPost() {
     const session = await auth()
     const loggedUserId = session?.user?.id
     const loggedUser = loggedUserId ? await getUserInfo(loggedUserId) : null;
     const loggedUserData = loggedUser?.data?.user ?? null
+    const categories = await getCategories()
+    const formCategories: CategoryType[] =  categories.data.categories ?? []
     return (
         <Container
             sx={{
@@ -53,7 +70,9 @@ export default async function FeedNewPost() {
                         height: 65,
                         width: 65
                     }} />
-                <FeedNewPostButton />
+                <FeedNewPostButton
+                    categories={formCategories}
+                />
             </Stack>
         </Container>
     )

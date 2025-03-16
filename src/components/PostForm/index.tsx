@@ -57,10 +57,10 @@ export default function PostForm(
     const [state, formAction, pending] = useActionState(createPost, initialState)
 
     // Categories
-    const [selectedValues, setSelectedValues] = useState<string[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const handleChange = (event: any) => {
         const value = event.target.value;
-        setSelectedValues((prev: any) =>
+        setSelectedCategories((prev: any) =>
             prev.includes(value) ? prev.filter((item: any) => item !== value) : [...prev, value]
         );
     };
@@ -119,6 +119,7 @@ export default function PostForm(
             setTitleError(false);
             setContentError(false);
         }
+
         if (imageFile) {
             const imageFormData = new FormData()
             imageFormData.append('imageFile', imageFile)
@@ -134,7 +135,6 @@ export default function PostForm(
                 }
                 const imageFileS3Url = result?.fileUrl
                 formData.append("thumbnail", imageFileS3Url)
-                console.log('upload went well!');
                 setIsImageUploading(false)
             } catch (error) {
                 console.error("Error uploading file:", error);
@@ -143,6 +143,7 @@ export default function PostForm(
         }
         // Appending visibility to formData
         formData.append('visibility', postVisibility)
+        formData.append('categories', JSON.stringify(selectedCategories))
         startTransition(() => {
             formAction(formData)
         })
@@ -282,7 +283,7 @@ export default function PostForm(
                             key={category.id}
                             control={
                                 <Checkbox
-                                    checked={selectedValues.includes(category.name)}
+                                    checked={selectedCategories.includes(category.name)}
                                     onChange={handleChange}
                                     value={category.name}
                                     sx={{ display: "none" }}
@@ -292,14 +293,14 @@ export default function PostForm(
                                 <Box
                                     sx={{
                                         border: '1px solid #666',
-                                        borderColor: selectedValues.includes(category.name) ? "primary.main" : "grey.400",
+                                        borderColor: selectedCategories.includes(category.name) ? "primary.main" : "grey.400",
                                         borderRadius: '1rem',
                                         padding: '.8rem',
                                         paddingX: '1.2rem',
                                         marginRight: '.8rem',
                                         marginBottom: '.8rem',
                                         cursor: "pointer",
-                                        backgroundColor: selectedValues.includes(category.name) ? "primary.light" : "transparent",
+                                        backgroundColor: selectedCategories.includes(category.name) ? "primary.light" : "transparent",
                                         transition: "0.3s",
                                         textAlign: "center"
                                     }}

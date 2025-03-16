@@ -52,17 +52,6 @@ export default function NavbarSubmenu({ loggedUser }: { loggedUser: UserType }) 
                     }
                 }}
             >
-                <MenuItem onClick={handleLogout}>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        size="small"
-                        fullWidth
-                        endIcon={<LogoutIcon />}
-                    >
-                        Logout
-                    </Button>
-                </MenuItem>
                 <MenuItem>
                     <Link
                         href={`/my-profile`}
@@ -82,6 +71,17 @@ export default function NavbarSubmenu({ loggedUser }: { loggedUser: UserType }) 
                             My Profile
                         </Button>
                     </Link>
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        size="small"
+                        fullWidth
+                        endIcon={<LogoutIcon />}
+                    >
+                        Logout
+                    </Button>
                 </MenuItem>
             </Menu>
         </>

@@ -124,23 +124,25 @@ export default async function PostPage(
                 </Typography>
             </Stack>
             {/* Post Image */}
-            <Box sx={{
-                w: 1,
-                height: postImageHeight,
-                position: 'relative',
-                borderRadius: 8,
-                mt: 2
-            }}>
-                <Image
-                    src={postData?.thumbnail}
-                    fill={true}
-                    alt={postData.title}
-                    style={{
-                        objectFit: 'cover',
-                        borderRadius: 8
-                    }}
-                />
-            </Box>
+            {!postData?.thumbnail ? null : (
+                <Box sx={{
+                    w: 1,
+                    height: postImageHeight,
+                    position: 'relative',
+                    borderRadius: 8,
+                    mt: 2
+                }}>
+                    <Image
+                        src={postData?.thumbnail}
+                        fill={true}
+                        alt={postData.title}
+                        style={{
+                            objectFit: 'cover',
+                            borderRadius: 8
+                        }}
+                    />
+                </Box>
+            )}
             {/* Post Engagement */}
             <Box
                 sx={{

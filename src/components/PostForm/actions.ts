@@ -16,12 +16,14 @@ export async function createPost(
         if (!loggedUserId) {
             throw new Error('Error with logged user')
         }
+        const categories = formData.get('categories') as string
+        const parsedCategories = JSON.parse(categories)
         const createPostObject = {
             title: formData.get('title'),
             content: formData.get('content'),
             authorId: loggedUserId,
             thumbnail: formData.get('thumbnail') ?? '',
-            categories: formData.get('categories') ?? [],
+            categories: parsedCategories ?? [],
             visibility: formData.get('visibility') ?? 'PUBLIC'
         }
         await apolloClient.mutate({

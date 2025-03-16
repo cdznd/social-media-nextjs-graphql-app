@@ -88,7 +88,7 @@ export default function PostCard({ postData, variants = [], position }: PostCard
                     paddingTop: 1,
                     paddingBottom: 1,
                     borderBottom: '1px solid',
-                    borderTop: '1px solid',
+                    borderTop: !postData?.thumbnail ? 'none' : '1px solid',
                     borderColor: brand[200]
                 }}
             >

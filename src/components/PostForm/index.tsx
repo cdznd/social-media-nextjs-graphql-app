@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useActionState } from "react";
+import { useState, useRef, useActionState, useTransition } from "react";
 import {
     Box,
     FormControl,
@@ -12,13 +12,16 @@ import {
     FormGroup,
     Checkbox,
     ToggleButtonGroup,
-    ToggleButton
+    ToggleButton,
+    Typography
 } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
 import { createPost } from "./actions";
 import { CategoryType } from "@/types/category";
+import SpinnerLoading from "../Loading/Spinner";
+import LinearLoading from "../Loading/Linear";
 
 type PostFormProps = {
     categories: CategoryType[],
@@ -28,7 +31,6 @@ type PostFormProps = {
 export default function PostForm(
     { categories, closeModal }: PostFormProps
 ) {
-
     // Error states
     const [titleError, setTitleError] = useState(false);
     const [contentError, setContentError] = useState(false);
@@ -39,10 +41,14 @@ export default function PostForm(
     // Image Upload state
     const [imageFile, setImageFile] = useState(null);
     const [imageFilePreview, setImageFilePreview] = useState('');
+    const [isImageUploading, setIsImageUploading] = useState(false);
     // Visibility
-    const [postVisibility, setPostVisibility] = useState('PRIVATE')
+    const [postVisibility, setPostVisibility] = useState('PUBLIC')
 
     // Server action
+    // As we are using it outside of a formAction we need to implement the transition
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [isPending, startTransition] = useTransition()
     const initialState = {
         success: false,
         message: ''
@@ -92,8 +98,6 @@ export default function PostForm(
             setTitleErrorMessage('');
         }
         if (!content || content.length < 10) {
-            console.log('checking content lenght');
-            console.log(content.length);
             setContentError(true);
             setContentErrorMessage('Content must be at least 10 characters long.');
             isValid = false;
@@ -107,7 +111,6 @@ export default function PostForm(
     // Submit
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log('handle submit');
         // Transform into FormData
         const formData = new FormData(event.currentTarget);
         if (!validateInputs(formData)) {
@@ -120,6 +123,7 @@ export default function PostForm(
             const imageFormData = new FormData()
             imageFormData.append('imageFile', imageFile)
             try {
+                setIsImageUploading(true)
                 const response = await fetch("/api/s3-upload", {
                     method: "POST",
                     body: imageFormData,
@@ -131,15 +135,48 @@ export default function PostForm(
                 const imageFileS3Url = result?.fileUrl
                 formData.append("thumbnail", imageFileS3Url)
                 console.log('upload went well!');
+                setIsImageUploading(false)
             } catch (error) {
                 console.error("Error uploading file:", error);
+                setIsImageUploading(false)
             }
         }
         // Appending visibility to formData
         formData.append('visibility', postVisibility)
-        formAction(formData)
-        closeModal()
+        startTransition(() => {
+            formAction(formData)
+        })
     };
+
+    if (isImageUploading) return (
+        <Box sx={{ my: 4 }}>
+            <Stack direction='column' alignItems='center'>
+                <Typography
+                    variant='h5'
+                    color='text.primary'>
+                    Uploading image.
+                </Typography>
+                <Box sx={{ width: '100%', mt: 4 }}>
+                    <LinearLoading />
+                </Box>
+            </Stack>
+        </Box>
+    )
+    if ((pending && !state?.success)) return (
+        <Box sx={{ my: 4 }}>
+            <Stack direction='column' alignItems='center'>
+                <Typography
+                    variant='h5'
+                    color='text.primary'>
+                    Creating Post.
+                </Typography>
+                <Box sx={{ mt: 4 }}>
+                    <SpinnerLoading />
+                </Box>
+            </Stack>
+        </Box>
+    )
+    if (!pending && state.success) closeModal();
 
     return (
         <Box
@@ -191,7 +228,6 @@ export default function PostForm(
                     style={{ display: 'none' }}
                     id="raised-button-file"
                     type="file"
-                    name="imageFile"
                     onChange={handleFileChange}
                 />
                 <Stack
@@ -297,7 +333,7 @@ export default function PostForm(
                     <ToggleButton
                         value="PRIVATE"
                         aria-label="post-visibility-private"
-                    > <LockIcon sx={{ mr: 1 }}/>Private </ToggleButton>
+                    > <LockIcon sx={{ mr: 1 }} />Private </ToggleButton>
                 </ToggleButtonGroup>
             </FormControl>
             <Button

@@ -50,13 +50,15 @@ export default function PostCommentForm(
                 }}
             >
                 {
-                    pending && (
-                        <Box sx={{ width: 1 }}><LinearLoading /></Box>
+                    (pending && !state.success) && (
+                        <Box sx={{ width: 1 }}>
+                            <LinearLoading />
+                        </Box>
                     )
                 }
                 <Button
                     type="submit"
-                    endIcon={pending ? <HourglassTopIcon /> : <SendIcon />}
+                    endIcon={(pending && !state.success) ? <HourglassTopIcon /> : <SendIcon />}
                     variant="contained"
                     color="secondary"
                     size="small"

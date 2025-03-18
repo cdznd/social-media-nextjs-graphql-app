@@ -277,7 +277,10 @@ export default function PostForm(
                                 src={imageFilePreview}
                                 alt="Preview upload"
                                 fill={true}
-                            />  
+                                style={{
+                                    objectFit: 'cover'
+                                }}
+                            />
                         </Box>
                     )}
                 </Stack>
@@ -332,7 +335,7 @@ export default function PostForm(
                 <FormLabel id="post-visibility-toggle">Visibility</FormLabel>
                 <ToggleButtonGroup
                     value={postVisibility}
-                    onChange={(event) => setPostVisibility(event.target.value)}
+                    onChange={(event) => setPostVisibility((event.target as HTMLSelectElement).value)}
                     aria-label="Platform"
                     sx={{
                         backgroundColor: 'background.paper',

@@ -1,39 +1,27 @@
-import createApolloClient from "@/lib/apollo-client/apolloClient";
 import { auth } from "@/lib/next-auth/auth";
+import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
 import { GET_USER_BY_ID } from "@/fragments/queries/user";
+import { GET_CATEGORIES } from "@/fragments/queries/category";
 import { Container, Stack } from "@mui/material";
 import UserAvatar from "../UserAvatar";
 import FeedNewPostButton from "../FeedNewPostButton";
-import { GET_CATEGORIES } from "@/fragments/queries/category";
 import { CategoryType } from "@/types/category";
 
 async function getUserInfo(userId: string) {
-    const apolloClient = createApolloClient()
-    try {
-        const { data } = await apolloClient.query({
-            query: GET_USER_BY_ID,
-            variables: {
-                userId: userId
-            }
-        })
-        return { data, error: null }
-    } catch (error) {
-        console.error(error)
-        return { data: null, error }
-    }
+    const data = await fetchGraphQLData(
+        GET_USER_BY_ID,
+        {
+            userId
+        }
+    )
+    return { data }
 }
 
 async function getCategories() {
-    const apolloClient = createApolloClient()
-    try {
-        const { data } = await apolloClient.query({
-            query: GET_CATEGORIES
-        })
-        return { data, error: null }
-    } catch(error) {
-        console.error(error)
-        return { data: null, error: error }
-    }
+    const data = await fetchGraphQLData(
+        GET_CATEGORIES
+    )
+    return { data }
 }
 
 export default async function FeedNewPost() {
@@ -42,7 +30,7 @@ export default async function FeedNewPost() {
     const loggedUser = loggedUserId ? await getUserInfo(loggedUserId) : null;
     const loggedUserData = loggedUser?.data?.user ?? null
     const categories = await getCategories()
-    const formCategories: CategoryType[] =  categories.data.categories ?? []
+    const formCategories: CategoryType[] = categories.data.categories ?? []
     return (
         <Container
             sx={{

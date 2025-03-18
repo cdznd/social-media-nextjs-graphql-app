@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useActionState, useTransition } from "react";
+import Image from "next/image";
 import {
     Box,
     FormControl,
@@ -18,16 +19,17 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
-import { createPost } from "./actions";
-import { CategoryType } from "@/types/category";
 import SpinnerLoading from "../Loading/Spinner";
 import LinearLoading from "../Loading/Linear";
+import { createPost } from "./actions";
+import { CategoryType } from "@/types/category";
 
 type PostFormProps = {
     categories: CategoryType[],
     closeModal: () => void
 }
 
+// TODO: Resolve explicity any types
 export default function PostForm(
     { categories, closeModal }: PostFormProps
 ) {
@@ -53,19 +55,23 @@ export default function PostForm(
         success: false,
         message: ''
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const [state, formAction, pending] = useActionState(createPost, initialState)
 
     // Categories
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     const handleChange = (event: any) => {
         const value = event.target.value;
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         setSelectedCategories((prev: any) =>
+            /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
             prev.includes(value) ? prev.filter((item: any) => item !== value) : [...prev, value]
         );
     };
 
     // Image
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     const handleFileChange = (event: any) => {
         const targed = event.currentTarget
         const selectedFile = targed?.files[0]
@@ -75,6 +81,7 @@ export default function PostForm(
         }
     }
 
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     const handleImageReset = (event: any) => {
         event.preventDefault();
         if (imageFileInputRef.current) {
@@ -262,9 +269,15 @@ export default function PostForm(
                     {imageFilePreview && (
                         <Box sx={{
                             padding: '2rem',
-                            height: '500px'
+                            height: '500px',
+                            width: '80%',
+                            position: 'relative'
                         }}>
-                            <img src={imageFilePreview} alt="Preview" style={{ maxWidth: '100%', height: '100%' }} />
+                            <Image
+                                src={imageFilePreview}
+                                alt="Preview upload"
+                                fill={true}
+                            />  
                         </Box>
                     )}
                 </Stack>

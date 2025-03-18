@@ -1,6 +1,7 @@
 'use client'
 import { useState, MouseEvent } from 'react';
 import Link from 'next/link'
+import { signOut } from 'next-auth/react';
 import { Box, Button, Menu, MenuItem } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -20,7 +21,7 @@ export default function NavbarSubmenu({ loggedUser }: { loggedUser: UserType }) 
     };
 
     const handleLogout = () => {
-        // signOut({ redirect: true })
+        signOut({ redirect: true })
     }
 
     return (

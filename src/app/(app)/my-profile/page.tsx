@@ -1,60 +1,46 @@
-import { Container, Typography } from "@mui/material";
 import { auth } from "@/lib/next-auth/auth";
-import createApolloClient from "@/lib/apollo-client/apolloClient";
+import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
 import { GET_MY_USER_PROFILE } from "@/fragments/queries/profile";
 import { GET_PRIVATE_PROFILE_FEED_INFO } from "@/fragments/queries/feed";
+import { Container, Typography } from "@mui/material";
 import PostListCard from "@/components/MyProfile/PostListCard";
 import UserProfileInfoCard from "@/components/UserProfileInfoCard";
 import ErrorAlert from "@/components/ErrorAlert";
-import Link from "next/link";
-
 import ProfileFriendList from "@/components/MyProfile/ProfileFriendList";
 import { PostType } from "@/types/post";
 
-async function getCurrentProfileData(userId: string) {
-    const apolloClient = createApolloClient()
-    try {
-        const { data: currentProfileData } = await apolloClient.query({
-            query: GET_MY_USER_PROFILE,
-            variables: { userId }
-        })
-        return { data: currentProfileData, feedError: null }
-    } catch (error) {
-        console.log(JSON.stringify(error, null, 2))
-        return { data: null, feedError: error }
-    }
+async function getCurrentProfileData(
+    userId: string
+) {
+    const data = await fetchGraphQLData(
+        GET_MY_USER_PROFILE,
+        { userId }
+    )
+    return { data }
 }
 
 async function getCurrentProfileFeedInfo(
     userId: string
 ) {
-    const apolloClient = createApolloClient()
-    try {
-        const { data } = await apolloClient.query({
-            query: GET_PRIVATE_PROFILE_FEED_INFO,
-            variables: {
-                userId
-            }
-        })
-        return { data, feedError: null }
-    } catch (error) {
-        console.log(JSON.stringify(error, null, 2))
-        return { data: null, feedError: error }
-    }
+    const data = await fetchGraphQLData(
+        GET_PRIVATE_PROFILE_FEED_INFO,
+        { userId }
+    )
+    return { data }
 }
 
 export default async function MyProfilePage() {
     const session = await auth()
     const loggedUserId = session?.user?.id
-    if(!loggedUserId) {
-        return <ErrorAlert message="No User Logged" />
+    if (!loggedUserId) {
+        return <ErrorAlert message="Error: No logged user" />
     }
     const { data } = await getCurrentProfileData(loggedUserId)
     const { data: { privateProfileFeedInfo } } = await getCurrentProfileFeedInfo(loggedUserId);
     const { privatePostsCount, publicPostsCount } = privateProfileFeedInfo || {}
     const user = data?.user
     if (!user) {
-        return <ErrorAlert message={'No User found'} />
+        return <ErrorAlert message={'Error: No user found'} />
     }
     const userPosts = user?.posts ?? []
     const userLikedPosts = user?.likes ? user?.likes.map((like: { post: PostType }) => like.post) : []
@@ -72,8 +58,7 @@ export default async function MyProfilePage() {
                     publicPosts: publicPostsCount
                 }}
             />
-            <Link href={`/users/${user.id}`}>Check My Feed</Link>
-            <ProfileFriendList 
+            <ProfileFriendList
                 userFriends={userFriends} />
             <PostListCard
                 title={'My Posts'}

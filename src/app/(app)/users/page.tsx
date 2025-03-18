@@ -1,30 +1,24 @@
+import { auth } from "@/lib/next-auth/auth";
+import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
+import { GET_ALL_USERS } from "@/fragments/queries/user";
 import { Alert, Container, Grid, Typography, Box, Stack } from "@mui/material";
 import UserProfileCard from "@/components/UserProfileCard";
-import createApolloClient from "@/lib/apollo-client/apolloClient";
-import { GET_ALL_USERS } from "@/fragments/queries/user";
-import { auth } from "@/lib/next-auth/auth";
-import { UserType } from "@/types/user";
-import { SearchParamsProps } from "@/types/feed";
 import PaginationComponent from "@/components/PaginationComponent";
 import GeneralSearch from "@/components/GeneralSearch";
+import { UserType } from "@/types/user";
+import { SearchParamsProps } from "@/types/feed";
 
 async function getAllUsers(page: number, searchString?: string) {
-    const apolloClient = createApolloClient()
-    try {
-        const usersPerPage = page == 1 ? 13 : 12
-        const { data } = await apolloClient.query({
-            query: GET_ALL_USERS,
-            variables: {
-                searchString: searchString,
-                take: usersPerPage,
-                skip: (page - 1) * usersPerPage
-            }
-        });
-        return { data, feedError: null };
-    } catch (error) {
-        console.error(error)
-        return { data: null, feedError: error };
-    }
+    const usersPerPage = page == 1 ? 13 : 12
+    const data = await fetchGraphQLData(
+        GET_ALL_USERS,
+        {
+            searchString: searchString,
+            take: usersPerPage,
+            skip: (page - 1) * usersPerPage
+        }
+    )
+    return { data };
 }
 
 export default async function usersPage(

@@ -3,6 +3,7 @@ import createApolloClient from "./apolloClient";
 
 export async function fetchGraphQLData(
     query: DocumentNode,
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     variables?: Record<string, any>
 ) {
     const apolloClient = createApolloClient();

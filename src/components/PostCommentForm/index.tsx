@@ -19,7 +19,6 @@ export default function PostCommentForm(
         postId,
         currentUserId,
     );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, formAction, pending] = useActionState(createCommentAction, initialState)
     return (
         <Box

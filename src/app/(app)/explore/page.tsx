@@ -1,56 +1,47 @@
-import createApolloClient from "@/lib/apollo-client/apolloClient";
+import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
 import { GET_EXPLORE_FEED_POSTS } from "@/fragments/queries/feed";
 import { Container } from "@mui/material";
 import Feed from "@/components/Feed";
 import { SearchParamsProps } from "@/types/feed";
 
 async function getExploreFeedData(
-    page: number,
-    searchString?: string,
-    category?: string,
-  ) {
-    const apolloClient = createApolloClient();
-    try {
-      const postsPerPage = 10 // TODO: Update this posts per page config
-      const { data } = await apolloClient.query({
-        query: GET_EXPLORE_FEED_POSTS,
-        variables: {
-          searchString,
-          category,
-          take: postsPerPage,
-          skip: (page - 1) * postsPerPage
-        },
-      });
-      return { data, feedError: null };
-    } catch (error) {
-      console.error(error)
-      return { data: null, feedError: error };
-    }
-  }
+  page: number,
+  searchString?: string,
+  category?: string,
+) {
+  const postsPerPage = 10
+  const data = await fetchGraphQLData(
+    GET_EXPLORE_FEED_POSTS,
+    {
+      searchString,
+      category,
+      take: postsPerPage,
+      skip: (page - 1) * postsPerPage
+    },
+  )
+  return { data };
+}
 
 export default async function ExplorePage(
   props: { searchParams: SearchParamsProps }
 ) {
-    const { search, category, page = 1 } = await props.searchParams
-    // TODO: better handle the feed Error here
-    const { data } = await getExploreFeedData(
-        page,
-        search,
-        category
-    );
-    const { 
-      posts: feedPosts = [],
-      totalCount = 0,
-      totalPages = 1
-    } = data?.exploreFeedPosts
-    return (
-        <Container>
-            <Feed
-                feedData={feedPosts}
-                feedType="explore"
-                totalPages={totalPages}
-                numberOfPosts={totalCount}
-            />
-        </Container>
-    )
+  const { search, category, page = 1 } = await props.searchParams
+  const { data } = await getExploreFeedData(
+    page,
+    search,
+    category
+  );
+  const feedPosts = data?.exploreFeedPosts?.posts ?? []
+  const totalPosts = data?.exploreFeedPosts?.totalCount ?? 0
+  const totalPages = data?.exploreFeedPosts?.totalPages ?? 0
+  return (
+    <Container>
+      <Feed
+        feedData={feedPosts}
+        feedType="explore"
+        totalPages={totalPages}
+        numberOfPosts={totalPosts}
+      />
+    </Container>
+  )
 }

@@ -1,0 +1,1 @@
+export const publicPaths = ['/sign-in', '/sign-up', '/home', '/api/auth/signin', '/api/auth/signup'];

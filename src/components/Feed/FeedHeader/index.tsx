@@ -1,4 +1,4 @@
-import createApolloClient from "@/lib/apollo-client/apolloClient";
+import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
 import { GET_CATEGORIES } from "@/fragments/queries/category";
 import { Box, Typography } from "@mui/material";
 import GeneralSearch from "../../GeneralSearch";
@@ -7,20 +7,14 @@ import VisibilityFilter from "./VisibilityFilter";
 import { FeedHeaderProps } from "@/types/feed";
 
 async function getCategories() {
-    const apolloClient = createApolloClient();
-    try {
-        const { data } = await apolloClient.query({
-            query: GET_CATEGORIES,
-        });
-        return { data, feedError: null };
-    } catch (error) {
-        console.error(error)
-        return { data: null, feedError: error };
-    }
+    const data = await fetchGraphQLData(
+        GET_CATEGORIES
+    )
+    return { data };
 }
 
 export default async function FeedHeader(
-    { 
+    {
         numberOfPosts,
         feedType
     }: FeedHeaderProps

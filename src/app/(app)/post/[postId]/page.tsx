@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import createApolloClient from "@/lib/apollo-client/apolloClient"
+import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
 import { GET_POST } from "@/fragments/queries/post"
 import { Typography, Container, Box, Stack, IconButton } from "@mui/material"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -12,25 +12,19 @@ import PostComments from "@/components/PostComments"
 import ErrorAlert from "@/components/ErrorAlert"
 import { CategoryType } from "@/types/category"
 
+async function getPostData(postId: string) {
+    const data = await fetchGraphQLData(
+        GET_POST,
+        {
+            postId
+        }
+    )
+    return { data }
+}
+
 type PostPageParams = Promise<{
     postId: string
 }>
-
-async function getPostData(postId: string) {
-    const apolloClient = createApolloClient()
-    try {
-        const { data } = await apolloClient.query({
-            query: GET_POST,
-            variables: {
-                postId
-            }
-        })
-        return { data }
-    } catch (error) {
-        console.error(error)
-        return { data: null }
-    }
-}
 
 export default async function PostPage(
     props: { params: PostPageParams }

@@ -1,35 +1,26 @@
-import { Container } from "@mui/material"
-import ErrorAlert from "@/components/ErrorAlert"
-import createApolloClient from "@/lib/apollo-client/apolloClient"
+import { auth } from "@/lib/next-auth/auth"
+import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
 import { GET_USER_PROFILE } from "@/fragments/queries/profile"
 import {
     GET_PRIVATE_PROFILE_FEED_POSTS,
     GET_PRIVATE_PROFILE_FEED_INFO
 } from "@/fragments/queries/feed"
+import { Container } from "@mui/material"
+import ErrorAlert from "@/components/ErrorAlert"
 import UserProfileInfoCard from "@/components/UserProfileInfoCard"
-import { auth } from "@/lib/next-auth/auth"
-
 import Feed from "@/components/Feed"
 import { SearchParamsProps } from "@/types/feed"
-import { Friendship } from "@prisma/client"
-import { ShortFriendshipType } from "@/types/friendship"
-
-type UserPageParams = Promise<{
-    userId: string,
-}>
+import {
+    FriendshipType,
+    ShortFriendshipType
+} from "@/types/friendship"
 
 async function getCurrentProfileData(userId: string) {
-    const apolloClient = createApolloClient()
-    try {
-        const { data: currentProfileData } = await apolloClient.query({
-            query: GET_USER_PROFILE,
-            variables: { userId }
-        })
-        return { data: currentProfileData, feedError: null }
-    } catch (error) {
-        console.log(JSON.stringify(error, null, 2))
-        return { data: null, feedError: error }
-    }
+    const data = await fetchGraphQLData(
+        GET_USER_PROFILE,
+        { userId }
+    )
+    return { data }
 }
 
 async function getCurrentProfileFeed(
@@ -39,44 +30,36 @@ async function getCurrentProfileFeed(
     category?: string,
     visibility?: string
 ) {
-    const apolloClient = createApolloClient()
-    try {
-        const postsPerPage = 10 // TODO: Update this posts per page config
-        const { data } = await apolloClient.query({
-            query: GET_PRIVATE_PROFILE_FEED_POSTS,
-            variables: {
-                userId,
-                searchString,
-                category,
-                visibility,
-                take: postsPerPage,
-                skip: (page - 1) * postsPerPage
-            },
-        });
-        return { data, feedError: null }
-    } catch (error) {
-        console.log(JSON.stringify(error, null, 2))
-        return { data: null, feedError: error }
-    }
+    const postsPerPage = 10;
+    const data = await fetchGraphQLData(
+        GET_PRIVATE_PROFILE_FEED_POSTS,
+        {
+            userId,
+            searchString,
+            category,
+            visibility,
+            take: postsPerPage,
+            skip: (page - 1) * postsPerPage
+        }
+    )
+    return { data }
 }
 
 async function getCurrentProfileFeedInfo(
     userId: string
 ) {
-    const apolloClient = createApolloClient()
-    try {
-        const { data } = await apolloClient.query({
-            query: GET_PRIVATE_PROFILE_FEED_INFO,
-            variables: {
-                userId
-            }
-        })
-        return { data, feedError: null }
-    } catch (error) {
-        console.log(JSON.stringify(error, null, 2))
-        return { data: null, feedError: error }
-    }
+    const data = await fetchGraphQLData(
+        GET_PRIVATE_PROFILE_FEED_INFO,
+        {
+            userId
+        }
+    )
+    return { data }
 }
+
+type UserPageParams = Promise<{
+    userId: string,
+}>
 
 export default async function UserPage(
     props: { params: UserPageParams, searchParams: SearchParamsProps },
@@ -109,7 +92,7 @@ export default async function UserPage(
     // Get all friends from this currentUser
     const currentProfileFriends = currentUser?.friends ?? [];
     const numberOfFriends = currentProfileFriends.reduce(
-        (acc: number, friendship: Friendship) => {
+        (acc: number, friendship: FriendshipType) => {
             if (friendship?.status === 'ACCEPTED') {
                 acc += 1
             }

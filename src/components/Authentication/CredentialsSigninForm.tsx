@@ -1,21 +1,18 @@
+'use client'
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import {
   Box,
   FormControl,
-  FormControlLabel,
   FormLabel,
   TextField,
   Button,
-  Checkbox
 } from "@mui/material";
 import ErrorAlert from "../ErrorAlert";
 
 const CredentialsSigninForm = () => {
 
-  const router = useRouter()
-
+  // Error states
   const [usernameError, setUsernameError] = useState<boolean>(false);
   const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>('');
   const [passwordError, setPasswordError] = useState<boolean>(false);
@@ -23,34 +20,12 @@ const CredentialsSigninForm = () => {
   const [loginError, setLoginError] = useState<boolean>(false)
   const [loginErrorMessage, setLoginErrorMessage] = useState<string>('')
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (usernameError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    // NextAuth SignIn
-    const result = await signIn('credentials',
-      {
-        username: data.get('username'),
-        password: data.get('password'),
-        redirect: false
-      }
-    )
-    if (result?.error) {
-      setLoginError(true)
-      setLoginErrorMessage(result?.error)
-    } else {
-      router.push('/')
-    }
-  };
-
-  const validateInputs = () => {
-    const username = document.getElementById('username') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
+  // client side validation
+  const validateInputs = (formData: FormData) => {
     let isValid = true;
-    if (!username.value) {
+    const username: string = (formData.get('username') as string) ?? ''
+    const password: string = (formData.get('password') as string) ?? ''
+    if (!username) {
       setUsernameError(true);
       setUsernameErrorMessage('Please enter a valid username address.');
       isValid = false;
@@ -58,9 +33,9 @@ const CredentialsSigninForm = () => {
       setUsernameError(false);
       setUsernameErrorMessage('');
     }
-    if (!password.value || password.value.length < 6) {
+    if (!password) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage('Please enter a valid password.');
       isValid = false;
     } else {
       setPasswordError(false);
@@ -69,19 +44,38 @@ const CredentialsSigninForm = () => {
     return isValid;
   };
 
+  // Submit
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Transform into FormData
+    const formData = new FormData(event.currentTarget);
+    if (!validateInputs(formData)) {
+      return;
+    }
+    // NextAuth SignIn
+    const result = await signIn(
+      'credentials',
+      {
+        username: formData.get('username'),
+        password: formData.get('password'),
+        redirect: false
+      }
+    )
+    if (result?.error) {
+      setLoginError(true)
+      setLoginErrorMessage(result?.error)
+    }
+  };
+
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
       noValidate
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        gap: 2,
-      }}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
     >
-      {loginError ? <ErrorAlert message={loginErrorMessage} /> : null }
+      {loginError ? <ErrorAlert message={loginErrorMessage} /> : null}
+      {/* Username */}
       <FormControl>
         <FormLabel htmlFor="username">Username</FormLabel>
         <TextField
@@ -98,6 +92,7 @@ const CredentialsSigninForm = () => {
           color={usernameError ? 'error' : 'primary'}
         />
       </FormControl>
+      {/* Password */}
       <FormControl>
         <FormLabel htmlFor="password">Password</FormLabel>
         <TextField
@@ -115,16 +110,11 @@ const CredentialsSigninForm = () => {
           color={passwordError ? 'error' : 'primary'}
         />
       </FormControl>
-      <FormControlLabel
-        control={<Checkbox value="remember" color="primary" />}
-        label="Remember me"
-      />
-      {/* <ForgotPassword open={open} handleClose={handleClose} /> */}
       <Button
         type="submit"
-        fullWidth
         variant="contained"
-        onClick={validateInputs}
+        color="primary"
+        disabled={false}
       >
         Sign in
       </Button>

@@ -1,15 +1,13 @@
-"use client"
+'use client'
 import { useState } from "react";
+import { useMutation } from "@apollo/client";
 import {
     Box,
     FormControl,
-    FormControlLabel,
     FormLabel,
     TextField,
-    Checkbox,
     Button,
 } from "@mui/material"
-import { useMutation } from "@apollo/client";
 import { CREATE_USER_MUTATION } from "@/fragments/mutations/mutations";
 import { useRouter } from "next/navigation";
 import ErrorAlert from "../ErrorAlert";
@@ -19,24 +17,71 @@ const CredentialsSignupForm = () => {
     const router = useRouter()
     const [createUser] = useMutation(CREATE_USER_MUTATION)
 
+    // Error states
+    // Name
     const [nameError, setNameError] = useState<boolean>(false);
     const [nameErrorMessage, setNameErrorMessage] = useState<string>('');
+    // Email
     const [emailError, setEmailError] = useState<boolean>(false);
     const [emailErrorMessage, setEmailErrorMessage] = useState<string>('');
+    // Password
     const [passwordError, setPasswordError] = useState<boolean>(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
-    // const [usernameError, setUsernameError] = useState<boolean>(false)
-    // const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>('')
+    // Username
+    const [usernameError, setUsernameError] = useState<boolean>(false)
+    const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>('')
+    // Submit
     const [submitError, setSubmitError] = useState<boolean>(false)
     const [submitErrorMessage, setSubmitErrorMessage] = useState<string>('')
 
+    const validateInputs = (formData: FormData) => {
+        let isValid = true;
+        const name: string = (formData.get('name') as string) ?? ''
+        const email: string = (formData.get('email') as string) ?? ''
+        const password: string = (formData.get('password') as string) ?? ''
+        const username: string = (formData.get('username') as string) ?? ''
+        if (!name || name.length < 1) {
+            setNameError(true);
+            setNameErrorMessage('Name is required.');
+            isValid = false;
+        } else {
+            setNameError(false);
+            setNameErrorMessage('');
+        }
+        if (!email || !validateEmailFormat(email)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError(false);
+            setEmailErrorMessage('');
+        }
+        if (!password || password.length < 6) {
+            setPasswordError(true);
+            setPasswordErrorMessage('Password must be at least 6 characters long.');
+            isValid = false;
+        } else {
+            setPasswordError(false);
+            setPasswordErrorMessage('');
+        }
+        if (!username) {
+            setUsernameError(true);
+            setUsernameErrorMessage('Invalid username.')
+        } else {
+            setUsernameError(false);
+            setUsernameErrorMessage('');
+        }
+        return isValid;
+    };
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (nameError || emailError || passwordError) {
-            event.preventDefault();
+        // Transform into FormData
+        const formData = new FormData(event.currentTarget);
+        if(!validateInputs(formData)) {
             return;
         }
-        const data = new FormData(event.currentTarget);
+        // Mutation
         const result = await createUser({
             variables: {
                 name: data.get('name'),
@@ -45,8 +90,7 @@ const CredentialsSignupForm = () => {
                 username: data.get('username')
             }
         })
-        if(result?.errors) {
-            console.error(result?.errors)
+        if (result?.errors) {
             setSubmitError(true)
             setSubmitErrorMessage('Error on the user creation')
         } else {
@@ -54,49 +98,15 @@ const CredentialsSignupForm = () => {
         }
     };
 
-    const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-        const name = document.getElementById('name') as HTMLInputElement;
-        let isValid = true;
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-            setEmailError(true);
-            setEmailErrorMessage('Please enter a valid email address.');
-            isValid = false;
-        } else {
-            setEmailError(false);
-            setEmailErrorMessage('');
-        }
-        if (!password.value || password.value.length < 6) {
-            setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters long.');
-            isValid = false;
-        } else {
-            setPasswordError(false);
-            setPasswordErrorMessage('');
-        }
-        if (!name.value || name.value.length < 1) {
-            setNameError(true);
-            setNameErrorMessage('Name is required.');
-            isValid = false;
-        } else {
-            setNameError(false);
-            setNameErrorMessage('');
-        }
-        return isValid;
-    };
-
     return (
         <Box
             component="form"
             onSubmit={handleSubmit}
+            noValidate
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
-            {
-                submitError ? (
-                    <ErrorAlert message={submitErrorMessage} />
-                ) : null
-            }
+            {submitError ? <ErrorAlert message={submitErrorMessage} /> : null}
+            {/* Name */}
             <FormControl>
                 <FormLabel htmlFor="name">Full name</FormLabel>
                 <TextField
@@ -111,6 +121,7 @@ const CredentialsSignupForm = () => {
                     color={nameError ? 'error' : 'primary'}
                 />
             </FormControl>
+            {/* Email */}
             <FormControl>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <TextField
@@ -126,13 +137,14 @@ const CredentialsSignupForm = () => {
                     color={passwordError ? 'error' : 'primary'}
                 />
             </FormControl>
+            {/* Password */}
             <FormControl>
                 <FormLabel htmlFor="password">Password</FormLabel>
                 <TextField
                     required
                     fullWidth
                     name="password"
-                    placeholder="••••••"
+                    placeholder="••••••••••••••••••"
                     type="password"
                     id="password"
                     autoComplete="new-password"
@@ -142,27 +154,39 @@ const CredentialsSignupForm = () => {
                     color={passwordError ? 'error' : 'primary'}
                 />
             </FormControl>
-            <FormControl>
-                <FormLabel htmlFor="username">Create your unique username</FormLabel>
+            {/* Username */}
+            <FormControl sx={{
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
+                p: 2,
+                mt: 1,
+                backgroundColor: 'background.paper'
+            }}>
+                <FormLabel
+                    sx={{
+                        textAlign: 'center',
+                        fontWeight: 'bold'
+                    }}
+                    htmlFor="username">
+                    Create your unique username.
+                </FormLabel>
                 <TextField
                     name="username"
+                    id="username"
+                    placeholder="Username"
                     required
                     fullWidth
-                    id="username"
-                    // error={usernameError}
-                    // helperText={usernameErrorMessage}
-                    // color={usernameError ? 'error' : 'primary'}
+                    error={usernameError}
+                    helperText={usernameErrorMessage}
+                    color={usernameError ? 'error' : 'primary'}
                 />
             </FormControl>
-            <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive updates via email."
-            />
             <Button
                 type="submit"
-                fullWidth
                 variant="contained"
-                onClick={validateInputs}
+                color="primary"
+                disabled={false}
             >
                 Sign up
             </Button>

@@ -16,26 +16,31 @@ export const authOptions: NextAuthOptions = {
                 password: { type: "password" }
             },
             async authorize(credentials) {
-                if (!credentials?.username || !credentials?.password) {
-                    throw new Error("Missing username or password.");
+                try {
+                    if (!credentials?.username || !credentials?.password) {
+                        throw new Error();
+                    }
+                    const user = await prisma.user.findUnique({
+                        where: { username: credentials.username },
+                        select: {
+                            id: true,
+                            email: true,
+                            username: true,
+                            password: true
+                        } // Returning only the necessary fields with select
+                    });
+                    // !user.password might be from  google provider
+                    if (!user || !user.password) {
+                        throw new Error();
+                    }
+                    const isValidPassword = await compare(credentials.password, user.password);
+                    if (!isValidPassword) {
+                        throw new Error();
+                    }
+                    return user // The data returned here will be included on the session object.
+                } catch (error) {
+                    throw new Error("Invalid credentials")
                 }
-                const user = await prisma.user.findUnique({
-                    where: { username: credentials.username },
-                    select: {
-                        id: true,
-                        email: true,
-                        username: true,
-                        password: true
-                    } // Returning only the necessary fields with select
-                });
-                if (!user || !user.password) {
-                    throw new Error("Invalid credentials.");
-                }
-                const isValidPassword = await compare(credentials.password, user.password);
-                if (!isValidPassword) {
-                    throw new Error("Invalid credentials.");
-                }
-                return user // The data returned here will be included on the session object.
             }
         }),
         GoogleProvider({

@@ -33,6 +33,7 @@ export async function updateProfile(
             message: 'Profile update with success!'
         }
     } catch(error) {
+        console.error(error)
         return {
             success: false,
             message: 'Error while updating profile!'

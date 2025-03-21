@@ -29,6 +29,7 @@ export default class UserService {
     }
 
     async updateUser(userId: string, name: string | null, image: string | null ) {
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         const data: Record<string, any> = {};
         if (name) data.name = name;
         if (image) data.image = image;

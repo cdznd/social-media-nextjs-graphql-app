@@ -6,8 +6,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import ModalContainer from "../ModalContainer";
 import ModalHeader from "../ModalHeader";
 import UserProfileUpdateForm from "../UserProfileUpdateForm";
+import { UserType } from "@/types/user";
 
-export default function UserProfileUpdateButton({ currentUser }) {
+type UserProfileUpdateButtonProps = {
+    currentUser: UserType
+}
+
+export default function UserProfileUpdateButton(
+    { currentUser }: UserProfileUpdateButtonProps
+) {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false)

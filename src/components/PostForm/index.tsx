@@ -63,7 +63,7 @@ export default function PostForm(
         if (!pending && state?.success) {
             closeModal();
         }
-    }, [pending, state?.success]);
+    }, [pending, state?.success, closeModal]);
 
     // Categories
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);

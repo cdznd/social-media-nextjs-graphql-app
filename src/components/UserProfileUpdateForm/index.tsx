@@ -30,9 +30,6 @@ export default function UserProfileUpdateForm(
     { closeModal, currentUser }: UserProfileUpdateFormProps
 ) {
     const [name, setName] = useState<string>('')
-    // Error states
-    const [nameError, setNameError] = useState<boolean>(false)
-    const [nameErrorMessage, setNameErrorMessage] = useState<string>('')
     // Image
     const imageFileInputRef = useRef<HTMLInputElement>(null)
     // Image Upload state
@@ -62,7 +59,7 @@ export default function UserProfileUpdateForm(
         if (!pending && state?.success) {
             closeModal();
         }
-    }, [pending, state?.success]);
+    }, [pending, state?.success, closeModal]);
 
     // Image
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -171,8 +168,6 @@ export default function UserProfileUpdateForm(
                             backgroundColor: 'background.default'
                         },
                     }}
-                    error={nameError}
-                    helperText={nameErrorMessage}
                 />
             </FormControl>
             {/* Image */}

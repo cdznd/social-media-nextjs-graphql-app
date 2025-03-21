@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
 import { GET_POST } from "@/fragments/queries/post"
-import { Typography, Container, Box, Stack, IconButton } from "@mui/material"
+import { Typography, Container, Box, Stack } from "@mui/material"
 import PostVisibilityStatus from "@/components/PostVisibilityStatus"
 import PostCategoryChip from "@/components/PostCategoryChip"
 import PostEngagement from "@/components/PostEngagement"
@@ -10,6 +10,8 @@ import PostComments from "@/components/PostComments"
 import ErrorAlert from "@/components/ErrorAlert"
 import BackButton from "@/components/BackButton";
 import { CategoryType } from "@/types/category"
+import PostAuthorActions from "@/components/PostAuthorActions";
+import { auth } from "@/lib/next-auth/auth";
 
 async function getPostData(postId: string) {
     const data = await fetchGraphQLData(
@@ -28,6 +30,8 @@ type PostPageParams = Promise<{
 export default async function PostPage(
     props: { params: PostPageParams }
 ) {
+    const session = await auth()
+    const loggedUserId = session?.user?.id
     const { postId } = await props.params
     const { data } = await getPostData(postId)
     const postData = data?.post
@@ -36,6 +40,8 @@ export default async function PostPage(
     const postCategories = postData?.categories
     const postLikes = postData?.likes ?? []
     const postComments = postData?.comments ?? []
+
+    const isLoggedUserAuthor = postAuthor.id === loggedUserId
 
     if (!postData) return <ErrorAlert message="No Post Found" />
 
@@ -46,13 +52,19 @@ export default async function PostPage(
             {/* Back button */}
             <Stack
                 direction="row"
-                justifyContent="start"
+                justifyContent="space-between"
                 spacing={2}
                 sx={{
-                    mb: 4
+                    mb: 4,
                 }}
             >
                 <BackButton />
+                {isLoggedUserAuthor && (
+                    <PostAuthorActions
+                        userId={postAuthor.id}
+                        postId={postId}
+                    />
+                )}
             </Stack>
             {/* Post Authos + Title + visibility  */}
             <Stack

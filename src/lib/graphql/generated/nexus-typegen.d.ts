@@ -286,6 +286,7 @@ export interface NexusGenFieldTypes {
     triggerLike: NexusGenRootTypes['Post'] | null; // Post
     updateFriendshipStatus: NexusGenRootTypes['Friendship'] | null; // Friendship
     updateNotificationReadStatus: NexusGenRootTypes['Notification'] | null; // Notification
+    updateUser: NexusGenRootTypes['User'] | null; // User
   }
   Notification: { // field return type
     actor: NexusGenRootTypes['User'] | null; // User
@@ -452,6 +453,7 @@ export interface NexusGenFieldTypeNames {
     triggerLike: 'Post'
     updateFriendshipStatus: 'Friendship'
     updateNotificationReadStatus: 'Notification'
+    updateUser: 'User'
   }
   Notification: { // field return type name
     actor: 'User'
@@ -585,6 +587,11 @@ export interface NexusGenArgTypes {
     }
     updateNotificationReadStatus: { // args
       notificationId: string; // String!
+    }
+    updateUser: { // args
+      image?: string | null; // String
+      name?: string | null; // String
+      userId: string; // String!
     }
   }
   Query: {

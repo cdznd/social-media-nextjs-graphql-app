@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useActionState, useTransition } from "react";
+import { useState, useEffect, useRef, useActionState, useTransition } from "react";
 import Image from "next/image";
 import {
     Box,
@@ -58,6 +58,12 @@ export default function PostForm(
     }
 
     const [state, formAction, pending] = useActionState(createPost, initialState)
+
+    useEffect(() => {
+        if (!pending && state?.success) {
+            closeModal();
+        }
+    }, [pending, state?.success]);
 
     // Categories
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -185,7 +191,6 @@ export default function PostForm(
             </Stack>
         </Box>
     )
-    if (!pending && state.success) closeModal();
 
     return (
         <Box

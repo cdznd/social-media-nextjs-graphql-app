@@ -27,7 +27,7 @@ export default function UserAvatar(
             }}
         >
             <Image
-                src={userImage}
+                src={userImage ? userImage : '/user_placeholder.png'}
                 alt='User Avatar'
                 height={height}
                 width={width}

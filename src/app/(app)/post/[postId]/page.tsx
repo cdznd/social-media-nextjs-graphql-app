@@ -1,15 +1,14 @@
 import Image from "next/image"
-import Link from "next/link"
 import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
 import { GET_POST } from "@/fragments/queries/post"
 import { Typography, Container, Box, Stack, IconButton } from "@mui/material"
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PostVisibilityStatus from "@/components/PostVisibilityStatus"
 import PostCategoryChip from "@/components/PostCategoryChip"
 import PostEngagement from "@/components/PostEngagement"
 import PostAuthorChip from "@/components/PostAuthorChip"
 import PostComments from "@/components/PostComments"
 import ErrorAlert from "@/components/ErrorAlert"
+import BackButton from "@/components/BackButton";
 import { CategoryType } from "@/types/category"
 
 async function getPostData(postId: string) {
@@ -53,14 +52,7 @@ export default async function PostPage(
                     mb: 4
                 }}
             >
-                <Link
-                    href='/feed'
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                    <IconButton aria-label="back">
-                        <ArrowBackIcon />
-                    </IconButton>
-                </Link>
+                <BackButton />
             </Stack>
             {/* Post Authos + Title + visibility  */}
             <Stack

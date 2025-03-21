@@ -23,7 +23,7 @@ export default function CredentialsSignupForm() {
 
     const router = useRouter()
 
-    // Server action
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isPending, startTransition] = useTransition()
     const initialState = {
         success: false,

@@ -38,6 +38,7 @@ export const authOptions: NextAuthOptions = {
                         throw new Error();
                     }
                     return user // The data returned here will be included on the session object.
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 } catch (error) {
                     throw new Error("Invalid credentials")
                 }

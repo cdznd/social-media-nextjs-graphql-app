@@ -1,12 +1,11 @@
-import { Card, CardContent, Typography, Box, Stack } from "@mui/material";
-import FriendshipTriggerButton from "../FriendshipTriggerButton";
-import { UserType } from "@/types/user";
-
+import { Card, CardContent, Typography, Box, Stack, Button } from "@mui/material";
 import PeopleIcon from '@mui/icons-material/People';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
-
+import FriendshipTriggerButton from "../FriendshipTriggerButton";
 import UserAvatar from "../UserAvatar";
+import UserProfileUpdateButton from "../UserProfileUpdateButton";
+import { UserType } from "@/types/user";
 
 type UserProfileCardProps = {
   user: UserType;
@@ -73,6 +72,12 @@ export default function UserProfileInfoCard(
                 toUserId={user.id}
               />
             </Box>
+          )
+        }
+        {
+          isCurrentUser && (
+            <UserProfileUpdateButton
+              currentUser={user} />
           )
         }
       </CardContent>

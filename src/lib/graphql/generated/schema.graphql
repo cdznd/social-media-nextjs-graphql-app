@@ -109,6 +109,7 @@ type Mutation {
   deleteFriendship(friendshipId: String!): Friendship
   deleteMutation(commentId: String!): Comment
   deleteNotification(notificationId: String!): Notification
+  deletePost(postId: String!): Post
   triggerLike(postId: String!, userId: String!): Post
   updateFriendshipStatus(friendshipId: String!, status: FriendshipStatus!): Friendship
   updateNotificationReadStatus(notificationId: String!): Notification

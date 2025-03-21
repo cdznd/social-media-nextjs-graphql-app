@@ -28,6 +28,17 @@ export default class UserService {
         })
     }
 
+    async updateUser(userId: string, name: string | null, image: string | null ) {
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+        const data: Record<string, any> = {};
+        if (name) data.name = name;
+        if (image) data.image = image;
+        return this.context.prisma.user.update({
+            where: { id: userId },
+            data,
+        });
+    }
+
     async getUserById(userId: string) {
         const result = this.context.prisma.user.findUnique({
             where: {

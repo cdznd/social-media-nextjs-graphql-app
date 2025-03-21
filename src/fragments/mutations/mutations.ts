@@ -72,3 +72,19 @@ export const CREATE_USER_MUTATION = gql`
         }
     }
 `
+
+export const UPDATE_USER_MUTATION = gql`
+    mutation UpdateUser(
+        $userId: String!,
+        $name: String,
+        $image: String,
+    ) {
+        updateUser(
+            userId: $userId
+            name: $name,
+            image: $image
+        ) {
+            id
+        }
+    }
+`

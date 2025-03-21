@@ -26,5 +26,18 @@ export const UserMutations = extendType({
                 return userService.createUser({ name, email, password, username, image })
             }
         })
+        t.field('updateUser', {
+            type: User,
+            args: {
+                userId: nonNull(stringArg()),
+                name: stringArg(),
+                image: stringArg() 
+            },
+            resolve: async (_parent, args, context: Context) => {
+                const { userId, name = null, image = null } = args
+                const userService = new UserService(context)
+                return userService.updateUser(userId, name, image)
+            }
+        })
     }
 })

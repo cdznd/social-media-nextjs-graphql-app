@@ -112,6 +112,7 @@ type Mutation {
   triggerLike(postId: String!, userId: String!): Post
   updateFriendshipStatus(friendshipId: String!, status: FriendshipStatus!): Friendship
   updateNotificationReadStatus(notificationId: String!): Notification
+  updateUser(image: String, name: String, userId: String!): User
 }
 
 type Notification {

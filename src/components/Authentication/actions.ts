@@ -1,49 +1,36 @@
-// 'use server'
-// import createApolloClient from "@/lib/apollo-client/apolloClient";
+'use server'
+import createApolloClient from "@/lib/apollo-client/apolloClient";
+import { CREATE_USER_MUTATION } from "@/fragments/mutations/mutations";
 
-// // import { auth } from "@/lib/next-auth/auth";
-// // import { revalidatePath } from "next/cache";
-// import { CREATE_USER_MUTATION } from "@/fragments/mutations/mutations";
+const apolloClient = createApolloClient();
 
-// const apolloClient = createApolloClient();
-
-// export async function createPost(
-//     previousState: { success: boolean },
-//     formData: FormData
-// ) {
-//     try {
-//         const session = await auth()
-//         const loggedUserId = session?.user?.id
-//         if (!loggedUserId) {
-//             throw new Error('Error with logged user')
-//         }
-//         const categories = formData.get('categories') as string
-//         const parsedCategories = JSON.parse(categories)
-//         const createPostObject = {
-//             title: formData.get('title'),
-//             content: formData.get('content'),
-//             authorId: loggedUserId,
-//             thumbnail: formData.get('thumbnail') ?? '',
-//             categories: parsedCategories ?? [],
-//             visibility: formData.get('visibility') ?? 'PUBLIC'
-//         }
-//         await apolloClient.mutate({
-//             mutation: CREATE_POST_MUTATION,
-//             variables: {
-//                 ...createPostObject
-//             }
-//         })
-//         revalidatePath(`/`)
-//         return {
-//             success: true,
-//             message: 'Post created with success!'
-//         }
-//     } catch(error) {
-//         console.error(error)
-//         // console.log(error.networkError.result.errors);
-//         return {
-//             success: false,
-//             message: 'Error creating post'
-//         }
-//     }
-// }
+export async function signUp(
+    previousState: { success: boolean },
+    formData: FormData
+) { 
+    try {
+        const createUserDTO = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+            username: formData.get('username')
+        }
+        await apolloClient.mutate({
+            mutation: CREATE_USER_MUTATION,
+            variables: {
+                ...createUserDTO
+            }
+        })
+        return {
+            success: true,
+            message: 'User created with success!'
+        }
+    } catch (error) {
+        console.error(error)
+        // console.log(error.networkError.result.errors);
+        return {
+            success: false,
+            message: 'Error creating user'
+        }
+    }
+}

@@ -48,7 +48,8 @@ export default function PostForm(
     const [postVisibility, setPostVisibility] = useState('PUBLIC')
 
     // Server action
-    // As we are using it outside of a formAction we need to implement the transition
+    // As we are using it outside of a form action and inside a custom handle submit
+    // we need to implement the transition
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isPending, startTransition] = useTransition()
     const initialState = {

@@ -1,21 +1,36 @@
 'use client'
-import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useState, useEffect, useActionState, useTransition } from "react";
+import { signIn } from 'next-auth/react';
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
     Box,
+    Stack,
+    Typography,
     FormControl,
     FormLabel,
     TextField,
     Button,
+    Divider
 } from "@mui/material"
-import { CREATE_USER_MUTATION } from "@/fragments/mutations/mutations";
-import { useRouter } from "next/navigation";
+import { signUp } from "./actions";
 import ErrorAlert from "../ErrorAlert";
+import SpinnerLoading from "../Loading/Spinner";
+import { validateEmailFormat } from "@/utils/email";
+import { GoogleIcon } from "../common/CustomIcons";
 
-const CredentialsSignupForm = () => {
+export default function CredentialsSignupForm() {
 
     const router = useRouter()
-    const [createUser] = useMutation(CREATE_USER_MUTATION)
+
+    // Server action
+    const [isPending, startTransition] = useTransition()
+    const initialState = {
+        success: false,
+        message: ''
+    }
+
+    const [state, formAction, pending] = useActionState(signUp, initialState)
 
     // Error states
     // Name
@@ -33,6 +48,16 @@ const CredentialsSignupForm = () => {
     // Submit
     const [submitError, setSubmitError] = useState<boolean>(false)
     const [submitErrorMessage, setSubmitErrorMessage] = useState<string>('')
+
+    useEffect(() => {
+        if (!pending && state?.success) {
+            router.push('/sign-in');
+        }
+        if(!pending && !state?.success && state.message) {
+            setSubmitError(true)
+            setSubmitErrorMessage(state.message)
+        }
+    }, [pending, state?.success, router]);
 
     const validateInputs = (formData: FormData) => {
         let isValid = true;
@@ -71,6 +96,8 @@ const CredentialsSignupForm = () => {
             setUsernameError(false);
             setUsernameErrorMessage('');
         }
+        setSubmitError(false)
+        setSubmitErrorMessage('')
         return isValid;
     };
 
@@ -78,120 +105,158 @@ const CredentialsSignupForm = () => {
         event.preventDefault();
         // Transform into FormData
         const formData = new FormData(event.currentTarget);
-        if(!validateInputs(formData)) {
+        if (!validateInputs(formData)) {
             return;
         }
-        // Mutation
-        const result = await createUser({
-            variables: {
-                name: data.get('name'),
-                email: data.get('email'),
-                password: data.get('password'),
-                username: data.get('username')
-            }
+        startTransition(() => {
+            formAction(formData)
         })
-        if (result?.errors) {
-            setSubmitError(true)
-            setSubmitErrorMessage('Error on the user creation')
-        } else {
-            router.push('/sign-in')
+    };
+
+    const handleGoogleSignUp = async () => {
+        const result = await signIn('google', {
+            callbackUrl: '/',
+            redirect: true,
+        });
+        if (result?.error) {
+            console.error(result.error);
         }
     };
 
-    return (
-        <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        >
-            {submitError ? <ErrorAlert message={submitErrorMessage} /> : null}
-            {/* Name */}
-            <FormControl>
-                <FormLabel htmlFor="name">Full name</FormLabel>
-                <TextField
-                    autoComplete="name"
-                    name="name"
-                    required
-                    fullWidth
-                    id="name"
-                    placeholder="Jon Snow"
-                    error={nameError}
-                    helperText={nameErrorMessage}
-                    color={nameError ? 'error' : 'primary'}
-                />
-            </FormControl>
-            {/* Email */}
-            <FormControl>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
-                    variant="outlined"
-                    error={emailError}
-                    helperText={emailErrorMessage}
-                    color={passwordError ? 'error' : 'primary'}
-                />
-            </FormControl>
-            {/* Password */}
-            <FormControl>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    placeholder="••••••••••••••••••"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                    variant="outlined"
-                    error={passwordError}
-                    helperText={passwordErrorMessage}
-                    color={passwordError ? 'error' : 'primary'}
-                />
-            </FormControl>
-            {/* Username */}
-            <FormControl sx={{
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 1,
-                p: 2,
-                mt: 1,
-                backgroundColor: 'background.paper'
-            }}>
-                <FormLabel
-                    sx={{
-                        textAlign: 'center',
-                        fontWeight: 'bold'
-                    }}
-                    htmlFor="username">
-                    Create your unique username.
-                </FormLabel>
-                <TextField
-                    name="username"
-                    id="username"
-                    placeholder="Username"
-                    required
-                    fullWidth
-                    error={usernameError}
-                    helperText={usernameErrorMessage}
-                    color={usernameError ? 'error' : 'primary'}
-                />
-            </FormControl>
-            <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={false}
-            >
-                Sign up
-            </Button>
+    if ((pending && !state?.success)) return (
+        <Box sx={{ my: 4 }}>
+            <Stack direction='column' alignItems='center'>
+                <Typography
+                    variant='h5'
+                    color='text.primary'>
+                    Creating User
+                </Typography>
+                <Box sx={{ mt: 4 }}>
+                    <SpinnerLoading />
+                </Box>
+            </Stack>
         </Box>
     )
-}
 
-export default CredentialsSignupForm;
+    return (
+        <>
+            <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+            >
+                {submitError ? <ErrorAlert message={submitErrorMessage} /> : null}
+                {/* Name */}
+                <FormControl>
+                    <FormLabel htmlFor="name">Full name</FormLabel>
+                    <TextField
+                        autoComplete="name"
+                        name="name"
+                        required
+                        fullWidth
+                        id="name"
+                        placeholder="Jon Snow"
+                        error={nameError}
+                        helperText={nameErrorMessage}
+                        color={nameError ? 'error' : 'primary'}
+                    />
+                </FormControl>
+                {/* Email */}
+                <FormControl>
+                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <TextField
+                        required
+                        fullWidth
+                        id="email"
+                        placeholder="your@email.com"
+                        name="email"
+                        autoComplete="email"
+                        variant="outlined"
+                        error={emailError}
+                        helperText={emailErrorMessage}
+                        color={passwordError ? 'error' : 'primary'}
+                    />
+                </FormControl>
+                {/* Password */}
+                <FormControl>
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <TextField
+                        required
+                        fullWidth
+                        name="password"
+                        placeholder="••••••••••••••••••"
+                        type="password"
+                        id="password"
+                        autoComplete="new-password"
+                        variant="outlined"
+                        error={passwordError}
+                        helperText={passwordErrorMessage}
+                        color={passwordError ? 'error' : 'primary'}
+                    />
+                </FormControl>
+                {/* Username */}
+                <FormControl sx={{
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: 1,
+                    p: 2,
+                    mt: 1,
+                    backgroundColor: 'background.paper'
+                }}>
+                    <FormLabel
+                        sx={{
+                            textAlign: 'center',
+                            fontWeight: 'bold'
+                        }}
+                        htmlFor="username">
+                        Create your unique username.
+                    </FormLabel>
+                    <TextField
+                        name="username"
+                        id="username"
+                        placeholder="Username"
+                        required
+                        fullWidth
+                        error={usernameError}
+                        helperText={usernameErrorMessage}
+                        color={usernameError ? 'error' : 'primary'}
+                    />
+                </FormControl>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={false}
+                >
+                    Sign up
+                </Button>
+            </Box>
+            <Divider>
+                <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+            </Divider>
+            <Stack direction="column" spacing={2}>
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => handleGoogleSignUp()}
+                    startIcon={<GoogleIcon />}
+                >
+                    Sign up with Google
+                </Button>
+                <Typography sx={{ textAlign: 'center' }}>
+                    Already have an account?{' '}
+                    <Link
+                        href="/sign-in"
+                        style={{
+                            textDecoration: 'none',
+                            textAlign: 'center'
+                        }}
+                    >
+                        Sign in
+                    </Link>
+                </Typography>
+            </Stack>
+        </>
+    )
+}

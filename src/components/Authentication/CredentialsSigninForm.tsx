@@ -1,5 +1,7 @@
 'use client'
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import {
   Box,
@@ -7,10 +9,15 @@ import {
   FormLabel,
   TextField,
   Button,
+  Typography,
+  Divider
 } from "@mui/material";
+import { GoogleIcon } from "../common/CustomIcons";
 import ErrorAlert from "../ErrorAlert";
 
 const CredentialsSigninForm = () => {
+
+  const router = useRouter()
 
   // Error states
   const [usernameError, setUsernameError] = useState<boolean>(false);
@@ -62,8 +69,20 @@ const CredentialsSigninForm = () => {
       }
     )
     if (result?.error) {
-      setLoginError(true)
-      setLoginErrorMessage(result?.error)
+      setLoginError(true);
+      setLoginErrorMessage(result.error);
+    } else {
+      router.push("/"); // Redirect only on success
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const result = await signIn('google', {
+      callbackUrl: '/',
+      redirect: true,
+    });
+    if (result?.error) {
+      console.error(result.error);
     }
   };
 
@@ -118,6 +137,31 @@ const CredentialsSigninForm = () => {
       >
         Sign in
       </Button>
+      <Divider>
+        <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+      </Divider>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Button
+          fullWidth
+          variant="outlined"
+          onClick={() => handleGoogleSignIn()}
+          startIcon={<GoogleIcon />}
+        >
+          Sign in with Google
+        </Button>
+        <Typography sx={{ textAlign: 'center' }}>
+          Don&apos;t have an account?{' '}
+          <Link
+            href="/sign-up"
+            style={{
+              textDecoration: 'none',
+              textAlign: 'center'
+            }}
+          >
+            Sign up
+          </Link>
+        </Typography>
+      </Box>
     </Box>
   )
 }

@@ -23,7 +23,7 @@ export default function CredentialsSignupForm() {
 
     const router = useRouter()
 
-    // Server action
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isPending, startTransition] = useTransition()
     const initialState = {
         success: false,
@@ -57,7 +57,7 @@ export default function CredentialsSignupForm() {
             setSubmitError(true)
             setSubmitErrorMessage(state.message)
         }
-    }, [pending, state?.success, router]);
+    }, [pending, state, router]);
 
     const validateInputs = (formData: FormData) => {
         let isValid = true;

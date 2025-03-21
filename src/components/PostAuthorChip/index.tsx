@@ -41,7 +41,7 @@ export default async function PostAuthorChip(
                     }}
                 />
                 <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                    {author.name}
+                    {author.username}
                 </Typography>
             </Stack>
         </Link>

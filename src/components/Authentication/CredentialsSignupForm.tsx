@@ -57,7 +57,7 @@ export default function CredentialsSignupForm() {
             setSubmitError(true)
             setSubmitErrorMessage(state.message)
         }
-    }, [pending, state?.success, router]);
+    }, [pending, state, router]);
 
     const validateInputs = (formData: FormData) => {
         let isValid = true;

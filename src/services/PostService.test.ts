@@ -1,20 +1,17 @@
 import { Context } from "@/lib/prisma/context"
 import { MockContext, createMockContext } from '../lib/prisma/tests/PrismaContextUtils'
 import PostService from "./PostService"
-import FriendshipService from "./FriendshipService"
 import { PostVisibilityType } from "@/types/post"
 import { FriendshipStatus } from "@/types/friendship"
 
 let mockCtx: MockContext
 let ctx: Context
 let postService: PostService
-let friendshipService: FriendshipService
 
 beforeEach(() => {
     mockCtx = createMockContext()
     ctx = mockCtx as unknown as Context
     postService = new PostService(ctx)
-    friendshipService = new FriendshipService(ctx)
 })
 
 describe('PostService', () => {

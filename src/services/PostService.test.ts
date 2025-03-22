@@ -119,17 +119,18 @@ describe('PostService', () => {
             expect(result).toEqual(postWithoutCategories)
         })
 
-        // test('should handle database errors', async () => {
-        //     const error = new Error('Database error')
-        //     mockCtx.prisma.post.create.mockRejectedValue(error)
-        //     await expect(postService.createPost({
-        //         title: mockNewPost.title,
-        //         content: mockNewPost.content,
-        //         authorId: mockNewPost.authorId,
-        //         thumbnail: mockNewPost.thumbnail,
-        //         categories: mockNewPost.categories
-        //     })).rejects.toThrow('Database error')
-        // })
+        test('should handle database errors', async () => {
+            const error = new Error('Database error')
+            mockCtx.prisma.post.create.mockRejectedValue(error)
+            await expect(postService.createPost({
+                title: mockNewPost.title,
+                content: mockNewPost.content,
+                authorId: mockNewPost.authorId,
+                visibility: mockNewPost.visibility,
+                thumbnail: mockNewPost.thumbnail,
+                categories: mockNewPost.categories
+            })).rejects.toThrow('Database error')
+        })
     })
 
     // describe('getPostById', () => {

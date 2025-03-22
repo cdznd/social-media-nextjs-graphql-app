@@ -13,7 +13,9 @@ export type ShortFriendshipType = {
     user: UserType
 }
 
+export type FriendshipStatus = 'ACCEPTED' | 'REJECTED' | 'PENDING'
+
 export type FriendWithStatus = {
     user: UserType,
-    status: 'ACCEPTED' | 'REJECTED' | 'PENDING'
+    status: FriendWithStatus
 }

@@ -1,16 +1,20 @@
 import { Context } from "@/lib/prisma/context"
 import { MockContext, createMockContext } from '../lib/prisma/tests/PrismaContextUtils'
 import PostService from "./PostService"
+import FriendshipService from "./FriendshipService"
 import { PostVisibilityType } from "@/types/post"
+import { FriendshipStatus } from "@/types/friendship"
 
 let mockCtx: MockContext
 let ctx: Context
 let postService: PostService
+let friendshipService: FriendshipService
 
 beforeEach(() => {
     mockCtx = createMockContext()
     ctx = mockCtx as unknown as Context
     postService = new PostService(ctx)
+    friendshipService = new FriendshipService(ctx)
 })
 
 describe('PostService', () => {
@@ -160,177 +164,225 @@ describe('PostService', () => {
         })
     })
 
-    // describe('getPosts', () => {
-    //     test('should get all posts', async () => {
-    //         mockCtx.prisma.post.findMany.mockResolvedValue([mockNewPost])
-    //         const result = await postService.getPosts()
-    //         expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({})
-    //         expect(result).toEqual([mockNewPost])
-    //     })
-    // })
+    describe('getPosts', () => {
+        test('should get all posts', async () => {
+            mockCtx.prisma.post.findMany.mockResolvedValue([mockNewPost])
+            const result = await postService.getPosts()
+            expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({})
+            expect(result).toEqual([mockNewPost])
+        })
+    })
 
-    // describe('getFeedByUserId', () => {
+    describe.only('getFeedByUserId', () => {
 
-    //     const mockPostWithRelations = {
-    //         ...mockNewPost,
-    //         author: {
-    //             id: 'user-1',
-    //             name: 'John Doe'
-    //         },
-    //         likes: [],
-    //         comments: [],
-    //         categories: [
-    //             { id: '1', name: 'tech' },
-    //             { id: '2', name: 'programming' }
-    //         ]
-    //     }
+        const mockPostWithRelations = {
+            ...mockNewPost,
+            author: {
+                id: 'user-1',
+                name: 'John Doe'
+            },
+            likes: [],
+            comments: [],
+            categories: [
+                { id: '1', name: 'tech' },
+                { id: '2', name: 'programming' }
+            ]
+        }
+    
+        beforeEach(() => {
+            jest.clearAllMocks(); // Reset mocks before each test
+        });
+    
+        test.only('should get feed without filters', async () => {
 
-    //     test('should get feed without filters', async () => {
-    //         mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-    //         const result = await postService.getFeedByUserId('user-id')
-    //         expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-    //             where: {
-    //                 AND: [{}, {}]
-    //             },
-    //             orderBy: { createdAt: undefined },
-    //             include: {
-    //                 author: true,
-    //                 likes: true,
-    //                 comments: true,
-    //                 categories: true,
-    //             }
-    //         })
-    //         expect(result).toEqual([mockPostWithRelations])
-    //     })
+            const mockFriends = [
+                {
+                    id: 'friendship-id-1',
+                    userAId: 'user-id',
+                    userA: {
+                        id: 'user-id'
+                    },
+                    userBId: 'friend-1',
+                    userB: {
+                        id: 'friend-1'
+                    },
+                    status: 'ACCEPTED' as FriendshipStatus
+                },
+                {
+                    id: 'friendship-id-2',
+                    userAId: 'user-id',
+                    userA: {
+                        id: 'user-id'
+                    },
+                    userBId: 'friend-2',
+                    userB: {
+                        id: 'friend-2'
+                    },
+                    status: 'ACCEPTED' as FriendshipStatus
+                }
+            ];
 
-    //     test('should filter by search string in title and content', async () => {
-    //         mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-    //         const result = await postService.getFeedByUserId('user-id', {
-    //             searchString: 'test'
-    //         })
-    //         expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-    //             where: {
-    //                 AND: [
-    //                     {
-    //                         OR: [
-    //                             { title: { contains: 'test', mode: 'insensitive' } },
-    //                             { content: { contains: 'test', mode: 'insensitive' } }
-    //                         ]
-    //                     },
-    //                     {}
-    //                 ]
-    //             },
-    //             orderBy: { createdAt: undefined },
-    //             include: {
-    //                 author: true,
-    //                 likes: true,
-    //                 comments: true,
-    //                 categories: true,
-    //             }
-    //         })
-    //         expect(result).toEqual([mockPostWithRelations])
-    //     })
+            const expectedWhereClause = {
+                AND: [{}, {}],
+                authorId: { in: ['friend-1', 'friend-2', 'user-id'] },
+                visibility: undefined
+            };
+    
+            mockCtx.prisma.post.count.mockResolvedValue(1);
+            mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations]);
+    
+            // Mock friendship service
+            mockCtx.prisma.friendship.findMany.mockResolvedValue(mockFriends)
 
-    //     test('should filter by category', async () => {
-    //         mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-    //         const result = await postService.getFeedByUserId('user-id', {
-    //             category: 'tech'
-    //         })
-    //         expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-    //             where: {
-    //                 AND: [
-    //                     {},
-    //                     {
-    //                         categories: {
-    //                             some: {
-    //                                 name: {
-    //                                     equals: 'tech',
-    //                                     mode: 'insensitive'
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 ]
-    //             },
-    //             orderBy: { createdAt: undefined },
-    //             include: {
-    //                 author: true,
-    //                 likes: true,
-    //                 comments: true,
-    //                 categories: true,
-    //             }
-    //         })
-    //         expect(result).toEqual([mockPostWithRelations])
-    //     })
+            const result = await postService.getFeedByUserId('user-id', { orderBy: 'asc' }, {});
+            expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
+                where: expectedWhereClause,
+                orderBy: { createdAt: 'asc' },
+                skip: undefined,
+                take: 10,
+                include: {
+                    author: true,
+                    likes: true,
+                    comments: true,
+                    categories: true,
+                }
+            });
+            expect(mockCtx.prisma.post.count).toHaveBeenCalledWith({ where: expectedWhereClause });
+            expect(result).toEqual({
+                posts: [mockPostWithRelations],
+                totalCount: 1,
+                totalPages: 1
+            });
+        });
 
-    //     test('should apply both search string and category filters', async () => {
-    //         mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-    //         const result = await postService.getFeedByUserId('user-id', {
-    //             searchString: 'test',
-    //             category: 'tech'
-    //         })
-    //         expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-    //             where: {
-    //                 AND: [
-    //                     {
-    //                         OR: [
-    //                             { title: { contains: 'test', mode: 'insensitive' } },
-    //                             { content: { contains: 'test', mode: 'insensitive' } }
-    //                         ]
-    //                     },
-    //                     {
-    //                         categories: {
-    //                             some: {
-    //                                 name: {
-    //                                     equals: 'tech',
-    //                                     mode: 'insensitive'
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 ]
-    //             },
-    //             orderBy: { createdAt: undefined },
-    //             include: {
-    //                 author: true,
-    //                 likes: true,
-    //                 comments: true,
-    //                 categories: true,
-    //             }
-    //         })
-    //         expect(result).toEqual([mockPostWithRelations])
-    //     })
+        // test('should filter by search string in title and content', async () => {
+        //     mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
+        //     const result = await postService.getFeedByUserId('user-id', {
+        //         searchString: 'test'
+        //     })
+        //     expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
+        //         where: {
+        //             AND: [
+        //                 {
+        //                     OR: [
+        //                         { title: { contains: 'test', mode: 'insensitive' } },
+        //                         { content: { contains: 'test', mode: 'insensitive' } }
+        //                     ]
+        //                 },
+        //                 {}
+        //             ]
+        //         },
+        //         orderBy: { createdAt: undefined },
+        //         include: {
+        //             author: true,
+        //             likes: true,
+        //             comments: true,
+        //             categories: true,
+        //         }
+        //     })
+        //     expect(result).toEqual([mockPostWithRelations])
+        // })
 
-    //     test('should order results by createdAt', async () => {
-    //         mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-    //         const result = await postService.getFeedByUserId(authorId, {}, {
-    //             orderBy: 'desc'
-    //         })
-    //         expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-    //             where: {
-    //                 AND: [{}, {}]
-    //             },
-    //             orderBy: { createdAt: 'desc' },
-    //             include: {
-    //                 author: true,
-    //                 likes: true,
-    //                 comments: true,
-    //                 categories: true,
-    //             }
-    //         })
-    //         expect(result).toEqual([mockPostWithRelations])
-    //     })
+        // test('should filter by category', async () => {
+        //     mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
+        //     const result = await postService.getFeedByUserId('user-id', {
+        //         category: 'tech'
+        //     })
+        //     expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
+        //         where: {
+        //             AND: [
+        //                 {},
+        //                 {
+        //                     categories: {
+        //                         some: {
+        //                             name: {
+        //                                 equals: 'tech',
+        //                                 mode: 'insensitive'
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             ]
+        //         },
+        //         orderBy: { createdAt: undefined },
+        //         include: {
+        //             author: true,
+        //             likes: true,
+        //             comments: true,
+        //             categories: true,
+        //         }
+        //     })
+        //     expect(result).toEqual([mockPostWithRelations])
+        // })
 
-    //     test('should handle empty result', async () => {
-    //         mockCtx.prisma.post.findMany.mockResolvedValue([])
-    //         const result = await postService.getFeedByUserId('user-id')
-    //         expect(result).toEqual([])
-    //     })
+        // test('should apply both search string and category filters', async () => {
+        //     mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
+        //     const result = await postService.getFeedByUserId('user-id', {
+        //         searchString: 'test',
+        //         category: 'tech'
+        //     })
+        //     expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
+        //         where: {
+        //             AND: [
+        //                 {
+        //                     OR: [
+        //                         { title: { contains: 'test', mode: 'insensitive' } },
+        //                         { content: { contains: 'test', mode: 'insensitive' } }
+        //                     ]
+        //                 },
+        //                 {
+        //                     categories: {
+        //                         some: {
+        //                             name: {
+        //                                 equals: 'tech',
+        //                                 mode: 'insensitive'
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             ]
+        //         },
+        //         orderBy: { createdAt: undefined },
+        //         include: {
+        //             author: true,
+        //             likes: true,
+        //             comments: true,
+        //             categories: true,
+        //         }
+        //     })
+        //     expect(result).toEqual([mockPostWithRelations])
+        // })
 
-    //     test('should handle database errors', async () => {
-    //         const error = new Error('Database error')
-    //         mockCtx.prisma.post.findMany.mockRejectedValue(error)
-    //         await expect(postService.getFeedByUserId('user-id')).rejects.toThrow('Database error')
-    //     })
-    // })
+        // test('should order results by createdAt', async () => {
+        //     mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
+        //     const result = await postService.getFeedByUserId(authorId, {}, {
+        //         orderBy: 'desc'
+        //     })
+        //     expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
+        //         where: {
+        //             AND: [{}, {}]
+        //         },
+        //         orderBy: { createdAt: 'desc' },
+        //         include: {
+        //             author: true,
+        //             likes: true,
+        //             comments: true,
+        //             categories: true,
+        //         }
+        //     })
+        //     expect(result).toEqual([mockPostWithRelations])
+        // })
+
+        // test('should handle empty result', async () => {
+        //     mockCtx.prisma.post.findMany.mockResolvedValue([])
+        //     const result = await postService.getFeedByUserId('user-id')
+        //     expect(result).toEqual([])
+        // })
+
+        // test('should handle database errors', async () => {
+        //     const error = new Error('Database error')
+        //     mockCtx.prisma.post.findMany.mockRejectedValue(error)
+        //     await expect(postService.getFeedByUserId('user-id')).rejects.toThrow('Database error')
+        // })
+    })
 })

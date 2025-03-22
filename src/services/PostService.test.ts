@@ -28,7 +28,7 @@ describe('PostService', () => {
     }
 
     describe('createPost', () => {
-        test.only('should create a post with all fields', async () => {
+        test('should create a post with all fields', async () => {
             mockCtx.prisma.post.create.mockResolvedValue(mockNewPost)
             const result = await postService.createPost({
                 title: mockNewPost.title,
@@ -61,31 +61,35 @@ describe('PostService', () => {
             })
             expect(result).toEqual(mockNewPost)
         })
-        // test('should create a post without optional thumbnail', async () => {
-        //     const postWithoutThumbnail = {
-        //         ...mockNewPost,
-        //         thumbnail: null
-        //     }
-        //     mockCtx.prisma.post.create.mockResolvedValue(postWithoutThumbnail)
-        //     const result = await postService.createPost({
-        //         title: mockNewPost.title,
-        //         content: mockNewPost.content,
-        //         authorId: mockNewPost.authorId,
-        //         categories: mockNewPost.categories
-        //     })
-        //     expect(mockCtx.prisma.post.create).toHaveBeenCalledWith({
-        //         data: {
-        //             title: mockNewPost.title,
-        //             content: mockNewPost.content,
-        //             authorId: mockNewPost.authorId,
-        //             thumbnail: undefined,
-        //             categories: {
-        //                 connectOrCreate: expect.any(Array)
-        //             }
-        //         }
-        //     })
-        //     expect(result).toEqual(postWithoutThumbnail)
-        // })
+
+        test.only('should create a post without optional thumbnail', async () => {
+            const postWithoutThumbnail = {
+                ...mockNewPost,
+                thumbnail: null
+            }
+            mockCtx.prisma.post.create.mockResolvedValue(postWithoutThumbnail)
+            const result = await postService.createPost({
+                title: mockNewPost.title,
+                content: mockNewPost.content,
+                authorId: mockNewPost.authorId,
+                visibility: mockNewPost.visibility,
+                categories: mockNewPost.categories
+            })
+            expect(mockCtx.prisma.post.create).toHaveBeenCalledWith({
+                data: {
+                    title: mockNewPost.title,
+                    content: mockNewPost.content,
+                    authorId: mockNewPost.authorId,
+                    visibility: mockNewPost.visibility,
+                    thumbnail: undefined,
+                    categories: {
+                        connectOrCreate: expect.any(Array)
+                    }
+                }
+            })
+            expect(result).toEqual(postWithoutThumbnail)
+        })
+
         // test('should create a post with empty categories array', async () => {
         //     const postWithoutCategories = {
         //         ...mockNewPost,

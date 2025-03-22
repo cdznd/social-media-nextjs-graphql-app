@@ -27,7 +27,7 @@ describe('PostService', () => {
         updatedAt: new Date()
     }
 
-    describe('createPost', () => {
+    describe.only('createPost', () => {
         test('should create a post with all fields', async () => {
             mockCtx.prisma.post.create.mockResolvedValue(mockNewPost)
             const result = await postService.createPost({
@@ -62,7 +62,7 @@ describe('PostService', () => {
             expect(result).toEqual(mockNewPost)
         })
 
-        test.only('should create a post without optional thumbnail', async () => {
+        test('should create a post without optional thumbnail', async () => {
             const postWithoutThumbnail = {
                 ...mockNewPost,
                 thumbnail: null
@@ -90,32 +90,35 @@ describe('PostService', () => {
             expect(result).toEqual(postWithoutThumbnail)
         })
 
-        // test('should create a post with empty categories array', async () => {
-        //     const postWithoutCategories = {
-        //         ...mockNewPost,
-        //         categories: []
-        //     }
-        //     mockCtx.prisma.post.create.mockResolvedValue(postWithoutCategories)
-        //     const result = await postService.createPost({
-        //         title: mockNewPost.title,
-        //         content: mockNewPost.content,
-        //         authorId: mockNewPost.authorId,
-        //         thumbnail: mockNewPost.thumbnail,
-        //         categories: []
-        //     })
-        //     expect(mockCtx.prisma.post.create).toHaveBeenCalledWith({
-        //         data: {
-        //             title: mockNewPost.title,
-        //             content: mockNewPost.content,
-        //             authorId: mockNewPost.authorId,
-        //             thumbnail: mockNewPost.thumbnail,
-        //             categories: {
-        //                 connectOrCreate: []
-        //             }
-        //         }
-        //     })
-        //     expect(result).toEqual(postWithoutCategories)
-        // })
+        test('should create a post with empty categories array', async () => {
+            const postWithoutCategories = {
+                ...mockNewPost,
+                categories: []
+            }
+            mockCtx.prisma.post.create.mockResolvedValue(postWithoutCategories)
+            const result = await postService.createPost({
+                title: mockNewPost.title,
+                content: mockNewPost.content,
+                authorId: mockNewPost.authorId,
+                visibility: mockNewPost.visibility,
+                thumbnail: mockNewPost.thumbnail,
+                categories: []
+            })
+            expect(mockCtx.prisma.post.create).toHaveBeenCalledWith({
+                data: {
+                    title: mockNewPost.title,
+                    content: mockNewPost.content,
+                    authorId: mockNewPost.authorId,
+                    visibility: mockNewPost.visibility,
+                    thumbnail: mockNewPost.thumbnail,
+                    categories: {
+                        connectOrCreate: []
+                    }
+                }
+            })
+            expect(result).toEqual(postWithoutCategories)
+        })
+
         // test('should handle database errors', async () => {
         //     const error = new Error('Database error')
         //     mockCtx.prisma.post.create.mockRejectedValue(error)

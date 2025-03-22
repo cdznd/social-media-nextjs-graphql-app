@@ -27,7 +27,7 @@ describe('PostService', () => {
         updatedAt: new Date()
     }
 
-    describe.only('createPost', () => {
+    describe('createPost', () => {
         test('should create a post with all fields', async () => {
             mockCtx.prisma.post.create.mockResolvedValue(mockNewPost)
             const result = await postService.createPost({
@@ -133,20 +133,32 @@ describe('PostService', () => {
         })
     })
 
-    // describe('getPostById', () => {
-    //     test('should get a post by id', async () => {
-    //         mockCtx.prisma.post.findUnique.mockResolvedValue(mockNewPost)
-    //         const result = await postService.getPostById(mockNewPost.id)
-    //         expect(mockCtx.prisma.post.findUnique).toHaveBeenCalledWith({
-    //             where: { id: mockNewPost.id }
-    //         })
-    //         expect(result).toEqual(mockNewPost)
-    //     })
-    //     test('should throw an error if post is not found', async () => {
-    //         mockCtx.prisma.post.findUnique.mockResolvedValue(null)
-    //         await expect(postService.getPostById(mockNewPost.id)).rejects.toThrow('Post not found')
-    //     })
-    // })
+    describe('getPostById', () => {
+        test('should get a post by id', async () => {
+            mockCtx.prisma.post.findUnique.mockResolvedValue(mockNewPost)
+            const result = await postService.getPostById(mockNewPost.id)
+            expect(mockCtx.prisma.post.findUnique).toHaveBeenCalledWith({
+                where: { id: mockNewPost.id },
+                include: {
+                    author: true,
+                    likes: true,
+                    comments: {
+                        orderBy: { createdAt: 'desc' },
+                        include: {
+                            user: true
+                        }
+                    },
+                    categories: true
+                }
+            })
+            expect(result).toEqual(mockNewPost)
+        })
+
+        test('should throw an error if post is not found', async () => {
+            mockCtx.prisma.post.findUnique.mockResolvedValue(null)
+            await expect(postService.getPostById(mockNewPost.id)).rejects.toThrow('Post not found')
+        })
+    })
 
     // describe('getPosts', () => {
     //     test('should get all posts', async () => {

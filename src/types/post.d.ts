@@ -2,7 +2,7 @@ import { CategoryType } from "./category";
 import { LikeType } from "./like";
 import { CommentType } from "./comment";
 
-type PostVisibilityType = "PUBLIC" | "PRIVATE"
+export type PostVisibilityType = "PUBLIC" | "PRIVATE"
 
 export type PostType = {
     id: string

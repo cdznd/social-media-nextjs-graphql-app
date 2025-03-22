@@ -39,6 +39,20 @@ export const PostMutations = extendType({
             }
         )
         t.field(
+            'deletePost',
+            {
+                type: Post,
+                args: {
+                    postId: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { postId } = args
+                    const postService = new PostService(context)
+                    return postService.deletePost(postId)
+                }
+            }
+        )
+        t.field(
             'triggerLike',
             {
                 type: Post,

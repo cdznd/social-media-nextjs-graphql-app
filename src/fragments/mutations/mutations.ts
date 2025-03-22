@@ -23,6 +23,18 @@ export const CREATE_POST_MUTATION = gql`
     }
 `;
 
+export const DELETE_POST_MUTATION = gql`
+    mutation DeletePost(
+        $postId: String!
+    ) {
+        deletePost(
+            postId: $postId
+        ) {
+            id
+        }
+    }
+`
+
 export const CREATE_POST_COMMENT_MUTATION = gql`
     mutation CreateComment($content: String!, $postId: String!, $userId: String!) {
         createComment(content: $content, postId: $postId, userId: $userId) {

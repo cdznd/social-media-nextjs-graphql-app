@@ -32,6 +32,14 @@ export default class PostService {
         })
     }
 
+    async deletePost(postId: string) {
+        return this.context.prisma.post.delete({
+            where: {
+                id: postId
+            }
+        })
+    }
+
     async getPostById(postId: string) {
         const result =
             await this.context.prisma.post.findUnique({

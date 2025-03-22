@@ -75,11 +75,12 @@ export default class PostService {
         options: FeedOptions,
         filters: FeedFilters,
     ) {
-        const { orderBy, skip, take = 10 } = options // TODO: Take is by default 10, better organize it
+        const { orderBy, skip, take = 10 } = options
         const { searchString, category, visibility } = filters
         const friendshipService = new FriendshipService(this.context)
         // Getting all friends of this userid
         const allUserFriendships = await friendshipService.getFriendsByUserId(userId)
+
         const allUserFriendsIDs = allUserFriendships.map(
             friendship => friendship.userA.id === userId ? friendship.userB.id : friendship.userA.id)
         // Where clause matching search string AND category if it exists

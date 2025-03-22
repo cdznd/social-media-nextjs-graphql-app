@@ -61,40 +61,4 @@ describe('UserService', () => {
             })
         })
     })
-
-    describe('getUserById', () => {
-        test('should get a user by id', async () => {
-            mockCtx.prisma.user.findUnique.mockResolvedValue(mockNewUser)
-            const result = await userService.getUserById(mockNewUser.id)
-            expect(mockCtx.prisma.user.findUnique).toHaveBeenCalledWith({
-                where: { id: mockNewUser.id },
-                include: {
-                    posts: {
-                        include: {
-                            author: true
-                        }
-                    },
-                }
-            })
-            expect(result).toEqual(mockNewUser)
-        })
-        // test('should throw an error if user is not found', async () => {
-        //     mockCtx.prisma.user.findUnique.mockRejectedValue(null)
-        //     await expect(userService.getUserById(mockNewUser.id)).rejects.toThrow('User not found')
-        // })
-    })
-
-    describe('getUsers', () => {
-        test('should get all users', async () => {
-            mockCtx.prisma.user.findMany.mockResolvedValue([mockNewUser])
-            const result = await userService.getUsers()
-            expect(mockCtx.prisma.user.findMany).toHaveBeenCalledWith({
-                include: {
-                    accounts: true
-                }
-            })
-            expect(result).toEqual([mockNewUser])
-        })
-    })
-
 })

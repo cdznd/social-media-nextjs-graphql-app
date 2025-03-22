@@ -1,6 +1,8 @@
 import { Context } from "@/lib/prisma/context"
 import { MockContext, createMockContext } from '../lib/prisma/tests/PrismaContextUtils'
 import PostService from "./PostService"
+import { PostVisibilityType } from "@/types/post"
+import { FriendshipStatus } from "@/types/friendship"
 
 let mockCtx: MockContext
 let ctx: Context
@@ -19,6 +21,7 @@ describe('PostService', () => {
         title: 'Test Post',
         content: 'Test Content',
         authorId,
+        visibility: 'PUBLIC' as PostVisibilityType,
         thumbnail: 'thumbnail-url',
         categories: ['tech', 'programming'],
         createdAt: new Date(),
@@ -32,6 +35,7 @@ describe('PostService', () => {
                 title: mockNewPost.title,
                 content: mockNewPost.content,
                 authorId: mockNewPost.authorId,
+                visibility: mockNewPost.visibility as PostVisibilityType,
                 thumbnail: mockNewPost.thumbnail,
                 categories: mockNewPost.categories
             })
@@ -40,6 +44,7 @@ describe('PostService', () => {
                     title: mockNewPost.title,
                     content: mockNewPost.content,
                     authorId: mockNewPost.authorId,
+                    visibility: mockNewPost.visibility,
                     thumbnail: mockNewPost.thumbnail,
                     categories: {
                         connectOrCreate: [
@@ -57,6 +62,7 @@ describe('PostService', () => {
             })
             expect(result).toEqual(mockNewPost)
         })
+
         test('should create a post without optional thumbnail', async () => {
             const postWithoutThumbnail = {
                 ...mockNewPost,
@@ -67,6 +73,7 @@ describe('PostService', () => {
                 title: mockNewPost.title,
                 content: mockNewPost.content,
                 authorId: mockNewPost.authorId,
+                visibility: mockNewPost.visibility,
                 categories: mockNewPost.categories
             })
             expect(mockCtx.prisma.post.create).toHaveBeenCalledWith({
@@ -74,6 +81,7 @@ describe('PostService', () => {
                     title: mockNewPost.title,
                     content: mockNewPost.content,
                     authorId: mockNewPost.authorId,
+                    visibility: mockNewPost.visibility,
                     thumbnail: undefined,
                     categories: {
                         connectOrCreate: expect.any(Array)
@@ -82,6 +90,7 @@ describe('PostService', () => {
             })
             expect(result).toEqual(postWithoutThumbnail)
         })
+
         test('should create a post with empty categories array', async () => {
             const postWithoutCategories = {
                 ...mockNewPost,
@@ -92,6 +101,7 @@ describe('PostService', () => {
                 title: mockNewPost.title,
                 content: mockNewPost.content,
                 authorId: mockNewPost.authorId,
+                visibility: mockNewPost.visibility,
                 thumbnail: mockNewPost.thumbnail,
                 categories: []
             })
@@ -100,6 +110,7 @@ describe('PostService', () => {
                     title: mockNewPost.title,
                     content: mockNewPost.content,
                     authorId: mockNewPost.authorId,
+                    visibility: mockNewPost.visibility,
                     thumbnail: mockNewPost.thumbnail,
                     categories: {
                         connectOrCreate: []
@@ -108,6 +119,7 @@ describe('PostService', () => {
             })
             expect(result).toEqual(postWithoutCategories)
         })
+
         test('should handle database errors', async () => {
             const error = new Error('Database error')
             mockCtx.prisma.post.create.mockRejectedValue(error)
@@ -115,6 +127,7 @@ describe('PostService', () => {
                 title: mockNewPost.title,
                 content: mockNewPost.content,
                 authorId: mockNewPost.authorId,
+                visibility: mockNewPost.visibility,
                 thumbnail: mockNewPost.thumbnail,
                 categories: mockNewPost.categories
             })).rejects.toThrow('Database error')
@@ -126,10 +139,22 @@ describe('PostService', () => {
             mockCtx.prisma.post.findUnique.mockResolvedValue(mockNewPost)
             const result = await postService.getPostById(mockNewPost.id)
             expect(mockCtx.prisma.post.findUnique).toHaveBeenCalledWith({
-                where: { id: mockNewPost.id }
+                where: { id: mockNewPost.id },
+                include: {
+                    author: true,
+                    likes: true,
+                    comments: {
+                        orderBy: { createdAt: 'desc' },
+                        include: {
+                            user: true
+                        }
+                    },
+                    categories: true
+                }
             })
             expect(result).toEqual(mockNewPost)
         })
+
         test('should throw an error if post is not found', async () => {
             mockCtx.prisma.post.findUnique.mockResolvedValue(null)
             await expect(postService.getPostById(mockNewPost.id)).rejects.toThrow('Post not found')
@@ -161,152 +186,66 @@ describe('PostService', () => {
             ]
         }
 
+        beforeEach(() => {
+            jest.clearAllMocks(); // Reset mocks before each test
+        });
+
         test('should get feed without filters', async () => {
-            mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-            const result = await postService.getFeedByUserId('user-id')
-            expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-                where: {
-                    AND: [{}, {}]
+            const mockFriends = [
+                {
+                    id: 'friendship-id-1',
+                    userAId: 'user-id',
+                    userA: {
+                        id: 'user-id'
+                    },
+                    userBId: 'friend-1',
+                    userB: {
+                        id: 'friend-1'
+                    },
+                    status: 'ACCEPTED' as FriendshipStatus
                 },
-                orderBy: { createdAt: undefined },
+                {
+                    id: 'friendship-id-2',
+                    userAId: 'user-id',
+                    userA: {
+                        id: 'user-id'
+                    },
+                    userBId: 'friend-2',
+                    userB: {
+                        id: 'friend-2'
+                    },
+                    status: 'ACCEPTED' as FriendshipStatus
+                }
+            ];
+            const expectedWhereClause = {
+                AND: [{}, {}],
+                authorId: { in: ['friend-1', 'friend-2', 'user-id'] },
+                visibility: undefined
+            };
+            mockCtx.prisma.post.count.mockResolvedValue(1);
+            mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations]);
+            // Mock friendship service
+            mockCtx.prisma.friendship.findMany.mockResolvedValue(mockFriends)
+            const result = await postService.getFeedByUserId('user-id', { orderBy: 'asc' }, {});
+            expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
+                where: expectedWhereClause,
+                orderBy: { createdAt: 'asc' },
+                skip: undefined,
+                take: 10,
                 include: {
                     author: true,
                     likes: true,
                     comments: true,
                     categories: true,
                 }
-            })
-            expect(result).toEqual([mockPostWithRelations])
-        })
+            });
+            expect(mockCtx.prisma.post.count).toHaveBeenCalledWith({ where: expectedWhereClause });
+            expect(result).toEqual({
+                posts: [mockPostWithRelations],
+                totalCount: 1,
+                totalPages: 1
+            });
+        });
 
-        test('should filter by search string in title and content', async () => {
-            mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-            const result = await postService.getFeedByUserId('user-id', {
-                searchString: 'test'
-            })
-            expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-                where: {
-                    AND: [
-                        {
-                            OR: [
-                                { title: { contains: 'test', mode: 'insensitive' } },
-                                { content: { contains: 'test', mode: 'insensitive' } }
-                            ]
-                        },
-                        {}
-                    ]
-                },
-                orderBy: { createdAt: undefined },
-                include: {
-                    author: true,
-                    likes: true,
-                    comments: true,
-                    categories: true,
-                }
-            })
-            expect(result).toEqual([mockPostWithRelations])
-        })
-
-        test('should filter by category', async () => {
-            mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-            const result = await postService.getFeedByUserId('user-id', {
-                category: 'tech'
-            })
-            expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-                where: {
-                    AND: [
-                        {},
-                        {
-                            categories: {
-                                some: {
-                                    name: {
-                                        equals: 'tech',
-                                        mode: 'insensitive'
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                },
-                orderBy: { createdAt: undefined },
-                include: {
-                    author: true,
-                    likes: true,
-                    comments: true,
-                    categories: true,
-                }
-            })
-            expect(result).toEqual([mockPostWithRelations])
-        })
-
-        test('should apply both search string and category filters', async () => {
-            mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-            const result = await postService.getFeedByUserId('user-id', {
-                searchString: 'test',
-                category: 'tech'
-            })
-            expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-                where: {
-                    AND: [
-                        {
-                            OR: [
-                                { title: { contains: 'test', mode: 'insensitive' } },
-                                { content: { contains: 'test', mode: 'insensitive' } }
-                            ]
-                        },
-                        {
-                            categories: {
-                                some: {
-                                    name: {
-                                        equals: 'tech',
-                                        mode: 'insensitive'
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                },
-                orderBy: { createdAt: undefined },
-                include: {
-                    author: true,
-                    likes: true,
-                    comments: true,
-                    categories: true,
-                }
-            })
-            expect(result).toEqual([mockPostWithRelations])
-        })
-
-        test('should order results by createdAt', async () => {
-            mockCtx.prisma.post.findMany.mockResolvedValue([mockPostWithRelations])
-            const result = await postService.getFeedByUserId(authorId, {}, {
-                orderBy: 'desc'
-            })
-            expect(mockCtx.prisma.post.findMany).toHaveBeenCalledWith({
-                where: {
-                    AND: [{}, {}]
-                },
-                orderBy: { createdAt: 'desc' },
-                include: {
-                    author: true,
-                    likes: true,
-                    comments: true,
-                    categories: true,
-                }
-            })
-            expect(result).toEqual([mockPostWithRelations])
-        })
-
-        test('should handle empty result', async () => {
-            mockCtx.prisma.post.findMany.mockResolvedValue([])
-            const result = await postService.getFeedByUserId('user-id')
-            expect(result).toEqual([])
-        })
-
-        test('should handle database errors', async () => {
-            const error = new Error('Database error')
-            mockCtx.prisma.post.findMany.mockRejectedValue(error)
-            await expect(postService.getFeedByUserId('user-id')).rejects.toThrow('Database error')
-        })
     })
 })

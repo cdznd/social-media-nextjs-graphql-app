@@ -13,12 +13,7 @@ const server = new ApolloServer<Context>({
     ? [ApolloServerPluginLandingPageDisabled()] // Disable Graphql Playground
     : [],
   formatError: (err) => {
-    // if (process.env.NODE_ENV === 'production') {
-    //   return new Error('Internal Server Error');
-    // }
-    
-    console.error('0050474212 Apollo Server Error:', err);
-
+    console.error('Apollo Server Error:', err);
     return err;
   },
 });

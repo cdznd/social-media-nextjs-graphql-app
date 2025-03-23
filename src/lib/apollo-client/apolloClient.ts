@@ -4,7 +4,7 @@ const createApolloClient = () => {
   return new ApolloClient({
     ssrMode: true,
     link: createHttpLink({
-      uri: `${process.env.NEXT_URL}/api/graphql`
+      uri: `http://localhost:3000/api/graphql`
     }),
     cache: new InMemoryCache()
   })

@@ -66,23 +66,21 @@ const CredentialsSigninForm = () => {
       return;
     }
     // NextAuth SignIn
-    try {
-      const result = await signIn(
-        'credentials',
-        {
-          username: formData.get('username'),
-          password: formData.get('password'),
-          redirect: false
-        }
-      )
-      if (result?.error) {
-        setLoginError(true);
-        setLoginErrorMessage(result.error);
-      } else {
-        router.push("/"); // Redirect only on success
+    const result = await signIn(
+      'credentials',
+      {
+        username: formData.get('username'),
+        password: formData.get('password'),
+        redirect: false
       }
-    } finally {
+    )
+    if (result?.error) {
+      setLoginError(true);
+      setLoginErrorMessage(result.error);
       setIsLoginPending(false)
+    } else {
+      setIsLoginPending(false)
+      router.push("/"); // Redirect only on success
     }
   };
 

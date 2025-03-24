@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import { Stack, Typography } from '@mui/material'
+import { Stack, Typography, Container } from '@mui/material'
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import { brand } from '../common/themePrimitives';
 import ModalContainer from '../ModalContainer';
@@ -36,7 +36,12 @@ export default function FeedNewPostButton({
                     },
                 }}
             >
-                <Typography color="text.secondary">Click here to create new post</Typography>
+                <Typography color="text.secondary" sx={{
+                    fontSize: {
+                        xs: 12,
+                        md: 14
+                    }
+                }}>Click here to create new post</Typography>
                 <DriveFileRenameOutlineIcon />
             </Stack>
             {/* Modal */}

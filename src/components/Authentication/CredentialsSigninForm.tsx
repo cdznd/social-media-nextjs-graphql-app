@@ -10,10 +10,12 @@ import {
   TextField,
   Button,
   Typography,
-  Divider
+  Divider,
+  Stack
 } from "@mui/material";
 import { GoogleIcon } from "../common/CustomIcons";
 import ErrorAlert from "../ErrorAlert";
+import SpinnerLoading from "../Loading/Spinner";
 
 const CredentialsSigninForm = () => {
 
@@ -26,6 +28,9 @@ const CredentialsSigninForm = () => {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
   const [loginError, setLoginError] = useState<boolean>(false)
   const [loginErrorMessage, setLoginErrorMessage] = useState<string>('')
+
+  // Pending state
+  const [isLoginPending, setIsLoginPending] = useState<boolean>(false)
 
   // client side validation
   const validateInputs = (formData: FormData) => {
@@ -54,6 +59,7 @@ const CredentialsSigninForm = () => {
   // Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoginPending(true)
     // Transform into FormData
     const formData = new FormData(event.currentTarget);
     if (!validateInputs(formData)) {
@@ -71,6 +77,7 @@ const CredentialsSigninForm = () => {
     if (result?.error) {
       setLoginError(true);
       setLoginErrorMessage(result.error);
+      setIsLoginPending(false)
     } else {
       router.push("/"); // Redirect only on success
     }
@@ -85,6 +92,29 @@ const CredentialsSigninForm = () => {
       console.error(result.error);
     }
   };
+
+  if ((isLoginPending)) return (
+    <Box sx={{ my: 4 }}>
+      <Stack
+        direction='column'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Typography
+          variant='h5'
+          color='text.primary'>
+          Logging ...
+        </Typography>
+        <Stack 
+          direction='row'
+          justifyContent='center'
+          alignItems='center'
+          sx={{ width: '100%', mt: 4 }}>
+          <SpinnerLoading />
+        </Stack>
+      </Stack>
+    </Box>
+  )
 
   return (
     <Box

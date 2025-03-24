@@ -40,9 +40,9 @@ export default function CategoryForm({ closeModal }: CategoryFormProps ) {
     const validateInputs = (formData: FormData) => {
         let isValid = true;
         const name: string = (formData.get("name") as string) ?? "";
-        if (!name || name.length < 5) {
+        if (!name || name.length < 2) {
             setNameError(true);
-            setNameErrorMessage('Title must be at least 5 characters long.');
+            setNameErrorMessage('Category name must be at least 2 characters long.');
             isValid = false;
         } else {
             setNameError(false);
@@ -105,7 +105,7 @@ export default function CategoryForm({ closeModal }: CategoryFormProps ) {
                 color="primary"
                 disabled={false}
             >
-                {pending ? 'Creating...' : 'Create Post'}
+                {pending ? 'Creating...' : 'Create Category'}
             </Button>
         </Box>
     )

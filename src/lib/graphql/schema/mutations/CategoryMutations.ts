@@ -11,16 +11,19 @@ import CategoryService from "@/services/CategoryService"
 export const CategoryMutations = extendType({
     type: 'Mutation',
     definition(t) {
-        t.field('createCategory', {
-            type: Category,
-            args: {
-                name: nonNull(stringArg())
-            },
-            resolve: async (_parent, args, context: Context) => {
-                const { name } = args
-                const categoryService = new CategoryService(context)
-                return categoryService.createCategory(name)
+        t.field(
+            'createCategory',
+            {
+                type: Category,
+                args: {
+                    name: nonNull(stringArg())
+                },
+                resolve: async (_parent, args, context: Context) => {
+                    const { name } = args
+                    const categoryService = new CategoryService(context)
+                    return categoryService.createCategory(name)
+                }
             }
-        })
+        )
     }
 })

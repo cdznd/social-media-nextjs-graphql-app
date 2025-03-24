@@ -21,6 +21,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
 import SpinnerLoading from "../Loading/Spinner";
 import LinearLoading from "../Loading/Linear";
+import PostAddCategoryButton from "../PostAddCategoryButton";
 import { createPost } from "./actions";
 import { CategoryType } from "@/types/category";
 
@@ -336,6 +337,7 @@ export default function PostForm(
                         />
                     ))}
                 </FormGroup>
+                <PostAddCategoryButton />
             </FormControl>
             <FormControl>
                 <FormLabel id="post-visibility-toggle">Visibility</FormLabel>

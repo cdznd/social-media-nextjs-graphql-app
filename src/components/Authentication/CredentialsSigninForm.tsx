@@ -10,10 +10,12 @@ import {
   TextField,
   Button,
   Typography,
-  Divider
+  Divider,
+  Stack
 } from "@mui/material";
 import { GoogleIcon } from "../common/CustomIcons";
 import ErrorAlert from "../ErrorAlert";
+import SpinnerLoading from "../Loading/Spinner";
 
 const CredentialsSigninForm = () => {
 
@@ -26,6 +28,9 @@ const CredentialsSigninForm = () => {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
   const [loginError, setLoginError] = useState<boolean>(false)
   const [loginErrorMessage, setLoginErrorMessage] = useState<string>('')
+
+  // Pending state
+  const [isLoginPending, setIsLoginPending] = useState<boolean>(false)
 
   // client side validation
   const validateInputs = (formData: FormData) => {
@@ -54,25 +59,30 @@ const CredentialsSigninForm = () => {
   // Submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoginPending(true)
     // Transform into FormData
     const formData = new FormData(event.currentTarget);
     if (!validateInputs(formData)) {
       return;
     }
     // NextAuth SignIn
-    const result = await signIn(
-      'credentials',
-      {
-        username: formData.get('username'),
-        password: formData.get('password'),
-        redirect: false
+    try {
+      const result = await signIn(
+        'credentials',
+        {
+          username: formData.get('username'),
+          password: formData.get('password'),
+          redirect: false
+        }
+      )
+      if (result?.error) {
+        setLoginError(true);
+        setLoginErrorMessage(result.error);
+      } else {
+        router.push("/"); // Redirect only on success
       }
-    )
-    if (result?.error) {
-      setLoginError(true);
-      setLoginErrorMessage(result.error);
-    } else {
-      router.push("/"); // Redirect only on success
+    } finally {
+      setIsLoginPending(false)
     }
   };
 
@@ -85,6 +95,21 @@ const CredentialsSigninForm = () => {
       console.error(result.error);
     }
   };
+
+  if ((isLoginPending)) return (
+    <Box sx={{ my: 4 }}>
+      <Stack direction='column' alignItems='center'>
+        <Typography
+          variant='h5'
+          color='text.primary'>
+          Logging ...
+        </Typography>
+        <Box sx={{ width: '100%', mt: 4 }}>
+          <SpinnerLoading />
+        </Box>
+      </Stack>
+    </Box>
+  )
 
   return (
     <Box

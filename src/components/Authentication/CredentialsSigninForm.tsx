@@ -98,7 +98,11 @@ const CredentialsSigninForm = () => {
 
   if ((isLoginPending)) return (
     <Box sx={{ my: 4 }}>
-      <Stack direction='column' alignItems='center'>
+      <Stack
+        direction='column'
+        alignItems='center'
+        justifyContent='center'
+      >
         <Typography
           variant='h5'
           color='text.primary'>

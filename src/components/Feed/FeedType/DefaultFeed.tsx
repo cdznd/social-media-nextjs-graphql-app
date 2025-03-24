@@ -8,7 +8,7 @@ export default function DefaultFeed({ posts }: FeedTypeProps) {
         return (
             <Box sx={{ mb: 8 }} key={post.id}>
                 <PostCard
-                    postData={post} 
+                    postData={post}
                     position={index + 1}
                 />
             </Box>
@@ -18,6 +18,10 @@ export default function DefaultFeed({ posts }: FeedTypeProps) {
         <Container
             sx={{
                 maxWidth: { xs: "100%", sm: "80%", md: "900px" },
+                px: {
+                    xs: 0,
+                    sm: 2
+                }
             }}
         >
             {renderPosts}

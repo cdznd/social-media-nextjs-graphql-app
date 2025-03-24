@@ -106,9 +106,13 @@ const CredentialsSigninForm = () => {
           color='text.primary'>
           Logging ...
         </Typography>
-        <Box sx={{ width: '100%', mt: 4 }}>
+        <Stack 
+          direction='row'
+          justifyContent='center'
+          alignItems='center'
+          sx={{ width: '100%', mt: 4 }}>
           <SpinnerLoading />
-        </Box>
+        </Stack>
       </Stack>
     </Box>
   )

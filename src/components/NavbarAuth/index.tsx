@@ -4,7 +4,7 @@ import NavbarSubmenu from '../NavbarSubmenu';
 import { UserType } from '@/types/user';
 
 type NavbarAuthProps = {
-    loggedUser?: UserType
+    loggedUser?: UserType                                                                              
 }
 
 export default function NavbarAuth({ loggedUser }: NavbarAuthProps) {
@@ -34,6 +34,7 @@ export default function NavbarAuth({ loggedUser }: NavbarAuthProps) {
             <Stack
                 direction="row"
                 alignItems="center"
+                justifyContent={{ xs: "center", sm: "start" }}
                 spacing={1}
             >
                 <Typography
@@ -42,7 +43,7 @@ export default function NavbarAuth({ loggedUser }: NavbarAuthProps) {
                     sx={{
                         fontWeight: 700,
                         display: {
-                            xs: 'none',
+                            xs: 'block',
                             sm: 'block',
                         }
                     }}>

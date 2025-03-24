@@ -90,7 +90,9 @@ export default async function Navbar() {
             <ColorModeIconDropdown />
           </Box>
           {/* Mobile */}
-          <NavbarMobile />
+          <NavbarMobile 
+            loggedUser={loggedUserData}
+          />
         </Toolbar>
       </Container>
     </AppBar>

@@ -20,7 +20,10 @@ export default function ModalContainer(
                 top: '50%',
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
-                width: 800,
+                width: {
+                    xs: '100%',
+                    md: 800
+                },
                 maxHeight: '80%',
                 overflowY: 'scroll',
                 bgcolor: 'background.paper',

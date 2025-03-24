@@ -34,7 +34,15 @@ export default async function FeedNewPost() {
     return (
         <Container
             sx={{
-                maxWidth: { xs: "100%", sm: "80%", md: "900px" },
+                maxWidth: {
+                    xs: "100%",
+                    sm: "80%",
+                    md: "900px"
+                },
+                px: {
+                    xs: 0,
+                    sm: 2
+                }
             }}
         >
             <Stack

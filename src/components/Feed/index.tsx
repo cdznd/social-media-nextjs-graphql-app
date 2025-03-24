@@ -35,8 +35,17 @@ export default function Feed(
     }
   })()
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <FeedHeader numberOfPosts={numberOfPosts} feedType={feedType} />
+    <Box sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: {
+        xs: 2,
+        lg: 4
+      },
+    }}>
+      <FeedHeader
+        numberOfPosts={numberOfPosts}
+        feedType={feedType} />
       {
         (feedType === 'private') && (
           <FeedNewPost />

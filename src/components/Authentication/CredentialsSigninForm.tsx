@@ -79,7 +79,6 @@ const CredentialsSigninForm = () => {
       setLoginErrorMessage(result.error);
       setIsLoginPending(false)
     } else {
-      setIsLoginPending(false)
       router.push("/"); // Redirect only on success
     }
   };

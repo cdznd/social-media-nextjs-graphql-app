@@ -26,6 +26,7 @@ export default async function usersPage(
 ) {
     const { search, page = 1 } = await props.searchParams
     const session = await auth()
+    const loggedUserId = session?.user?.id ?? ''
     const { data } = await getAllUsers(page, search)
     const {
         users = [],
@@ -34,7 +35,7 @@ export default async function usersPage(
     // Filtering to remove the current logged user from the list.
     // I could have done it on the backend, but for now it's the simplest way to do it.
     const allUsers = Array.isArray(users)
-        ? users.filter((user: UserType) => user.id !== session?.user?.id)
+        ? users.filter((user: UserType) => user.id !== loggedUserId)
         : []
     const emptyListOfUsers = allUsers.length === 0
     return (
@@ -52,7 +53,10 @@ export default async function usersPage(
                                 {
                                     allUsers.map((user: UserType) => (
                                         <Grid item xs={12} sm={6} md={4} lg={3} key={user.id}>
-                                            <UserProfileCard user={user} key={user.id} />
+                                            <UserProfileCard
+                                                user={user}
+                                                loggedUserId={loggedUserId}
+                                                key={user.id} />
                                         </Grid>
                                     ))
                                 }

@@ -1,13 +1,34 @@
+
 import Link from "next/link";
+import { fetchGraphQLData } from "@/lib/apollo-client/apolloFetcher";
+import { GET_FRIENDSHIP } from "@/fragments/queries/friendship";
 import { Box, Card, CardContent, Typography } from "@mui/material"
 import { brand } from "../common/themePrimitives";
 import FriendshipTriggerButton from "../FriendshipTriggerButton";
-import { UserProfileCardProps } from "@/types/user";
 import UserAvatar from "../UserAvatar";
+import { UserType } from "@/types/user";
 
-export default function UserProfileCard(
-  { user }: UserProfileCardProps
+async function getUserFriendshipData(userId: string, loggedUserId: string) {
+  const data = await fetchGraphQLData(
+    GET_FRIENDSHIP,
+    {
+      fromUserId: loggedUserId,
+      toUserId: userId
+    }
+  )
+  return data
+}
+
+type UserProfileCardProps = {
+  user: UserType,
+  loggedUserId: string
+}
+
+export default async function UserProfileCard(
+  { user, loggedUserId }: UserProfileCardProps
 ) {
+  const data = await getUserFriendshipData(user.id, loggedUserId)
+  const friendshipData = data?.friendship
   return (
     <Card
       sx={{
@@ -29,7 +50,7 @@ export default function UserProfileCard(
           <Link
             href={`/users/${user.id}`}
             style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Typography 
+            <Typography
               variant="h6"
               sx={{
                 textDecoration: 'none',
@@ -42,7 +63,9 @@ export default function UserProfileCard(
           </Link>
         </Box>
         <FriendshipTriggerButton
-          toUserId={user.id}
+          friendshipData={friendshipData}
+          loggedUserId={loggedUserId}
+          userId={user.id}
         />
       </CardContent>
     </Card>

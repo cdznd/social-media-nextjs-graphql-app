@@ -1,87 +1,75 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useActionState, useTransition } from "react"
 import { Button, Box, IconButton, Menu, MenuItem } from "@mui/material"
-import { useMutation, useQuery } from "@apollo/client"
-import {
-    CREATE_FRIENDSHIP_REQUEST_MUTATION,
-    DELETE_FRIENDSHIP_MUTATION
-} from "@/fragments/mutations/friendship"
-import { useSession } from "next-auth/react"
-import { GET_FRIENDSHIP } from "@/fragments/queries/friendship"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import {
+    triggerFriendship,
+    deleteFriendship
+} from "./actions"
+import LinearLoading from "../Loading/Linear";
+type FriendshipTriggerButtonProps = {
+    friendshipData: any,
+    loggedUserId: string,
+    userId: string
+}
 
 export default function FriendshipTriggerButton(
-    { toUserId }: { toUserId: string }
+    { friendshipData, loggedUserId, userId }: FriendshipTriggerButtonProps
 ) {
+    // anchor
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-
     const handleClose = () => {
         setAnchorEl(null);
     };
 
-    const session = useSession()
-    const loggedUser = session?.data?.user
-
-    // Try to find a friendship between the logged user and the other user
-    const { data: friendshipData, loading: queryLoading } = useQuery(GET_FRIENDSHIP, {
-        variables: {
-            fromUserId: loggedUser?.id,
-            toUserId
-        },
-        skip: !loggedUser?.id || !toUserId
-    })
-
-    const currentFriendship = friendshipData?.friendship
-    const friendshipStatus = currentFriendship?.status || null
-    const friendshipUserActorId = currentFriendship?.userA.id // The user who sent the request
+    const currentFriendship = friendshipData
+    const friendshipStatus = currentFriendship?.status ?? null
+    // The user who sent the request
+    const friendshipUserActorId = currentFriendship?.userA.id ?? null
     // If it's still pending display the option to delete to the actor
     const displayOptionToActor
-        = friendshipUserActorId === loggedUser?.id
+        = friendshipUserActorId === loggedUserId
 
-    // Using the createFriendshipRequest mutation
-    const [triggerFriendship, { loading: mutationLoading }] = useMutation(
-        CREATE_FRIENDSHIP_REQUEST_MUTATION,
+    // ACTION SERVER calls
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [isPending, startTransition] = useTransition()
+    // useActionState to track the triggerFriendship action
+    const [triggerState, actionTriggerFriendship, isPendingTriggerFriendship] = useActionState(
+        triggerFriendship,
         {
-            refetchQueries: [
-                {
-                    query: GET_FRIENDSHIP,
-                    variables: { fromUserId: loggedUser?.id, toUserId }
-                }
-            ]
+            success: false,
+            message: ''
+        }
+    )
+    // useActionState to track the deleteFriendship action
+    const [deleteState, actionDeleteFriendship, isPendingDeleteFriendship] = useActionState(
+        deleteFriendship,
+        {
+            success: false,
+            message: ''
         }
     )
 
-    const [deleteFriendship] = useMutation(DELETE_FRIENDSHIP_MUTATION, {
-        refetchQueries: [
-            {
-                query: GET_FRIENDSHIP,
-                variables: { fromUserId: loggedUser?.id, toUserId }
-            }
-        ]
-    })
-
     const sendFriendRequest = async () => {
-        await triggerFriendship({
-            variables: {
-                fromUserId: loggedUser?.id,
-                toUserId
-            }
+        startTransition(() => {
+            actionTriggerFriendship({
+                fromUserId: loggedUserId,
+                toUserId: userId
+            })
         })
     }
 
     const handleRemoveFriend = async () => {
         if (!currentFriendship?.id) return;
-        await deleteFriendship({
-            variables: {
-                friendshipId: currentFriendship.id
-            }
-        });
+        startTransition(() => {
+            actionDeleteFriendship({ friendshipId: currentFriendship.id });
+        })
         handleClose();
     }
 
@@ -130,30 +118,38 @@ export default function FriendshipTriggerButton(
                 variant={buttonConfig.variant}
                 color={buttonConfig.color}
                 onClick={sendFriendRequest}
-                disabled={buttonConfig.disabled || queryLoading || mutationLoading}
+                disabled={buttonConfig.disabled}
                 size="small"
+                endIcon={
+                    (isPendingTriggerFriendship && !triggerState.success) ? <HourglassTopIcon /> : null}
             >
                 {buttonConfig.text}
             </Button>
             {buttonConfig.showOptions && (
-                <>
-                    <IconButton
-                        onClick={handleClick}
-                        size="small"
-                        sx={{ ml: 1 }}
-                    >
-                        <MoreHorizIcon />
-                    </IconButton>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <MenuItem onClick={handleRemoveFriend} sx={{ color: 'error.main' }}>
-                            Remove friend
-                        </MenuItem>
-                    </Menu>
-                </>
+                (isPendingDeleteFriendship && !deleteState.success) ? (
+                    <Box sx={{ width: 1 }}>
+                        <LinearLoading />
+                    </Box>
+                ) : (
+                    <>
+                        <IconButton
+                            onClick={handleClick}
+                            size="small"
+                            sx={{ ml: 1 }}
+                        >
+                            <MoreHorizIcon />
+                        </IconButton>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <MenuItem onClick={handleRemoveFriend} sx={{ color: 'error.main' }}>
+                                Remove friend
+                            </MenuItem>
+                        </Menu>
+                    </>
+                )
             )}
         </Box>
     )

@@ -2,7 +2,7 @@ import { Card, CardContent, Typography, Box, Stack } from "@mui/material";
 import PeopleIcon from '@mui/icons-material/People';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
-import FriendshipTriggerButton from "../FriendshipTriggerButton";
+// import FriendshipTriggerButton from "../FriendshipTriggerButton";
 import UserAvatar from "../UserAvatar";
 import UserProfileUpdateButton from "../UserProfileUpdateButton";
 import { UserType } from "@/types/user";
@@ -68,9 +68,9 @@ export default function UserProfileInfoCard(
         {
           displayFriendshipButton && (
             <Box>
-              <FriendshipTriggerButton
+              {/* <FriendshipTriggerButton
                 toUserId={user.id}
-              />
+              /> */}
             </Box>
           )
         }

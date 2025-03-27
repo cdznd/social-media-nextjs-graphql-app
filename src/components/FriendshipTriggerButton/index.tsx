@@ -9,8 +9,10 @@ import {
     deleteFriendship
 } from "./actions"
 import LinearLoading from "../Loading/Linear";
+import { FriendshipType } from "@/types/friendship";
+
 type FriendshipTriggerButtonProps = {
-    friendshipData: any,
+    friendshipData: FriendshipType,
     loggedUserId: string,
     userId: string
 }

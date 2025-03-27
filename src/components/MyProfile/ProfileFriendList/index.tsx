@@ -1,8 +1,11 @@
 import UserProfileCard from "@/components/UserProfileCard";
 import { FriendWithStatus } from "@/types/friendship";
 import { Box, Card, Typography, Alert, Stack, Grid } from "@mui/material"
+import { auth } from "@/lib/next-auth/auth";
 
-export default function ProfileFriendList({ userFriends }: { userFriends: FriendWithStatus[] }) {
+export default async function ProfileFriendList({ userFriends }: { userFriends: FriendWithStatus[] }) {
+    const session = await auth()
+    const loggedUserId = session?.user?.id ?? ''
     const emptyFriendList = userFriends.length === 0
     return (
         <Card sx={{
@@ -41,7 +44,7 @@ export default function ProfileFriendList({ userFriends }: { userFriends: Friend
                                             const userFriend = friend.user
                                             return (
                                                 <Grid item xs={12} sm={6} md={4} lg={3} key={userFriend.id}>
-                                                    <UserProfileCard user={userFriend} />
+                                                    <UserProfileCard user={userFriend} loggedUserId={loggedUserId} />
                                                 </Grid>
                                             )
                                         }

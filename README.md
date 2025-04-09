@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Social Media Next.js GraphQL Application
 
-## Getting Started
+A modern social media application built with Next.js, GraphQL, and Material-UI. This application provides a robust platform for social networking with real-time updates, user authentication, and a beautiful, responsive interface.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Modern Tech Stack**
+  - Next.js 15 with App Router
+  - GraphQL API with Apollo Server
+  - Material-UI v6 for beautiful UI components
+  - TypeScript for type safety
+  - Prisma as the ORM
+  - AWS S3 for file storage
+
+- **Authentication & Authorization**
+  - Secure user authentication
+  - Role-based access control
+  - JWT token management
+
+- **Social Features**
+  - User profiles
+  - Posts and comments
+  - Real-time updates
+  - File uploads
+
+## 🛠️ Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Docker and Docker Compose (for local development)
+- AWS S3 bucket (for file storage)
+
+## 📦 Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/social-media-nextjs-graphql-app.git
+   cd social-media-nextjs-graphql-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following variables:
+   ```
+   DATABASE_URL="your_database_url"
+   AWS_ACCESS_KEY_ID="your_aws_access_key"
+   AWS_SECRET_ACCESS_KEY="your_aws_secret_key"
+   AWS_REGION="your_aws_region"
+   AWS_BUCKET_NAME="your_bucket_name"
+   JWT_SECRET="your_jwt_secret"
+   ```
+
+4. Set up the database:
+   ```bash
+   npx prisma generate
+   npx prisma migrate dev
+   ```
+
+5. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+## 🏗️ Project Structure
+
+```
+src/
+├── app/              # Next.js app router pages
+├── components/       # Reusable React components
+├── fragments/        # GraphQL fragments
+├── lib/             # Core functionality and configurations
+├── services/        # Business logic and API services
+├── types/           # TypeScript type definitions
+└── utils/           # Utility functions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧪 Testing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Run the test suite:
+```bash
+npm test
+# or
+yarn test
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Deployment
 
-## Learn More
+The application is configured for deployment on Vercel. The build process includes:
+1. Prisma schema generation
+2. Database migrations
+3. Next.js build
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run vercel-build
+# or
+yarn vercel-build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📝 API Documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The GraphQL API documentation is available at `/api/graphql` when running the development server.
 
-## Deploy on Vercel
+## 🤝 Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👥 Authors
+
+- Your Name - Initial work
+
+## 🙏 Acknowledgments
+
+- Next.js team for the amazing framework
+- Apollo team for GraphQL tools
+- Material-UI team for the component library
+- Prisma team for the ORM

@@ -23,12 +23,50 @@ A modern social media application built with Next.js, GraphQL, and Material-UI. 
   - Real-time updates
   - File uploads
 
+## 🛠️ Technologies Used
+
+This project leverages a modern tech stack of cutting-edge libraries and frameworks:
+
+### Core Framework
+- **Next.js (v15.1.6)** - React framework with App Router for improved routing and server components
+- **React (v19.0.0)** - Latest version with improved rendering and concurrent mode
+- **TypeScript (v5.7.3)** - Strong type safety throughout the application
+
+### GraphQL Ecosystem
+- **Apollo Server (v4.11.3)** - Powers the GraphQL API backend
+- **Apollo Client (v3.12.8)** - Client-side data fetching with caching
+- **Nexus (v1.3.0)** - Code-first GraphQL schema generation
+- **GraphQL Depth Limit** - Protection against malicious queries
+
+### Database & ORM
+- **Prisma (v6.3.0)** - Modern ORM with type-safe database access
+- **@prisma/client (v6.2.1)** - Generated Prisma client for database operations
+
+### Authentication
+- **NextAuth (v4.24.11)** - Flexible authentication with multiple providers
+- **@next-auth/prisma-adapter** - Prisma adapter for NextAuth
+- **Bcrypt (v5.1.1)** - Secure password hashing
+
+### UI Framework
+- **Material-UI (v6.4.1)** - Complete UI component library
+- **Emotion (v11.14.0)** - CSS-in-JS styling solution
+- **MUI Icons** - Extensive icon library
+
+### File Storage
+- **AWS SDK for S3 (v3.740.0)** - Cloud file storage integration
+
+### Testing
+- **Jest (v29.7.0)** - Testing framework
+- **ts-jest** - TypeScript support for Jest
+- **Faker.js (v9.5.0)** - Realistic test data generation
+
 ## 🛠️ Prerequisites
 
 - Node.js (v18 or higher)
 - npm or yarn
 - Docker and Docker Compose (for local development)
 - AWS S3 bucket (for file storage)
+- PostgreSQL database
 
 ## 📦 Installation
 
@@ -46,23 +84,46 @@ A modern social media application built with Next.js, GraphQL, and Material-UI. 
    ```
 
 3. Set up environment variables:
-   Create a `.env` file in the root directory with the following variables:
+   Copy the `.env.development` file to `.env.local`:
+   ```bash
+   cp .env.development .env.local
    ```
-   DATABASE_URL="your_database_url"
-   AWS_ACCESS_KEY_ID="your_aws_access_key"
-   AWS_SECRET_ACCESS_KEY="your_aws_secret_key"
-   AWS_REGION="your_aws_region"
-   AWS_BUCKET_NAME="your_bucket_name"
+   
+   Then edit `.env.local` to update the following variables with your own values:
+   ```
+   # AWS credentials
+   NEXT_PUBLIC_AWS_S3_ACCESS_KEY_ID="your_aws_access_key"
+   NEXT_PUBLIC_AWS_S3_SECRET_ACCESS_KEY="your_aws_secret_key"
+   
+   # Google OAuth credentials
+   GOOGLE_CLIENT_ID="your_google_client_id"
+   GOOGLE_CLIENT_SECRET="your_google_client_secret"
+   
+   # Database connection
+   DATABASE_URL="your_database_connection_string"
+   
+   # JWT and NextAuth secrets
    JWT_SECRET="your_jwt_secret"
+   NEXTAUTH_SECRET="your_nextauth_secret"
    ```
 
-4. Set up the database:
+4. Start the PostgreSQL database (if using Docker):
+   ```bash
+   docker-compose up -d postgres
+   ```
+
+5. Set up the database:
    ```bash
    npx prisma generate
    npx prisma migrate dev
    ```
 
-5. Start the development server:
+6. Seed the database with initial data:
+   ```bash
+   npx prisma db seed
+   ```
+
+7. Start the development server:
    ```bash
    npm run dev
    # or

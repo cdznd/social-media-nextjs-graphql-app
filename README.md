@@ -1,6 +1,6 @@
 # Social Media Next.js GraphQL Application
 
-A modern social media application built with Next.js, GraphQL, and Material-UI. This application provides a robust platform for social networking with real-time updates, user authentication, and a beautiful, responsive interface.
+A modern social media application built with Next.js, GraphQL, and Material-UI. This application provides a powerful platform for social networking with user authentication, friendship mechanism, likes, comments, notifications and a responsive interface.
 
 ## 🚀 Features
 
@@ -14,18 +14,18 @@ A modern social media application built with Next.js, GraphQL, and Material-UI. 
 
 - **Authentication & Authorization**
   - Secure user authentication
-  - Role-based access control
   - JWT token management
 
 - **Social Features**
   - User profiles
+  - Multiple feeds, private, and a explore public feed
   - Posts and comments
   - Real-time updates
   - File uploads
 
 ## 🛠️ Technologies Used
 
-This project leverages a modern tech stack of cutting-edge libraries and frameworks:
+This project leverages a modern tech stack of libraries and frameworks:
 
 ### Core Framework
 - **Next.js (v15.1.6)** - React framework with App Router for improved routing and server components
@@ -172,22 +172,7 @@ The GraphQL API documentation is available at `/api/graphql` when running the de
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create your feature branch (`git checkout -b feature/feature-name`)
+3. Commit your changes (`git commit -m 'Add some new features'`)
+4. Push to the branch (`git push origin feature/amazing-name`)
 5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 👥 Authors
-
-- Your Name - Initial work
-
-## 🙏 Acknowledgments
-
-- Next.js team for the amazing framework
-- Apollo team for GraphQL tools
-- Material-UI team for the component library
-- Prisma team for the ORM

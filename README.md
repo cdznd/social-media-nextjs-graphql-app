@@ -1,6 +1,7 @@
 # Social Media Next.js GraphQL Application
 
-A modern social media application built with Next.js, GraphQL, and Material-UI. This application provides a powerful platform for social networking with user authentication, friendship mechanism, likes, comments, notifications and a responsive interface.
+A modern social media application built with Next.js, GraphQL, and Material-UI. The project features multiple feeds, including a private feed for friends' posts, an explore feed for public posts, and a profile feed, all with search and filtering functionalities. It also includes a friendship system, notifications, and post interactions such as likes and comments.
+Project Deployed using <a href="https://vercel.com/">Vercel</a> and a Postgres <a href="https://railway.com/">Railway</a> database.
 
 ## 🚀 Features
 
@@ -66,7 +67,7 @@ This project leverages a modern tech stack of libraries and frameworks:
 - npm or yarn
 - Docker and Docker Compose (for local development)
 - AWS S3 bucket (for file storage)
-- PostgreSQL database
+- PostgreSQL database (docker container)
 
 ## 📦 Installation
 
@@ -107,9 +108,9 @@ This project leverages a modern tech stack of libraries and frameworks:
    NEXTAUTH_SECRET="your_nextauth_secret"
    ```
 
-4. Start the PostgreSQL database (if using Docker):
+4. Start the PostgreSQL database and pgadmin:
    ```bash
-   docker-compose up -d postgres
+   docker-compose up -d
    ```
 
 5. Set up the database:
@@ -176,3 +177,27 @@ The GraphQL API documentation is available at `/api/graphql` when running the de
 3. Commit your changes (`git commit -m 'Add some new features'`)
 4. Push to the branch (`git push origin feature/amazing-name`)
 5. Open a Pull Request
+
+## 🖼️ Screenshots
+
+Project screenshots:
+
+<p align="center">
+  <table>
+    <tr>
+      <td><img src="public/explore.png" alt="Explore" width="400"></td>
+      <td><img src="assets/friend-profile.png" alt="Friend Profile" width="400"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/friend-list.png" alt="Friend List" width="400"></td>
+      <td><img src="assets/notifications.png" alt="Notifications" width="400"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/private-feed-dark.png" alt="Private Feed Dark Mode" width="400"></td>
+      <td><img src="assets/private-feed.png" alt="Private Feed" width="400"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/profile.png" alt="Profile" width="400"></td>
+    </tr>
+  </table>
+</p>

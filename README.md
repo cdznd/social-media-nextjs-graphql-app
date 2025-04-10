@@ -1,6 +1,6 @@
 # Social Media Next.js GraphQL Application
 
-A modern social media application built with Next.js, GraphQL, and Material-UI. The project features multiple feeds, including a private feed for friends' posts, an explore feed for public posts, and a profile feed, all with search and filtering functionalities. It also includes a friendship system, notifications, and post interactions such as likes and comments.
+A modern social media application built with Next.js, GraphQL, and Material-UI. The project features multiple feeds, including a private feed for friends' posts, an explore feed for public posts, and a profile feed, all with search and filtering functionalities. It also includes a friendship system, notifications, and post interactions such as likes and comments. Best security practices were applied to the GraphQL implementation, and Core Web Vitals were improved using built-in features from Next.js and React, such as the new next/image component for automatic image optimization and automatic code splitting for faster page loads.
 Project Deployed using <a href="https://vercel.com/">Vercel</a> and a Postgres <a href="https://railway.com/">Railway</a> database.
 
 ## 🚀 Features
@@ -30,7 +30,7 @@ This project leverages a modern tech stack of libraries and frameworks:
 
 ### Core Framework
 - **Next.js (v15.1.6)** - React framework with App Router for improved routing and server components
-- **React (v19.0.0)** - Latest version with improved rendering and concurrent mode
+- **React (v19.0.0)** - Latest version, leveraging new hooks such as useActionState and useOptimistic
 - **TypeScript (v5.7.3)** - Strong type safety throughout the application
 
 ### GraphQL Ecosystem
@@ -50,7 +50,6 @@ This project leverages a modern tech stack of libraries and frameworks:
 
 ### UI Framework
 - **Material-UI (v6.4.1)** - Complete UI component library
-- **Emotion (v11.14.0)** - CSS-in-JS styling solution
 - **MUI Icons** - Extensive icon library
 
 ### File Storage
@@ -185,19 +184,16 @@ Project screenshots:
 <p align="center">
   <table>
     <tr>
-      <td><img src="public/explore.png" alt="Explore" width="400"></td>
-      <td><img src="assets/friend-profile.png" alt="Friend Profile" width="400"></td>
+      <td><img src="public/private-feed-dark.png" alt="Private Feed Dark Mode" width="500"></td>
+      <td><img src="public/profile.png" alt="Profile" width="500"></td>
     </tr>
     <tr>
-      <td><img src="assets/friend-list.png" alt="Friend List" width="400"></td>
-      <td><img src="assets/notifications.png" alt="Notifications" width="400"></td>
+      <td><img src="public/explore.png" alt="Explore" width="500"></td>
+      <td><img src="public/friend-profile.png" alt="Friend Profile" width="500"></td>
     </tr>
     <tr>
-      <td><img src="assets/private-feed-dark.png" alt="Private Feed Dark Mode" width="400"></td>
-      <td><img src="assets/private-feed.png" alt="Private Feed" width="400"></td>
-    </tr>
-    <tr>
-      <td><img src="assets/profile.png" alt="Profile" width="400"></td>
+      <td><img src="public/friends-list.png" alt="Friend List" width="500"></td>
+      <td><img src="public/notifications.png" alt="Notifications" width="500"></td>
     </tr>
   </table>
 </p>

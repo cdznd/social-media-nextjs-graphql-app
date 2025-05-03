@@ -1,7 +1,14 @@
 # Social Media Next.js GraphQL Application
 
-A modern social media application built with Next.js, GraphQL, and Material-UI. The project features multiple feeds, including a private feed for friends' posts, an explore feed for public posts, and a profile feed, all with search and filtering functionalities. It also includes a friendship system, notifications, and post interactions such as likes and comments. Best security practices were applied to the GraphQL implementation, and Core Web Vitals were improved using built-in features from Next.js and React, such as the new next/image component for automatic image optimization and automatic code splitting for faster page loads.
+A modern social media application built with Next.js, GraphQL, and Material-UI. The project features multiple feeds, including a private feed for friends' posts, an explore feed for public posts, and a profile feed, all with search and filtering functionalities. 
+
+It also includes a friendship system, notifications, and post interactions such as likes and comments. Best security practices were applied to the GraphQL implementation, and Core Web Vitals were improved using built-in features from Next.js and React, such as the new next/image component for automatic image optimization and automatic code splitting for faster page loads.
+
 Project Deployed using <a href="https://vercel.com/">Vercel</a> and a Postgres <a href="https://railway.com/">Railway</a> database.
+
+<p align="center">
+  <img src="public/private-feed-dark.png" alt="" width="800">
+</p>
 
 ## 🚀 Features
 
@@ -14,7 +21,7 @@ Project Deployed using <a href="https://vercel.com/">Vercel</a> and a Postgres <
   - AWS S3 for file storage
 
 - **Authentication & Authorization**
-  - Secure user authentication
+  - Secure user authentication with NextAuth
   - JWT token management
 
 - **Social Features**
